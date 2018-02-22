@@ -164,14 +164,25 @@ function transformEventsEmailOptin (obj) {
 
 function subscribeEventsOptIn (e, el) {
   var data = getTargetDataSet(el, true, true)
-  data['emailOptIns[events]'] = true
   update('self', null, data, function (err, obj) {
-    if (err) return window.alert(err.message)
-    toasty('You are now subscribed to hear about Monstercat events')
+    if (terror(err)) {
+      return
+    }
 
-    resetTargetInitialValues(el, obj)
-    loadSession(function (err, obj) {
-      loadSubSources(document.querySelector('[role=events-email-optin]'), true, true)
+    updateSelfNotifSubs([{
+      subKey: 'events',
+      notifType: 'email',
+      status: 'subscribed'
+    }], function (err, result) {
+      if (terror(err)) {
+        return
+      }
+      toasty('You are now subscribed to hear about Monstercat events')
+
+      resetTargetInitialValues(el, obj)
+      loadSession(function (err, obj) {
+        loadSubSources(document.querySelector('[role=events-email-optin]'), true, true)
+      })
     })
   })
 }

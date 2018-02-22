@@ -350,6 +350,15 @@ function youTubeUserToChannelID (user, done) {
   })
 }
 
+function terror (err) {
+  if (err) {
+    toasty(new Error(err))
+    return true
+  }
+
+  return false
+}
+
 function copyToClipboard (e) {
   var parent = findParentWith(e.target, 'div');
   var input = parent.querySelector('textarea,input[type=text]');

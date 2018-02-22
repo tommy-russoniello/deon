@@ -1,4 +1,5 @@
 function transformSubmittedAccountData (data) {
+  data = fixFormDataIndexes(data, ['emailOptIns'])
   var str = data.birthday_year + '-' + data.birthday_month + '-' + data.birthday_day;
   if (!data.birthday_year || data.birthday_year <= 1900) {
     data.birthday = null;
@@ -29,7 +30,9 @@ function validateAccountData (data, exclude) {
 }
 
 function saveAccount (e, el) {
-  var data = getTargetDataSet(el, true, true)
+  e.preventDefault()
+  var form = e.target
+  var data = formToObject(form)
   data = transformSubmittedAccountData(data);
   if (!data) return
   var wasLegacy = isLegacyLocation()
@@ -52,6 +55,40 @@ function saveAccount (e, el) {
       siteNotices.completeProfileNotice.start();
     })
   })
+}
+
+function saveAccountNotifSubs (e) {
+  e.preventDefault()
+  var form = e.target
+  var data = formToObject(form)
+  data = fixFormDataIndexes(data, ['emailOptIns'])
+
+  data.emailOptIns = data.emailOptIns || []
+  data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
+    return {
+      notifType: 'email',
+      subKey: subKey,
+      status: data.emailOptIns.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
+    }
+  })
+
+  updateSelfNotifSubs(data.notifSubs, function (err, result) {
+    if (err) {
+      return toasty(new Error(err))
+    }
+    toasty(strings.notifSubsUpdated)
+  })
+}
+
+function updateSelfNotifSubs (subs, done) {
+    requestJSON({
+    url: endpoint + '/self/notif-subs',
+    withCredentials: true,
+    method: 'PATCH',
+    data: {
+      notifSubs: subs
+    }
+  }, done)
 }
 
 function saveAccountSettings (e, el) {
@@ -137,33 +174,32 @@ function disableTwoFactor (e, el) {
   })
 }
 
-function mapAccount (o) {
-  o.countries = getAccountCountries(o.location)
-  if (!o.twoFactorId && !o.pendingTwoFactorId) {
-    o.enableTwoFactor = {
+function mapAccount (account) {
+  account.countries = getAccountCountries(account.location)
+  if (!account.twoFactorId && !account.pendingTwoFactorId) {
+    account.enableTwoFactor = {
       countries: CountryCallingCodes
     }
-    o.twoFactor = false
+    account.twoFactor = false
   }
-  else if (o.pendingTwoFactorId) {
-    o.confirmingTwoFactor = true
-    o.twoFacotr = false
+  else if (account.pendingTwoFactorId) {
+    account.confirmingTwoFactor = true
+    account.twoFacotr = false
   }
-  else if (o.twoFactorId) {
-    o.twoFactor = true
+  else if (account.twoFactorId) {
+    account.twoFactor = true
   }
-  if (o.birthday) {
-    var date = new Date(o.birthday);
-    o.birthday_year = date.getUTCFullYear();
-    o.birthday_day = ('0' + (date.getUTCDate()).toString()).substr(-2);
-    o.birthday_month = ('0' + (date.getUTCMonth() + 1).toString()).substr(-2);
+  if (account.birthday) {
+    var date = new Date(account.birthday);
+    account.birthday_year = date.getUTCFullYear();
+    account.birthday_day = ('0' + (date.getUTCDate()).toString()).substr(-2);
+    account.birthday_month = ('0' + (date.getUTCMonth() + 1).toString()).substr(-2);
   }
-  o.hasGoldAccess = hasGoldAccess()
-  o.endhost = endhost
-  o.shopEmail = session.user.shopEmail ? session.user.shopEmail : session.user.email
-  o.locationLegacy = isLegacyLocation()
-  o.emailOptIns = transformEmailOptins(o.emailOptIns)
-  return o
+  account.hasGoldAccess = hasGoldAccess()
+  account.endhost = endhost
+  account.shopEmail = session.user.shopEmail ? session.user.shopEmail : session.user.email
+  account.locationLegacy = isLegacyLocation()
+  return account
 }
 
 function transformAccountGold (o, done) {
@@ -271,6 +307,14 @@ function transformAccountSettings (obj) {
     opt.selected = opt.value == obj.preferredDownloadFormat
     return opt
   })
+  return obj
+}
+
+function transformAccountNotifSubs (obj) {
+  obj.emailOptIns = obj.results.reduce(function (map, sub) {
+    map[sub.subKey] = sub.status == 'subscribed'
+    return map
+  }, {});
   return obj
 }
 
