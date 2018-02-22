@@ -75,6 +75,16 @@ function saveAccountNotifSubs (e) {
   var data = formToObject(form)
   data = transformSubmittedAccountData(data)
   data = transformSubmittedNotifSubs(data)
+  data = fixFormDataIndexes(data, ['emailOptIns'])
+
+  data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
+    return {
+      notifType: 'email',
+      subKey: subKey,
+      status: data.emailOptIns.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
+    }
+  })
+
   updateSelfNotifSubs(data.notifSubs, function (err, result) {
     if (err) {
       return toasty(new Error(err))
