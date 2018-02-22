@@ -133,6 +133,7 @@ function updatePassword (e, el) {
 
 function signUp (data, where, done) {
   data.password = data.password.toString();
+
   requestJSON({
     url: endpoint + where,
     method: 'POST',
@@ -146,9 +147,7 @@ function signUp (data, where, done) {
   });
 }
 
-function signUpAt (e, el, where) {
-  var data = getTargetDataSet(el);
-  data = transformSubmittedAccountData(data);
+function signUpAt (data, where) {
   signUp(data, where, function (err, obj, xhr) {
     if (err) return toasty(new Error(err.message))
     go(getRedirectTo())
@@ -171,16 +170,21 @@ function validateSignUp (data, errors) {
 }
 
 function submitSignUp (e, el) {
-  var data = getTargetDataSet(el)
+  e.preventDefault()
+  var form = e.target
+  var data = formToObject(form)
   data = transformSubmittedAccountData(data);
+  data = transformSubmittedNotifSubs(data)
+
   var errors = validateSignUp(data)
+
   if(errors.length) {
     errors.forEach(function (err) {
       toasty(new Error(err));
     })
     return
   }
-  signUpAt(e, el, '/signup')
+  signUpAt(data, '/signup')
 }
 
 function getRedirectTo () {
@@ -239,7 +243,7 @@ function transformSignUp () {
 
   if(qo.promotions || qo.location) {
     obj.emailOptIns = {
-      promotions:true
+      events: true
     }
   }
 

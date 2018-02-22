@@ -13,6 +13,18 @@ function transformSubmittedAccountData (data) {
   return data;
 }
 
+function transformSubmittedNotifSubs (data) {
+  data.emailOptIns = data.emailOptIns || []
+  data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
+    return {
+      notifType: 'email',
+      subKey: subKey,
+      status: data.emailOptIns.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
+    }
+  })
+  return data
+}
+
 function validateAccountData (data, exclude) {
   exclude = exclude || {};
   var errors = [];
@@ -61,17 +73,8 @@ function saveAccountNotifSubs (e) {
   e.preventDefault()
   var form = e.target
   var data = formToObject(form)
-  data = fixFormDataIndexes(data, ['emailOptIns'])
-
-  data.emailOptIns = data.emailOptIns || []
-  data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
-    return {
-      notifType: 'email',
-      subKey: subKey,
-      status: data.emailOptIns.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
-    }
-  })
-
+  data = transformSubmittedAccountData(data)
+  data = transformSubmittedNotifSubs(data)
   updateSelfNotifSubs(data.notifSubs, function (err, result) {
     if (err) {
       return toasty(new Error(err))

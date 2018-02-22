@@ -111,7 +111,7 @@ function enableFacebookSignin (e, el) {
 function signUpSocial (e, el) {
   var data = getTargetDataSet(el)
   var where = data.submitWhere
-  signUpAt(e, el, where)
+  signUpAt(data, where)
 }
 
 function signUpGoogle (opts, found) {

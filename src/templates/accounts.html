@@ -342,13 +342,15 @@
         <div class="flex sign-split">
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Email</h2>
-                <table class="form mobile" data-set="credentials" trigger-target="signUp">
-                    {{>signup-fields}}
-                </table>
-                <div class="button-group">
-                    <button class="button--cta button--full" action="submitSignUp" trigger="signUp" data-set-target="credentials">Sign Up</button>
-                    or <a href="/signin?redirect={{redirectTo}}">sign in</a>
-                </div>
+                <form onsubmit="submitSignUp(event)">
+                    <table class="form mobile">
+                        {{>signup-fields}}
+                    </table>
+                    <div class="button-group">
+                        <button class="button--cta button--full">Sign Up</button>
+                        or <a href="/signin?redirect={{redirectTo}}">sign in</a>
+                    </div>
+                </form>
             </div>
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Social</h2>
@@ -623,13 +625,8 @@
                 </form>
                 <hr class="mt-4 mb-4" />
                 <form onsubmit="saveAccountNotifSubs(event)">
-                    <table class="form mobile">
-                        <tr>
-                            <th valign="top">Email me about</th>
-                            <td source="$endpoint/self/notif-subs" template="account-notif-subs">
-                            </td>
-                        </tr>
-                    </table>
+                    <h2>Email Me About</h2>
+                    <div source="$endpoint/self/notif-subs" template="account-notif-subs"></div>
                     <div class="button-group button-group--margin">
                         <button class="button--cta button--full">
                             Save
@@ -725,11 +722,13 @@
                         </option>
                         {{/downloadOptions}}
                     </select>
-                    <span class="note">
-                    See more about MP3 quality
-                    <a href="http://wiki.hydrogenaud.io/index.php?title=LAME#Recommended_encoder_settings"
-                       target="_blank">here</a>.
-                    </span>
+                    <div class="mt-1">
+                        <span class="note">
+                        See more about MP3 quality
+                        <a href="http://wiki.hydrogenaud.io/index.php?title=LAME#Recommended_encoder_settings"
+                           target="_blank">here</a>.
+                        </span>
+                    </div>
                 </td>
             </tr>
             <tr>

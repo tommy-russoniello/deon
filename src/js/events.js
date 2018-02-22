@@ -196,7 +196,7 @@ function signUpForEventEmail (e, el) {
   if(data.email && data.email.length > 0) {
     qs.email = data.email
   }
-  qs.promotions = 1
+  qs.events = 1
   return go('/sign-up?' + objectToQueryString(qs))
 }
 
