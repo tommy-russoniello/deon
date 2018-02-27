@@ -805,17 +805,34 @@ function transformWebsiteDetails (wd) {
 /* Transform Methods */
 
 function transformHome (obj) {
-  var results = obj.results.map(mapRelease).filter(function (i) {
-    return i.type != "Podcast"
-  })
-  results.sort(sortRelease)
+  var tracks = []
+  var prevRelease = null
+  var releaseTracks = {}
+  console.log('transformHome', obj);
+
+  //Build releases from the returne tracks
+  var releases = obj.results.reduce(function (list, track)  {
+    var releaseId = track.release._id
+    if (releaseId != prevRelease) {
+      list.push(mapRelease(track.release))
+    }
+
+    releaseTracks[releaseId] = releaseTracks[releaseId] || []
+    releaseTracks[releaseId].push(track)
+
+    prevRelease = releaseId
+
+    return list
+  }, [])
+
+  releases.sort(sortRelease)
 
   obj.featuredRelease = false
   obj.earlyRelease = false
 
   var firstEarly = false
   var todayReleaseDate = formatDate(new Date())
-  obj.releases = results.reduce(function (list, release, index) {
+  obj.releases = releases.reduce(function (list, release, index) {
     //We always try to make the first release be the featured one
     //if the second release is TODAY's release it'll be moved on the next iteration
     if (index == 0) {
@@ -838,6 +855,21 @@ function transformHome (obj) {
     }
     return list
   }, [])
+
+  //Build the list of tracks based on the order of the releases
+  if (obj.earlyRelease) {
+    tracks = tracks.concat(releaseTracks[obj.earlyRelease._id])
+  }
+
+  tracks = tracks.concat(releaseTracks[obj.featuredRelease._id])
+
+  obj.releases.forEach(function (release) {
+    tracks = tracks.concat(releaseTracks[release._id])
+  })
+
+  obj.tracks = tracks
+
+  console.log('obj.tracks',obj.tracks);
 
   obj.hasGoldAccess = hasGoldAccess()
   if (obj.hasGoldAccess) {

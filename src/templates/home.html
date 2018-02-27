@@ -2,11 +2,8 @@
         route="^(\?.*)?$"
         page-title="Monstercat">
     <div role="home-featured">
-        <div source="$endpoint/catalog/release?limit=15" template="home-featured"></div>
+        <div source="$endpoint/catalog/browse?types=Single,EP,Album&sort=date&limit=50" template="home-featured"></div>
     </div>
-    <tracks>
-        {{>home-page-tracks}}
-    </tracks>
     <div source="https://shop.monstercat.com/collections/website-featured/products.json" template="home-merch"></div>
     <div source="$endpoint/catalog/release?filters=type,Podcast&limit=8" template="home-podcast"></div>
     {{>spotify-and-social}}
@@ -23,10 +20,9 @@
     <p>{{message}}</p>
     {{/error}}
     {{#data}}
-    <div style="dispxlay: none;"
-        source="$endpoint/catalog/browse?types=Single,EP,Album"
-        template="home-page-tracks">
-    </div>
+        <div style="display: none;">
+            {{>home-page-tracks}}
+        </div>
     <div class="top-banner">
         {{#featuredRelease}}
         <div class="banner banner--scaled">
@@ -164,16 +160,11 @@
 </script>
 
 <script type="text/template"
-        template-name="home-page-tracks"
-        transform="transformHomeTracks"
+        mustache-name="home-page-tracks"
         >
-{{#data}}
-    <div>Length: {{results.length}}</div>
-    {{#results}}
-        <br />{{>playSong}} / {{release.title}} / {{title}}
-
-    {{/results}}
-{{/data}}
+{{#tracks}}
+{{>playSong}} / {{release.title}} / {{title}}
+{{/tracks}}
 </script>
 
 <script type="text/template"
