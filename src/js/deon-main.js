@@ -808,7 +808,8 @@ function transformHome (obj) {
   var tracks = []
   var prevRelease = null
   var releaseTracks = {}
-  console.log('transformHome', obj);
+
+  //TESTING
 
   //Build releases from the returne tracks
   var releases = obj.results.reduce(function (list, track)  {
@@ -818,14 +819,19 @@ function transformHome (obj) {
     }
 
     releaseTracks[releaseId] = releaseTracks[releaseId] || []
-    releaseTracks[releaseId].push(track)
+    releaseTracks[releaseId].push(mapTrack(track))
 
     prevRelease = releaseId
 
     return list
   }, [])
 
+  releases = releases.map(mapRelease)
   releases.sort(sortRelease)
+
+  console.log('releases',releases);
+  releases[0].inEarlyAccess = true
+
 
   obj.featuredRelease = false
   obj.earlyRelease = false
@@ -833,6 +839,8 @@ function transformHome (obj) {
   var firstEarly = false
   var todayReleaseDate = formatDate(new Date())
   obj.releases = releases.reduce(function (list, release, index) {
+    console.log('index',index);
+    console.log('release.inEarlyAccess',release.inEarlyAccess);
     //We always try to make the first release be the featured one
     //if the second release is TODAY's release it'll be moved on the next iteration
     if (index == 0) {
