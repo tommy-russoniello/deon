@@ -4,6 +4,9 @@
     <div role="home-featured">
         <div source="$endpoint/catalog/release?limit=15" template="home-featured"></div>
     </div>
+    <tracks>
+        {{>home-page-tracks}}
+    </tracks>
     <div source="https://shop.monstercat.com/collections/website-featured/products.json" template="home-merch"></div>
     <div source="$endpoint/catalog/release?filters=type,Podcast&limit=8" template="home-podcast"></div>
     {{>spotify-and-social}}
@@ -20,8 +23,12 @@
     <p>{{message}}</p>
     {{/error}}
     {{#data}}
+    <div style="dispxlay: none;"
+        source="$endpoint/catalog/browse?types=Single,EP,Album"
+        template="home-page-tracks">
+    </div>
     <div class="top-banner">
-        {{#featured}}
+        {{#featuredRelease}}
         <div class="banner banner--scaled">
             <div class="banner" style='background-image:url("{{coverBig}}")'>
                 <div class="banner-shade"></div>
@@ -78,7 +85,53 @@
                 {{/inEarlyAccess}}
             </div>
         </div>
-        {{/featured}}
+        {{/featuredRelease}}
+        {{#earlyRelease}}
+            <div class="container flex">
+                <div class="col-xs-12 col-sm-12 col-md-4 featured-artwork">
+                    <a class="silent" href="/release/{{catalogId}}">
+                        <img class="shadow responsive" src="{{cover}}"/>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 cl-white featured-details">
+                    <span class="tag">Early Access</span>
+                    <a class="silent no-hover" href="/release/{{catalogId}}">
+                        <h2 class="title uppercase">{{title}}</h2>
+                    </a>
+                    <h3>By {{artists}}</h3>
+                    <p class="date">
+                        {{>albumReleaseDates}}
+                    </p>
+                    {{#hasGoldAccess}}
+                        <a class="button button--cta button--icon button--icon button--home-play early-access"
+                                action="playSongsIndex"
+                                role="play-release"
+                                index="1"
+                                release-id="{{_id}}">
+                            <span class="play"><i class="fa fa-play"></i> <span>Listen Early</span></span>
+                            <span class="pause"><i class="fa fa-pause"></i> <span>Pause</span></span>
+                        </a>
+
+                        <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
+                            View
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                        <div class="early-access-message cl-white">
+                            {{goldThankYou}}
+                        </div>
+                    {{/hasGoldAccess}}
+                    {{^hasGoldAccess}}
+                    <a href="/gold" class="button button--cta button--icon">
+                        Get Gold to Listen Early
+                        <i class="fa fa-chevron-right"></i>
+                    </a>
+                    <p class="early-access-message cl-white">
+                        <a href="/gold">Monstercat Gold</a> members can stream releases 20hrs early.
+                    </p>
+                    {{/hasGoldAccess}}
+                </div>
+            </div>
+        {{/earlyRelease}}
         <div class="container latest cl-white">
             <header class="flex top-cta">
                 <div class="col-xs-6">
@@ -115,8 +168,10 @@
         transform="transformHomeTracks"
         >
 {{#data}}
+    <div>Length: {{results.length}}</div>
     {{#results}}
-        {{>playSong}}
+        <br />{{>playSong}} / {{release.title}} / {{title}}
+
     {{/results}}
 {{/data}}
 </script>
@@ -126,10 +181,6 @@
         mustache-name="home-play-button"
 >
 <input type="hidden" role="release-id" release-id="{{_id}}" />
-<div style="display: none;"
-    source="$endpoint/catalog/browse?types=Single,EP,Album"
-    template="home-page-tracks">
-</div>
 <a class="button button--cta button--icon button--icon button--home-play {{#inEarlyAccess}}early-access{{/inEarlyAccess}}"
         action="playSongs"
         role="play-release"

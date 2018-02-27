@@ -452,8 +452,8 @@
         {{#releaseDate}}Released {{releaseDate}}{{/releaseDate}}
     {{/inEarlyAccess}}
     {{#inEarlyAccess}}
-        {{#preReleaseDateObj}}Pre-Releases in <span role="countdown" class="countdown" to="{{preReleaseDateObj}}" completed="featuredReleaseCountdownEnd"></span>{{/preReleaseDateObj}}
-        {{#releaseDateObj}}Releases in <span role="countdown" class="countdown" to="{{releaseDateObj}}" completed="featuredReleaseCountdownEnd"></span>{{/releaseDateObj}}
+        {{#preReleaseDateObj}}<span class="date-label">Pre-Releases in </span><span role="countdown" class="countdown" to="{{preReleaseDateObj}}" completed="featuredReleaseCountdownEnd"></span>{{/preReleaseDateObj}}
+        {{#releaseDateObj}}<span class="date-label">Releases in </span><span role="countdown" class="countdown" to="{{releaseDateObj}}" completed="featuredReleaseCountdownEnd"></span>{{/releaseDateObj}}
     {{/inEarlyAccess}}
 </script>
 

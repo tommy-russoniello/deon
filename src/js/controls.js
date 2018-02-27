@@ -278,6 +278,12 @@ function areTracksLoaded (tracks) {
   })
 }
 
+
+function playSongsIndex (e, el) {
+  loadAndPlayTracks(parseInt(el.getAttribute('index')))
+}
+
+
 function playSongs (e, el) {
   loadAndPlayTracks()
 }
@@ -363,9 +369,14 @@ function updateControls () {
     pel.classList.toggle('fa-play', !playlistPlaying)
   }
 
-  var rel = document.querySelector(sel.playRelease)
-  if (rel) {
-    rel.classList.toggle('active', playing && isReleaseLoaded(rel.getAttribute('release-id')))
+  var rels = document.querySelectorAll(sel.playRelease)
+  if (rels) {
+    rels.forEach(function (rel) {
+      console.log('rel', rel);
+      if (rel) {
+        rel.classList.toggle('active', playing && isReleaseLoaded(rel.getAttribute('release-id')))
+      }
+    })
   }
 }
 

@@ -809,9 +809,36 @@ function transformHome (obj) {
     return i.type != "Podcast"
   })
   results.sort(sortRelease)
-  obj.featured = results.shift()
-  obj.releases = results
-  obj.releases.length = 8
+
+  obj.featuredRelease = false
+  obj.earlyRelease = false
+
+  var firstEarly = false
+  var todayReleaseDate = formatDate(new Date())
+  obj.releases = results.reduce(function (list, release, index) {
+    //We always try to make the first release be the featured one
+    //if the second release is TODAY's release it'll be moved on the next iteration
+    if (index == 0) {
+      firstEarly = release.inEarlyAccess
+      obj.featuredRelease = release
+    }
+    else if (index == 1 && firstEarly) {
+      //If the second release is today's release
+      if (formatDate(release.releaseDate) == todayReleaseDate || formatDate(release.preReleaseDate) == todayReleaseDate) {
+        obj.featuredRelease = release
+        obj.earlyRelease = results[0]
+        list.push(release)
+      }
+      else {
+        list.push(release)
+      }
+    }
+    else if (list.length < 8) {
+      list.push(release)
+    }
+    return list
+  }, [])
+
   obj.hasGoldAccess = hasGoldAccess()
   if (obj.hasGoldAccess) {
     var thankyous = ['Thanks for being Gold, ' + getSessionName() + '.',
@@ -826,7 +853,9 @@ function transformHome (obj) {
 function transformHomeTracks (obj, done) {
   obj = obj || {}
   transformTracks(obj.results, function (err, data) {
-    done(err, data);
+    done(err, {
+      results: data
+    });
   });
 }
 

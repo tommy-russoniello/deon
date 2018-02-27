@@ -30,6 +30,13 @@
   color: #000;
 }
 
+.home-early-access {
+  padding: 0.5em;
+  /*
+  background: rgba(255, 255, 255, 0.1);
+  */
+}
+
 .early-access-message {
   margin-top: 0.5em;
 }
@@ -94,7 +101,8 @@ p.date{
   color: #aaa;
 }
 
-h1.title {
+h1.title,
+h2.title {
   margin: 1rem 0 .35rem;
 }
 
@@ -470,4 +478,32 @@ ul.social-grid {
   #home-instinct-uncaged {
     height: 200px;
   }
+}
+
+.top-banner .home-featured-release.featured-details {
+  align-self: auto;
+}
+
+@media screen and (min-width: 769px) {
+  .home-early-access .tag {
+    font-size: 0.8rem;
+  }
+
+  .home-early-access a.cover {
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .home-early-access a.cover img {
+  }
+
+  .home-early-access .countdown {
+    line-height: 1em;
+  }
+
+  .home-early-access .date-label {
+    display: block;
+  }
+
 }
