@@ -280,7 +280,8 @@ function areTracksLoaded (tracks) {
 
 
 function playSongsIndex (e, el) {
-  loadAndPlayTracks(parseInt(el.getAttribute('index')))
+  var index = parseInt(el.getAttribute('index'))
+  loadAndPlayTracks(index)
 }
 
 
@@ -344,6 +345,7 @@ function updateControls () {
 
   var playing = player.playing || player.loading
   var item = player.items[player.index]
+  var itemReleaseId = item.releaseId
   var selector = '[role="play-song"][play-link="' + (item ? item.source : '') + '"]'
 
   var allMatches = document.querySelectorAll(selector)
@@ -370,11 +372,13 @@ function updateControls () {
   }
 
   var rels = document.querySelectorAll(sel.playRelease)
+  var itemCopy = Object.assign({}, item)
   if (rels) {
     rels.forEach(function (rel) {
-      console.log('rel', rel);
+      var buttonId = rel.getAttribute('release-id')
+      var releasePlaying = buttonId == itemCopy.releaseId
       if (rel) {
-        rel.classList.toggle('active', playing && isReleaseLoaded(rel.getAttribute('release-id')))
+        rel.classList.toggle('active', playing && releasePlaying)
       }
     })
   }
@@ -382,6 +386,10 @@ function updateControls () {
 
 function isPlaylistLoaded (id) {
   return player.items.length && player.items[0].playlistId == id
+}
+
+function isReleasePlaying (id) {
+  return player.items[player.index].releaseId = id
 }
 
 function isReleaseLoaded (id) {

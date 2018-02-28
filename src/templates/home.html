@@ -2,7 +2,7 @@
         route="^(\?.*)?$"
         page-title="Monstercat">
     <div role="home-featured">
-        <div source="$endpoint/catalog/browse?types=Single,EP,Album&sort=date&limit=50" template="home-featured"></div>
+        <div source="$endpoint/catalog/browse?types=Single,EP,Album&sort=date&limit=40" template="home-featured"></div>
     </div>
     <div source="https://shop.monstercat.com/collections/website-featured/products.json" template="home-merch"></div>
     <div source="$endpoint/catalog/release?filters=type,Podcast&limit=8" template="home-podcast"></div>
@@ -14,116 +14,112 @@
         template-name="home-featured"
         transform="transformHome">
     {{#loading}}
-    {{>loading-view-black}}
+        {{>loading-view-black}}
     {{/loading}}
     {{#error}}
     <p>{{message}}</p>
     {{/error}}
     {{#data}}
-        <div style="">
-            {{>home-page-tracks}}
-        </div>
-    <div class="top-banner">
-        {{#featuredRelease}}
-        <div class="banner banner--scaled">
-            <div class="banner" style='background-image:url("{{coverBig}}")'>
-                <div class="banner-shade"></div>
-                <div class="gradient"></div>
-            </div>
-        </div>
-        <div class="container flex">
-            <div class="col-xs-12 col-sm-12 col-md-4 featured-artwork">
-                <a class="silent" href="/release/{{catalogId}}">
-                    <img class="shadow responsive" src="{{coverBig}}"/>
-                </a>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-8 cl-white featured-details">
-                <span class="tag">Featured</span>
-                <a class="silent no-hover" href="/release/{{catalogId}}">
-                    <h1 class="title uppercase">{{title}}</h1>
-                </a>
-                <h3>By {{artists}}</h3>
-                <p class="date">
-                    {{>albumReleaseDates}}
-                </p>
-                {{>home-play-button}}
-                <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
-                    View
-                    <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-        </div>
-        {{/featuredRelease}}
-        {{#earlyRelease}}
-            <div class="home-early-release">
-                <a class="silent" href="/release/{{catalogId}}">
-                    <img class="shadow responsive" src="{{cover}}"/>
-                </a>
-                <a class="silent no-hover" href="/release/{{catalogId}}">
-                    <h2 class="title uppercase">{{title}}</h2>
-                </a>
-                <h3>By {{artists}}</h3>
-                <p class="date">
-                    {{>albumReleaseDates}}
-                </p>
-                {{#hasGoldAccess}}
-                    <a class="button button--cta button--icon button--icon button--home-play early-access"
-                            action="playSongsIndex"
-                            role="play-release"
-                            index="1"
-                            release-id="{{_id}}">
-                        <span class="play"><i class="fa fa-play"></i> <span>Listen Early</span></span>
-                        <span class="pause"><i class="fa fa-pause"></i> <span>Pause</span></span>
+        <div style="display: none;">{{>home-page-tracks}}</div>
+        <div class="top-banner">
+            {{#earlyRelease}}
+                <div class="home-early-release cl-white">
+                    <a class="silent cover" href="/release/{{catalogId}}">
+                        <img class="shadow responsive" src="{{coverSmall}}"/>
                     </a>
+                    <h2 class="uppercase"><a class="silent no-hover" href="/release/{{catalogId}}">{{title}}</a></h2>
+                    <h3>By {{artists}}</h3>
+                    <p class="date">
+                        {{>albumReleaseDates}}
+                    </p>
+                    {{#hasGoldAccess}}
+                        <a class="button button--cta button--icon button--icon button--home-play early-access"
+                                action="playSongsIndex"
+                                role="play-release"
+                                index="0"
+                                release-id="{{_id}}">
+                            <span class="play"><i class="fa fa-play"></i> <span>Listen Early</span></span>
+                            <span class="pause"><i class="fa fa-pause"></i> <span>Pause</span></span>
+                        </a>
 
-                    <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
-                        View
+                        <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
+                            View
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                        <div class="early-access-message cl-white">
+                            {{goldThankYou}}
+                        </div>
+                    {{/hasGoldAccess}}
+                    {{^hasGoldAccess}}
+                    <a href="/gold" class="button button--cta button--icon">
+                        Get Gold to Listen Early
                         <i class="fa fa-chevron-right"></i>
                     </a>
-                    <div class="early-access-message cl-white">
-                        {{goldThankYou}}
+                    <p class="early-access-message cl-white">
+                        <a href="/gold">Monstercat Gold</a> members can stream releases 20hrs early.
+                    </p>
+                    {{/hasGoldAccess}}
+                </div>
+            {{/earlyRelease}}
+            {{#featuredRelease}}
+                <div class="banner banner--scaled">
+                    <div class="banner" style='background-image:url("{{coverBig}}")'>
+                        <div class="banner-shade"></div>
+                        <div class="gradient"></div>
                     </div>
-                {{/hasGoldAccess}}
-                {{^hasGoldAccess}}
-                <a href="/gold" class="button button--cta button--icon">
-                    Get Gold to Listen Early
-                    <i class="fa fa-chevron-right"></i>
-                </a>
-                <p class="early-access-message cl-white">
-                    <a href="/gold">Monstercat Gold</a> members can stream releases 20hrs early.
-                </p>
-                {{/hasGoldAccess}}
                 </div>
+                <div class="container flex">
+                    <div class="col-xs-12 col-sm-12 col-md-4 featured-artwork">
+                        <a class="silent" href="/release/{{catalogId}}">
+                            <img class="shadow responsive" src="{{coverBig}}"/>
+                        </a>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-8 cl-white featured-details">
+                        <span class="tag">Featured</span>
+                        <a class="silent no-hover" href="/release/{{catalogId}}">
+                            <h1 class="title uppercase">{{title}}</h1>
+                        </a>
+                        <h3>By {{artists}}</h3>
+                        <p class="date">
+                            {{>albumReleaseDates}}
+                        </p>
+                        {{>home-play-button}}
+                        <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
+                            View
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            {{/featuredRelease}}
+
+            <div class="container latest cl-white">
+                <header class="flex top-cta">
+                    <div class="col-xs-6">
+                        <h2 class="line-top">New Releases</h2>
+                    </div>
+                    <div class="col-xs-6 text right">
+                        <a href="/music" class="button button--icon button--transparent">
+                            View all
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </header>
+                <ul class="art-list art-list--full-width">
+                    {{#releases}}
+                        {{>release-list-item}}
+                    {{/releases}}
+                </ul>
             </div>
-        {{/earlyRelease}}
-        <div class="container latest cl-white">
-            <header class="flex top-cta">
-                <div class="col-xs-6">
-                    <h2 class="line-top">New Releases</h2>
-                </div>
-                <div class="col-xs-6 text right">
-                    <a href="/music" class="button button--icon button--transparent">
-                        View all
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                </div>
-            </header>
-            <ul class="art-list art-list--full-width">
-                {{#releases}}
-                    {{>release-list-item}}
-                {{/releases}}
-            </ul>
         </div>
-    </div>
-    <div class="hero cl-white">
-        <div class="banner" style="background-image:url(/img/banner.jpg)">
-            <div class="banner-shade"></div>
-            <div class="gradient gradient--inverted"></div>
+        <div class="hero cl-white">
+            <div class="banner" style="background-image:url(/img/banner.jpg)">
+                <div class="banner-shade"></div>
+                <div class="gradient gradient--inverted"></div>
+            </div>
+            <div class="container">
+                <h1 class="line-bottom">Empowering a creative and passionate community through innovation.</h1>
+            </div>
         </div>
-        <div class="container">
-            <h1 class="line-bottom">Empowering a creative and passionate community through innovation.</h1>
-        </div>
-    </div>
     {{/data}}
 </script>
 
@@ -131,7 +127,7 @@
         mustache-name="home-page-tracks"
         >
 {{#tracks}}
-{{>playSong}} / {{release.title}} / {{title}}
+    {{>playSong}}
 {{/tracks}}
 </script>
 
@@ -139,12 +135,12 @@
         template-name="home-play-button"
         mustache-name="home-play-button"
 >
-<input type="hidden" role="release-id" release-id="{{_id}}" />
-<a class="button button--cta button--icon button--icon button--home-play {{#inEarlyAccess}}early-access{{/inEarlyAccess}}"
-        action="playSongs"
+<a class="button button--cta button--icon button--icon button--home-play"
+        action="playSongsIndex"
         role="play-release"
+        index="{{featuredPlayIndex}}"
         release-id="{{_id}}">
-    <span class="play"><i class="fa fa-play"></i> <span>{{#inEarlyAccess}}Listen Early{{/inEarlyAccess}}{{^inEarlyAccess}}Play{{/inEarlyAccess}}</span></span>
+    <span class="play"><i class="fa fa-play"></i> <span>Play</span></span>
     <span class="pause"><i class="fa fa-pause"></i> <span>Pause</span></span>
 </a>
 </script>

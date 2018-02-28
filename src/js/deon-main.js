@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
       if (testEl) {
         var testName = testEl.getAttribute("ab-test")
         var test = window[testName]
-        console.log('test',test);
         if (test) {
           var kpi = testEl.getAttribute('kpi');
           if (kpi) {
@@ -754,6 +753,7 @@ function mapRelease (release) {
   }
   release.artists = release.renderedArtists
   release.cover = release.coverUrl + '?image_width=512';
+  release.coverSmall = release.coverUrl + '?image_width=256';
   release.coverBig = release.coverUrl + '?image_width=1024';
   if (release.urls instanceof Array) {
     release.originalUrls = release.urls.reduce(function (urls, link) {
@@ -804,18 +804,28 @@ function transformWebsiteDetails (wd) {
 
 /* Transform Methods */
 
-function transformHome (obj) {
+function transformHome (obj, done) {
   var tracks = []
   var prevRelease = null
   var releaseTracks = {}
+  var scope = {}
 
-  //TESTING
+  //For testing
+  if (window.location.hash.indexOf('early') != -1) {
+    obj.results[0].inEarlyAccess = true
+  }
 
-  //Build releases from the returne tracks
-  var releases = obj.results.reduce(function (list, track)  {
+  //Build releases from the returned tracks
+  var releases = obj.results.reduce(function (list, track, index)  {
     var releaseId = track.release._id
     if (releaseId != prevRelease) {
-      list.push(mapRelease(track.release))
+      var release = mapRelease(track.release)
+      release.inEarlyAccess = track.inEarlyAccess
+      list.push(release)
+    }
+    //If we are on the same release as prev track and this track is early
+    else if (track.inEarlyAccess) {
+      list[list.length-1].inEarlyAccess = true
     }
 
     releaseTracks[releaseId] = releaseTracks[releaseId] || []
@@ -829,65 +839,69 @@ function transformHome (obj) {
   releases = releases.map(mapRelease)
   releases.sort(sortRelease)
 
-  console.log('releases',releases);
-  releases[0].inEarlyAccess = true
+  scope.featuredRelease = false
+  scope.earlyRelease = false
 
-
-  obj.featuredRelease = false
-  obj.earlyRelease = false
-
-  var firstEarly = false
-  var todayReleaseDate = formatDate(new Date())
-  obj.releases = releases.reduce(function (list, release, index) {
-    console.log('index',index);
-    console.log('release.inEarlyAccess',release.inEarlyAccess);
-    //We always try to make the first release be the featured one
-    //if the second release is TODAY's release it'll be moved on the next iteration
-    if (index == 0) {
-      firstEarly = release.inEarlyAccess
-      obj.featuredRelease = release
-    }
-    else if (index == 1 && firstEarly) {
-      //If the second release is today's release
-      if (formatDate(release.releaseDate) == todayReleaseDate || formatDate(release.preReleaseDate) == todayReleaseDate) {
-        obj.featuredRelease = release
-        obj.earlyRelease = results[0]
-        list.push(release)
+  scope.releases = releases.reduce(function (list, release, index) {
+    if (list.length < 8) {
+      if (!scope.featuredRelease && !release.inEarlyAccess) {
+        scope.featuredRelease = release
+      }
+      else if (!scope.earlyRelease && release.inEarlyAccess) {
+        scope.earlyRelease = release
       }
       else {
         list.push(release)
       }
     }
-    else if (list.length < 8) {
-      list.push(release)
-    }
     return list
   }, [])
 
+
   //Build the list of tracks based on the order of the releases
-  if (obj.earlyRelease) {
-    tracks = tracks.concat(releaseTracks[obj.earlyRelease._id])
+  if (scope.earlyRelease) {
+    tracks = tracks.concat(releaseTracks[scope.earlyRelease._id])
+    scope.featuredPlayIndex = releaseTracks[scope.earlyRelease._id].length
+  }
+  else {
+    scope.featuredPlayIndex = 0
   }
 
-  tracks = tracks.concat(releaseTracks[obj.featuredRelease._id])
+  tracks = tracks.concat(releaseTracks[scope.featuredRelease._id])
 
-  obj.releases.forEach(function (release) {
+  scope.releases.forEach(function (release) {
     tracks = tracks.concat(releaseTracks[release._id])
   })
 
-  obj.tracks = tracks
+  scope.tracks = tracks.map(function (track, index) {
+    track.index = index
+    return track
+  })
 
-  console.log('obj.tracks',obj.tracks);
-
-  obj.hasGoldAccess = hasGoldAccess()
-  if (obj.hasGoldAccess) {
+  scope.hasGoldAccess = hasGoldAccess()
+  if (scope.hasGoldAccess) {
     var thankyous = ['Thanks for being Gold, ' + getSessionName() + '.',
     'Stay golden, ' + getSessionName() + '.',
     "Here's an early taste for you, " + getSessionName() + '.',
     'Enjoy the early music, ' + getSessionName() + ' ;)']
-    obj.goldThankYou = thankyous[randomChooser(thankyous.length)-1]
+    scope.goldThankYou = thankyous[randomChooser(thankyous.length)-1]
   }
-  return obj
+
+  //The page gets stuck on loading unless I explicitly use these fields
+  //I'm not sure which field I'm not including here is causing the issue
+  if (scope.earlyRelease) {
+    scope.earlyRelease = {
+      _id: scope.earlyRelease._id,
+      title: scope.earlyRelease.title,
+      catalogId: scope.earlyRelease.catalogId,
+      artists: scope.earlyRelease.artists,
+      releaseDate: scope.earlyRelease.releaseDate,
+      preReleaseDate: scope.earlyRelease.preReleaseDate,
+      coverSmall: scope.earlyRelease.coverSmall
+    }
+  }
+  done(null, scope)
+  //return scope
 }
 
 function transformHomeTracks (obj, done) {

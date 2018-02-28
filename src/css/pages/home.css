@@ -30,11 +30,25 @@
   color: #000;
 }
 
-.home-early-access {
-  padding: 0.5em;
-  /*
-  background: rgba(255, 255, 255, 0.1);
-  */
+.home-early-release {
+  padding: 1em;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.home-early-release h2 {
+  margin: 0;
+}
+
+.home-early-release .cover {
+  display: none;
+
+  width: 60px;
+  height: 60px;
+  float: left;
+  margin-right: 5px;
 }
 
 .early-access-message {
