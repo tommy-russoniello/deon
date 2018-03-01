@@ -242,10 +242,14 @@ function transformSignUp () {
   }
 
   if(qo.promotions || qo.location) {
-    obj.emailOptIns = {
-      events: true
+    obj.notifSubs = {
+      events: {
+        checked: true
+      }
     }
   }
+
+  obj.notifSubsList = getNotifSubsList(obj.notifSubs)
 
   return obj
 }

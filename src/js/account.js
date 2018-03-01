@@ -1,5 +1,5 @@
 function transformSubmittedAccountData (data) {
-  data = fixFormDataIndexes(data, ['emailOptIns'])
+  data = fixFormDataIndexes(data, ['notifSubs'])
   var str = data.birthday_year + '-' + data.birthday_month + '-' + data.birthday_day;
   if (!data.birthday_year || data.birthday_year <= 1900) {
     data.birthday = null;
@@ -14,12 +14,14 @@ function transformSubmittedAccountData (data) {
 }
 
 function transformSubmittedNotifSubs (data) {
-  data.emailOptIns = data.emailOptIns || []
+  console.log('data',data);
+  var checkedSubs = data.notifSubs
+  console.log('checkedSubs',checkedSubs);
   data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
     return {
       notifType: 'email',
       subKey: subKey,
-      status: data.emailOptIns.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
+      status: checkedSubs.indexOf(subKey) >= 0 ? 'subscribed' : 'unsubscribed'
     }
   })
   return data
@@ -257,7 +259,7 @@ function completedAccountGold () {
   startCountdownTicks();
 }
 
-function transformEmailOptins (optinsArray) {
+function transformNotifSubs (optinsArray) {
   if (!optinsArray) return {}
   return optinsArray.reduce(function (atlas, value) {
     atlas[value.type] = value.in
@@ -314,11 +316,44 @@ function transformAccountSettings (obj) {
   return obj
 }
 
+function getNotifSubsList (notifSubs) {
+  notifSubs = notifSubs || {}
+
+  var list = [{
+      subKey: 'news',
+      label: 'Monstercat News'
+    },{
+      subKey: 'merch',
+      label: 'Shop Discounts &amp; Promotions'
+    }, {
+      subKey: 'events',
+      label: 'Official Monstercat Events'
+    }
+  ]
+
+  list = list.map(function (item) {
+    var data = notifSubs[item.subKey] || {}
+    item.checked = !!data.checked
+    item.pending = !!data.pending
+    item.requireConfirmation = !!data.requireConfirmation
+    return item
+  })
+
+  return list
+}
+
 function transformAccountNotifSubs (obj) {
-  obj.emailOptIns = obj.results.reduce(function (map, sub) {
-    map[sub.subKey] = sub.status == 'subscribed'
+  obj.notifSubs = obj.results.reduce(function (map, sub) {
+    map[sub.subKey] = {
+      checked: sub.status == 'subscribed' || sub.status == 'pending',
+      pending: sub.status == 'pending',
+      requireConfirmation: sub.requireConfirmation
+    }
     return map
   }, {});
+
+  obj.notifSubsList = getNotifSubsList(obj.notifSubs)
+
   return obj
 }
 

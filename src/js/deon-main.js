@@ -147,7 +147,7 @@ function hasCompletedProfile () {
     return false
   }
   var user = session.user;
-  return !(!user.birthday || !user.emailOptIns || user.emailOptIns.length < 3 || !user.geoLocation);
+  return !(!user.birthday || !user.geoLocation);
 }
 
 function isLegacyUser () {

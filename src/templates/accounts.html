@@ -821,9 +821,9 @@
         <tr>
             <th valign="top">Email me about</th>
             <td>
-                {{>account-email-optin-news}}
-                {{>account-email-optin-events}}
-                {{>account-email-optin-merch}}
+                {{#notifSubsList}}
+                    {{>notif-sub-checkbox}}
+                {{/notifSubsList}}
             </td>
         </tr>
     </tbody>
@@ -837,37 +837,27 @@
             Important service updates
         </label>
     </div>
-    {{>account-email-optin-news}}
-    {{>account-email-optin-events}}
-    {{>account-email-optin-merch}}
+    {{#notifSubsList}}
+        {{>notif-sub-checkbox}}
+    {{/notifSubsList}}
 </script>
 
 <script type="text/template"
-        mustache-name="account-email-optin-news">
+        mustache-name="notif-sub-checkbox">
 <div class="checkbox email-optin-checkbox">
     <label>
-        <input type="checkbox" name="emailOptIns[news]"{{#emailOptIns.news}} checked="checked"{{/emailOptIns.news}} value="1" />
-        Monstercat News
-    </label>
-</div>
-</script>
-
-<script type="text/template"
-        mustache-name="account-email-optin-merch">
-<div class="checkbox email-optin-checkbox">
-    <label>
-        <input type="checkbox" name="emailOptIns[merch]"{{#emailOptIns.merch}} checked="checked"{{/emailOptIns.merch}} value="1" />
-        Shop Discounts &amp; Promotions
-    </label>
-</div>
-</script>
-
-<script type="text/template"
-        mustache-name="account-email-optin-events">
-<div class="checkbox email-optin-checkbox">
-    <label>
-        <input type="checkbox" name="emailOptIns[events]"{{#emailOptIns.events}} checked="checked"{{/emailOptIns.events}} value="1" />
-        Official Monstercat Events
+        <input type="checkbox"
+            name="notifSubs[{{subKey}}]"
+            {{#checked}} checked="checked"{{/checked}}
+            {{#pending}} disabled {{/pending}}
+            value="1" />
+        {{{label}}}
+        {{#pending}}<strong>Confirmation email sent</strong>{{/pending}}
+        {{^checked}}
+            {{#requireConfirmation}}
+                <em>Resub confirmation required</em>
+            {{/requireConfirmation}}
+        {{/checked}}
     </label>
 </div>
 </script>

@@ -192,11 +192,9 @@ function submitCompleteProfile (e) {
 
 function clickCompleteProfile (e) {
   var obj = {}
-  var numEmailOptins = 3 //How many optin lists we maintain
 
   obj.sections = {
     birthday: !session.user.birthday,
-    emails: !session.user.emailOptIns || session.user.emailOptIns.length < numEmailOptins,
     location: !session.user.geoLocation
   }
   openModal('complete-profile-modal', obj)

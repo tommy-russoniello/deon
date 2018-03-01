@@ -137,27 +137,9 @@ function transformEventsPage (obj) {
 function transformEventsEmailOptin (obj) {
   obj.isSignedIn = isSignedIn()
   if (obj.isSignedIn) {
-    obj.emailOptIns = transformEmailOptins(obj.emailOptIns)
-    obj.fullyOptedIn = obj.emailOptIns.events && !isLegacyLocation()
-
-    //Legacy Location
-    //delete obj.googleMapsPlaceId
-    //obj.location = "Canada"
-
-    //New Location
-    //obj.location = "Canada"
-    //obj.googleMapsPlaceId = "ChIJs0-pQ_FzhlQRi_OBm-qWkbs"
-    //obj.placeName = "Vancouver"
-    //obj.placeNameFull = "Vancouver, BC, Canada"
-
-    //Has Opted In
-    //obj.emailOptIns = {eventsNearMe: true}
-
-    //Has Opted Out
-    //obj.emailOptIns = {eventsNearMe: false}
-
-    //Hasn't opted in or out
-    //obj.emailOptIns = {}
+    console.log('obj',obj);
+    obj.notifSubs = transformNotifSubs(obj.notifSubs)
+    obj.fullyOptedIn = obj.notifSubs.events.checked && !isLegacyLocation()
   }
   return obj
 }
