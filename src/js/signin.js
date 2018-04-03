@@ -151,7 +151,7 @@ function signUpAt (data, where) {
   signUp(data, where, function (err, obj, xhr) {
     if (err) return toasty(new Error(err.message))
     go(getRedirectTo())
-  });
+  })
 }
 
 

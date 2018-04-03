@@ -14,9 +14,8 @@ function transformSubmittedAccountData (data) {
 }
 
 function transformSubmittedNotifSubs (data) {
-  console.log('data',data);
-  var checkedSubs = data.notifSubs
-  console.log('checkedSubs',checkedSubs);
+  var checkedSubs = data.notifSubs || []
+
   data.notifSubs = ['merch', 'news', 'events'].map(function (subKey) {
     return {
       notifType: 'email',
