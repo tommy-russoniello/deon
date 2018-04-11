@@ -27,38 +27,35 @@
       {{>loading}}
     {{/loading}}
     {{#data}}
-      {{#splitTestA}}
-        <div class="panel md-container licensing-content-creator-info">
-          <div class="flex">
-            <div class="licensing-box col-xs-12 col-sm-12 col-md-6">
-              <h2>How It Works</h2>
-              <p>A Monstercat Whitelist License is a monthly subscription that allows content creators to utilize the Monstercat Catalog on one of YouTube, Twitch or Mixer. Each channel will require its own license. This removes all existing and future Content ID matches allowing content creators to earn 100% of their channel advertising royalties.</p>
-              <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
-            </div>
-            <div class="flex">
-              <div class="licensing-box col-xs-12 faq col-lg-6">
-                <h2 id="faq">Frequently Asked Questions</h2>
-                <div
-                    template="markdown-bare"
-                    source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      {{/splitTestA}}
-      {{#splitTestB}}
       <div class="panel md-container licensing-content-creator-info">
         <div class="flex">
           <div class="licensing-box col-xs-12 col-sm-12 col-md-6">
             <h2>How It Works</h2>
-            <p>A Monstercat Whitelist License is a monthly subscription that allows content creators to utilize the Monstercat Catalog on one of YouTube, Twitch or Mixer. Each channel will require its own license. </p>
+            {{#splitTestControl}}
+              <h3>Thanks for your interest in using Monstercat's music!</h3>
+              <p>You can definitely use our music in your videos/streams.</p>
 
-            <h3>Keep 100% of the Monetization</h3>
-            <p>A Whitelist license removes all existing and future Content ID matches allowing content creators to keep all of their channel advertising revenue.</p>
+              <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. <strong>Don't worry!</strong> These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
 
-            <h3>Support the Artists</h3>
-            <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
+              <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
+
+              <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
+            {{/splitTestControl}}
+            {{#splitTestHeaders}}
+              <h3>Thanks for your interest in using Monstercat's music!</h3>
+              <p>You can definitely use our music in your videos/streams.</p>
+
+              <h3>Keep 100% of the Monetization</h3>
+              <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
+
+              <h3>No License = Copyright Claims</h3>
+              <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. Don't worry! These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
+
+              <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
+
+              <h3>Support the Artists</h3>
+              <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
+            {{/splitTestHeaders}}
 
             <div class="button-group button-group--center">
               {{>licensingContentCreatorCTAs}}
@@ -78,8 +75,6 @@
           </div>
         </div>
       </div>
-
-      {{/splitTestB}}
     {{/data}}
     <div class="panel">
       <h3>Buy a License</h3>

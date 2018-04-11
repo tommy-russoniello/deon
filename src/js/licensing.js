@@ -22,16 +22,16 @@ function transformLicensingContentCreators (obj, done) {
   obj = transformLicensing(obj)
   //Create the split test
   licensingABTest = new SplitTest({
-    name: 'licensing-ab',
+    name: 'content-creator-description',
     dontCheckStarter: true,
     modifiers: {
-      'a': function (_this) {
-        obj.splitTestA = true
-        obj.splitTestB = false
+      'control': function () {
+        obj.splitTestControl = true
+        obj.splitTestHeaders = false
       },
-      'b' : function (_this) {
-        obj.splitTestA = false
-        obj.splitTestB = true
+      'headers' : function () {
+        obj.splitTestControl = false
+        obj.splitTestHeaders = true
       }
     },
     onStarted: function () {
