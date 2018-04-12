@@ -137,7 +137,6 @@ function transformEventsPage (obj) {
 function transformEventsEmailOptin (obj) {
   obj.isSignedIn = isSignedIn()
   if (obj.isSignedIn) {
-    console.log('obj',obj);
     obj.notifSubs = transformNotifSubs(obj.notifSubs)
     obj.fullyOptedIn = obj.notifSubs.events.checked && !isLegacyLocation()
   }
