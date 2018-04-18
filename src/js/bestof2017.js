@@ -21,7 +21,7 @@ function transformBestOf2017Results (obj, done) {
   requestJSON({
     url: endpoint + '/poll/' + artistPollId + '/breakdown',
     withCredentials: true
-  }, function (err, breakdown) {
+  }, (err, breakdown) => {
     if(err) {
       return toasty(new Error(err));
     }
@@ -29,34 +29,34 @@ function transformBestOf2017Results (obj, done) {
     transformBestOf2017Results.poll = obj.poll;
 
     //Map results to the choices in the poll
-    var voteResults = breakdown.countsByIndex.map(function (votes, index) {
+    var voteResults = breakdown.countsByIndex.map((votes, index) => {
       return {
         artistId: obj.poll.choices[index],
         votes: votes
       }
     });
 
-    var artistIds = voteResults.map(function (result) {
+    var artistIds = voteResults.map((result) => {
       return result.artistId
     });
 
     requestJSON({
       url: endpoint + '/catalog/artists-by-users?ids=' + artistIds.join(','),
       withCredentials: true
-    }, function (err, result) {
+    }, (err, result) => {
       if(err) {
         return toasty(new Error(err));
       }
       var atlas = {}
-      result.results.forEach(function (result) {
+      result.results.forEach((result) => {
         atlas[result._id] = result;
       })
 
-      obj.results = voteResults.sort(function (a, b) {
+      obj.results = voteResults.sort((a, b) => {
         return a.votes > b.votes ? -1 : 1;
       })
 
-      obj.results = obj.results .map(function (result, index) {
+      obj.results = obj.results .map((result, index) => {
         result.artist = atlas[result.artistId];
         result.rank = index + 1;
         return result
@@ -173,7 +173,6 @@ function completedBestOf2017Results () {
   })
 
   window.addEventListener('popstate', function () {
-    clearTimeout(timeout);
     clearTimeout(timeoutUpdateTimeNotice);
   });
 }

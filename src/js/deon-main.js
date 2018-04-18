@@ -446,7 +446,7 @@ function getArtistTwitterMention (artist) {
   if (artist.urls) {
     var socials = getSocialsAtlas(artist.urls);
     if (socials.twitter) {
-      var username = getTwitterLinkUsername(socials.twitter);
+      var username = getTwitterLinkUsername(socials.twitter.original);
 
       if (username) {
         return username
@@ -561,7 +561,8 @@ function getSocials (linkObjs) {
   var arr = []
   var socials = linkObjs.map(function (link) {
     var social = {
-      link: link.original
+      link: link.original,
+      original: link.original
     }
 
     var platform = SOCIAL_LINKS_MAP[link.platform]
