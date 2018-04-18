@@ -101,6 +101,7 @@
                     </li>
                     {{/streamable}}
                     {{^inEarlyAccess}}
+                    {{#releaseDate}}
                     <li class="mb-1">
                         <a href="{{downloadLink}}"
                         target="_blank"
@@ -116,6 +117,7 @@
                         <i class="fa fa-cloud-download"></i>
                         </a>
                     </li>
+                    {{/releaseDate}}
                     {{/inEarlyAccess}}
                     {{#inEarlyAccess}}
                     {{^hasGoldAccess}}
