@@ -244,22 +244,57 @@ function getCookie(cname) {
  * @param {Array} a items An array containing the items.
  */
 function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
+  var j, x, i
+  for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1))
+      x = a[i]
+      a[i] = a[j]
+      a[j] = x
+  }
 }
 
-function randomChooser(n){
-  return Math.floor(Math.random() * n+1);
+function createLoadingPlaceHolder (min, max, wordMins, wordMaxs) {
+  const defaultMaxWords = 3
+  const wordMax = wordMaxs || defaultMaxWords
+  const wordMin = wordMins || 1
+
+  const placeholder = {words: []}
+  const targetLen = randomRange(min, max)
+  const wordRange = [Math.floor(min / wordMin), Math.ceil(max / wordMax)]
+  let totalLen = 0
+  let attempts = 0
+
+  do {
+    const wordLen = randomRange(wordRange[0], wordRange[1])
+
+    if (totalLen + wordLen <= targetLen) {
+      placeholder.words.push('&nbsp;'.repeat(wordLen))
+      totalLen += wordLen
+    }
+
+    attempts++
+  }
+  while (attempts < 20 && totalLen < targetLen)
+
+  return placeholder
+}
+
+function randomItemChooser (list) {
+  return list[randomChooser(list.length) - 1]
+}
+
+function randomRange (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function randomChooser (n) {
+  return Math.floor(Math.random() * n + 1)
 }
 
 function iframeHeight(){
   var iframe = document.querySelectorAll('iframe.fullpage-iframe')
-  for (var i = 0; i<iframe.length; i++){
+
+  for (var i = 0; i < iframe.length; i++){
     iframe[i].addEventListener('load', resetHeightIframes, true)
   }
 }
@@ -269,7 +304,7 @@ function resetHeightIframes(){
 }
 
 function getMonths () {
-  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']  
+  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 }
 
 function commaAnd (list, and) {

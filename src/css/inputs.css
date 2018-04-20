@@ -3,9 +3,9 @@ th.shrink, td.shrink {
   width: 1px;
 }
 
-th.nohpad, td.nohpad {
-  padding-left: 0;
-  padding-right: 0;
+.nohpad, .nohpad {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 tr:nth-child(odd) > td {

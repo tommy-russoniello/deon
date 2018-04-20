@@ -182,11 +182,11 @@
                 {{/downloadLinks}}
 
             </div>
-            <table class="drag-sortable one-line">
+            <table class="drag-sortable one-line" role="playlist-tracks">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th class="shrink nohpad"></th>
+                        <th class="shrink"></th>
+                        <th class="shrink"></th>
                         <th>Title</th>
                         <th>Release</th>
                         <th>Artist</th>
@@ -196,10 +196,47 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody role="playlist-tracks"
-                       source="$endpoint/catalog/browse/?playlistId={{_id}}"
-                       template="playlist-tracks">
+                {{#pagePlaceholders}}
+                <tbody data-placeholder-page="{{page}}">
+                    {{#tracks}}
+                    <tr data-placeholder-index="{{index}}" data-placeholder-page="{{page}}">
+                        <td class="shrink">
+                            <input  type="text"
+                                    disabled=""
+                                    value="{{number}}"
+                                    size="2" />
+                        </td>
+                        <td class="shrink">
+                            <button class="faux button--mobile" role="play-song"><i class="fa fa-play-circle"></i></button>
+                        </td>
+                        <td>
+                            {{#title}}{{>loading-placeholder}}{{/title}}
+                        </td>
+                        <td>
+                            {{#release}}{{>loading-placeholder}}{{/release}}
+                        </td>
+                        <td>
+                            {{#artists}}{{>loading-placeholder}}{{/artists}}
+                        </td>
+                        <td>
+                            {{#genre}}{{>loading-placeholder}}{{/genre}}
+                        </td>
+                        <td>
+                            <span class="loading-placeholder">Time</span>
+                        </td>
+                        <td>
+                            <span class="loading-placeholder">BPM</span>
+                        </td>
+                        <td>
+                            <span class="loading-placeholder"></span>
+                            <span class="loading-placeholder"></span>
+                            <span class="loading-placeholder"></span>
+                            <span class="loading-placeholder"></span>
+                        </td>
+                    </tr>
+                    {{/tracks}}
                 </tbody>
+                {{/pagePlaceholders}}
             </table>
         </div>
         {{/data}}
@@ -209,10 +246,7 @@
 <script type="text/template"
         template-name="playlist-tracks"
         transform="transformPlaylistTracks"
-        completed="updateControls">
-    {{#loading}}
-    {{>loading-table-view}}
-    {{/loading}}
+        completed="completedPlaylistTracks">
     {{#error}}
     <tr><td colspan="6">{{message}}</td></tr>
     {{/error}}
@@ -228,10 +262,9 @@
         ondragleave="playlistDragLeave(event)"
         ondragstart="playlistDragStart(event, '{{_id}}', '{{releaseId}}')"
         {{/edit}}>
-        <td>
+        <td class="shrink">
             {{#edit}}
             <input  type="text"
-                    action-enter="reorderPlaylistFromInputs"
                     action-enter="reorderPlaylistFromInputs"
                     onfocus="playlistTrackOrderFocus(event, this)"
                     onblur="playlistTrackOrderBlur(event, this)"
