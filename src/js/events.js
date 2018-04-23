@@ -146,7 +146,7 @@ function transformEventsEmailOptin (obj) {
 function subscribeEventsOptIn (e, el) {
   var data = getTargetDataSet(el, true, true)
   update('self', null, data, function (err, obj) {
-    if (terror(err)) {
+    if (displayError(err)) {
       return
     }
 
@@ -155,7 +155,7 @@ function subscribeEventsOptIn (e, el) {
       notifType: 'email',
       status: 'subscribed'
     }], function (err, result) {
-      if (terror(err)) {
+      if (displayError(err)) {
         return
       }
       toasty('You are now subscribed to hear about Monstercat events')

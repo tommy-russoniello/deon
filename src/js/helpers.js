@@ -350,7 +350,7 @@ function youTubeUserToChannelID (user, done) {
   })
 }
 
-function terror (err) {
+function displayError (err) {
   if (err) {
     toasty(new Error(err))
     return true
