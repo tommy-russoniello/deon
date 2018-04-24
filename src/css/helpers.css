@@ -229,6 +229,9 @@
 .text.decoration-none {
   text-decoration: none;
 }
+.text.line-through {
+  text-decoration: line-through;;
+}
 
 .pad-vertical {
   margin-top: 1em;

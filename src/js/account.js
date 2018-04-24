@@ -51,17 +51,17 @@ function saveAccount (e, el) {
   var wasLegacy = isLegacyLocation()
   var errors = validateAccountData(data);
   if (errors.length > 0) {
-    errors.forEach(function (err) {
+    errors.forEach((err) => {
       toasty(new Error(err));
     })
     return
   }
-  update('self', null, data, function (err, obj) {
+  update('self', null, data, (err, obj) => {
     if (err) return window.alert(err.message)
     toasty(strings.accountUpdated)
     document.querySelector('[name="password"]').value = ""
     resetTargetInitialValues(el, obj)
-    loadSession(function (err, obj) {
+    loadSession((err, obj) => {
       if (wasLegacy && !isLegacyLocation()) {
         reloadPage()
       }
@@ -77,7 +77,7 @@ function saveAccountNotifSubs (e) {
   data = transformSubmittedAccountData(data)
   data = transformSubmittedNotifSubs(data)
 
-  updateSelfNotifSubs(data.notifSubs, function (err, result) {
+  updateSelfNotifSubs(data.notifSubs, (err, result) => {
     if (err) {
       return toasty(new Error(err))
     }
@@ -98,8 +98,9 @@ function updateSelfNotifSubs (subs, done) {
 
 function saveAccountSettings (e, el) {
   var data = getTargetDataSet(el, false, true)
+
   if (!data) return
-  update('self/settings', null, data, function (err, obj) {
+  update('self/settings', null, data, (err, obj) => {
     if (err) return window.alert(err.message)
     toasty(strings.settingsUpdated)
     session.settings = obj
@@ -109,8 +110,9 @@ function saveAccountSettings (e, el) {
 
 function saveShopEmail (e, el) {
   var data = getTargetDataSet(el, true, true)
+
   if (!data) return
-  update('self', null, data, function (err, obj) {
+  update('self', null, data, (err, obj) => {
     if (err) return window.alert(err.message)
     toasty(strings.shopEmailUpdated)
     session.user.shopEmail = data.shopEmail
@@ -118,6 +120,7 @@ function saveShopEmail (e, el) {
 }
 function saveRedditUsername (e, el) {
   var data = getTargetDataSet(el, false, true)
+
   if (!data) {
     data = {redditUsername: null}
   }
@@ -126,7 +129,7 @@ function saveRedditUsername (e, el) {
     method: 'PUT',
     data: data,
     withCredentials: true
-  }, function (err, obj, xhr) {
+  }, (err, obj, xhr) => {
     if (err) return window.alert(err.message)
     toasty('Flair set')
     session.user.redditUsername = data.redditUsername
@@ -142,7 +145,7 @@ function enableTwoFactor (e, el) {
     method: 'PUT',
     data: data,
     withCredentials: true
-  }, function (err, obj, xhr) {
+  }, (err, obj, xhr) => {
     if (err) return window.alert(err.message)
     window.location.hash = '#two-factor'
     reloadPage()
@@ -159,7 +162,7 @@ function confirmTwoFactor (e, el) {
     method: 'PUT',
     data: data,
     withCredentials: true
-  }, function (err, obj, xhr) {
+  }, (err, obj, xhr) => {
     if (err) return window.alert(err.message)
     reloadPage()
     window.location.hash = '#two-factor'
@@ -172,7 +175,7 @@ function disableTwoFactor (e, el) {
     url: endpoint + '/self/two-factor/disable',
     method: 'PUT',
     withCredentials: true
-  }, function (err, obj, xhr) {
+  }, (err, obj, xhr) => {
     if (err) return window.alert(err.message)
     reloadPage()
     toasty(strings.twoFactorDisabled)
@@ -232,7 +235,7 @@ function transformAccountGold (o, done) {
   requestJSON({
     url: endpoint + '/self',
     withCredentials: true
-  }, function (err, selfResult) {
+  }, (err, selfResult) => {
     if (err) {
       return done(err);
     }
@@ -243,7 +246,7 @@ function transformAccountGold (o, done) {
       return done(null, obj);
     }
 
-    requestSelfShopCodes(function (err, result) {
+    requestSelfShopCodes((err, result) => {
       if (err) {
         return done(err);
       }
@@ -297,7 +300,7 @@ function verifyInvite (e, el) {
     url: endhost + '/invite/complete',
     method: 'POST',
     data: data
-  }, function (err, result) {
+  }, (err, result) => {
     if (err) {
       return toasty(new Error(err))
     }
@@ -307,7 +310,7 @@ function verifyInvite (e, el) {
 }
 
 function transformAccountSettings (obj) {
-  obj.downloadOptions = transformAccountSettings.options.map(function (opt) {
+  obj.downloadOptions = transformAccountSettings.options.map((opt) => {
     opt = cloneObject(opt)
     opt.selected = opt.value == obj.preferredDownloadFormat
     return opt
@@ -319,15 +322,15 @@ function getNotifSubsList (notifSubs) {
   notifSubs = notifSubs || {}
 
   var list = [{
-      subKey: 'news',
-      label: 'Monstercat News'
-    },{
-      subKey: 'merch',
-      label: 'Shop Discounts &amp; Promotions'
-    }, {
-      subKey: 'events',
-      label: 'Official Monstercat Events'
-    }
+    subKey: 'news',
+    label: 'Monstercat News'
+  }, {
+    subKey: 'merch',
+    label: 'Shop Discounts &amp; Promotions'
+  }, {
+    subKey: 'events',
+    label: 'Official Monstercat Events'
+  }
   ]
 
   list = list.map(function (item) {

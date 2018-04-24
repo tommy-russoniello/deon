@@ -850,15 +850,12 @@
         <input type="checkbox"
             name="notifSubs[{{subKey}}]"
             {{#checked}} checked="checked"{{/checked}}
-            {{#pending}} disabled {{/pending}}
+            {{#requireConfirmation}} disabled {{/requireConfirmation}}
             value="1" />
-        {{{label}}}
-        {{#pending}}<strong>Confirmation email sent</strong>{{/pending}}
-        {{^checked}}
-            {{#requireConfirmation}}
-                <em>Resub confirmation required</em>
-            {{/requireConfirmation}}
-        {{/checked}}
+        <span class="{{#requireConfirmation}}text line-through{{/requireConfirmation}}">{{{label}}}</span>
+        {{#requireConfirmation}}
+            <strong>Contact support to resubscribe</strong>
+        {{/requireConfirmation}}
     </label>
 </div>
 </script>
