@@ -53,7 +53,7 @@ function transformBlog(obj){
 
   var maxExcerpt = 200
 
-  obj.results.forEach(function (i, index, arr) {
+  obj.results.forEach((i, index, arr) => {
   	i.featured = (index == 0 && !obj.tag) ? true : false
     i.date = formatDate(i.date)
     i.isOdd = !(index % 2 == 0)
@@ -61,6 +61,11 @@ function transformBlog(obj){
     i.excerpt = (i.excerpt.length > maxExcerpt) ? i.excerpt.substr(0,maxExcerpt)+'...' : i.excerpt
     i.image = transformLegacyImages(i.image)
     i.url = i.path.split('/')[1].slice(0, -3) // remove 'posts/' and '.md'
+
+    const date = new Date(i.date)
+
+    i.link = '/blog/' + date.getFullYear() + '-' + zeroPad(date.getMonth() + 1, 2) + '-' + zeroPad(date.getDate(),2) + '/' + i.url
+
   })
   return obj
 }
@@ -70,5 +75,8 @@ function transformExcerptToText(htmlExcerpt){
   return aux.textContent || aux.innerText || "";
 }
 function transformLegacyImages(img){
+  if (!img) {
+    return ""
+  }
 	return (img.indexOf('http') == -1) ? img = 'https://www.monstercat.com' + img : img
 }

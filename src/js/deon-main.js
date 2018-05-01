@@ -1005,6 +1005,14 @@ function transformMarkdown (obj) {
   return marked(obj)
 }
 
+function transformMarkdownPost (obj) {
+  let html = marked(obj)
+
+  html = html.split('&lt;').join('<').split('&gt;').join('>')
+
+  return html
+}
+
 function scrollToAnimated (el, opts) {
   opts = opts || {}
   var duration = opts.duration || 1000
