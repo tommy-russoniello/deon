@@ -15,7 +15,7 @@ function SplitTest (opts) {
   this.onStart = function () {
 
   }
-  this.dontCheckStarter = false
+  this.dontCheckStarter = true
 
   for(var i in opts) {
     this[i] = opts[i]

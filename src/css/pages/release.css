@@ -332,11 +332,57 @@ button > i.active,
     max-width: 325px;
   }
 }
-@media screen and (min-width: 1500px){
+@media screen and (min-width: 1920px){
   .scroll-container{
     max-width: 400px;
   }
+
+  ul.release-purchase-links.show-names li {
+    flex: 0 0 calc(33% - 0.25em);
+    display: block;
+    margin: 0 0.25em 0.25em 0;
+  }
 }
+
+@media screen and (max-width: 767px) {
+  .release-purchase-links .name {
+    display: none;
+  }
+
+  .release-purchase-links li {
+    margin-bottom: 0.5em;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .release-purchase-links.show-names {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: right;
+  }
+
+  .release-purchase-links.show-names li {
+    flex: 0 0 calc(50% - 0.25em);
+    display: block;
+    margin: 0 0.25em 0.25em 0;
+  }
+
+  .release-purchase-links.show-names li .icon-letter {
+    display: none;
+  }
+
+  .release-purchase-links.show-names li a {
+    display: block;
+    text-align: left;
+    padding: 8px 0px 8px 8px;
+  }
+
+  .release-purchase-links.show-names li a .name {
+    font-size: 0.9em;
+  }
+}
+
 textarea.copycredits {
   width: 100%;
   font-size: 1rem;

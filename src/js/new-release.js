@@ -3,18 +3,21 @@ var RELEASE_LINK_MAP = {
   youtube: {
     cta: 'Watch',
     label: 'Watch on YouTube',
+    name: 'YouTube',
     icon: 'social-y',
     priority: 110
   },
   spotify: {
     label: 'Listen on Spotify',
     icon: 'spotify',
+    name: 'Spotify',
     cta: 'Play',
     priority: 100
   },
   itunes: {
     cta: 'Download',
     label: 'Download on iTunes',
+    name: 'iTunes',
     icon: 'apple',
     priority: 90
   },
@@ -22,24 +25,28 @@ var RELEASE_LINK_MAP = {
     cta: 'Play',
     icon: 'apple',
     label: 'Apple Music',
+    name: 'Apple Music',
     priority: 90
   },
   googleplay: {
     cta: 'Download',
     label: 'Get on Google Play',
+    name: 'Google',
     icon: 'google',
     priority: 80
   },
   amazon: {
     cta: 'Download',
     label: 'Get on Amazon',
+    name: 'Amazon',
     icon: 'amazon',
     priority: 70
   },
   deezer: {
     cta: 'Listen',
     label: 'Listen on Deezer',
-    name: 'D',
+    iconLetter: 'D',
+    name: 'Deezer',
     noIcon: true,
     priority: 65
   },
@@ -48,18 +55,21 @@ var RELEASE_LINK_MAP = {
     label: 'Buy on Bandcamp',
     oldLabel: 'Buy from Bandcamp',
     icon: 'bandcamp',
+    name: 'Bandcamp',
     priority: 60
   },
   soundcloud: {
     cta: 'Listen',
     label: 'Listen on SoundCloud',
     icon: 'soundcloud',
+    name: 'SoundCloud',
     priority: 50,
   },
   beatport: {
     cta: 'Get',
     icon: 'link',
     label: 'Get on Beatport',
+    name: 'Beatport',
     oldLabel: 'Get From Beatport',
     priority: 30,
   },
@@ -67,6 +77,7 @@ var RELEASE_LINK_MAP = {
     cta: 'Get',
     icon: 'mixcloud',
     label: 'Get on Mixcloud',
+    name: 'Mixcloud',
     priority: 20
   }
 }
@@ -203,76 +214,43 @@ function transformReleasePage (obj, done) {
       scope.artistIds = scope.releaseArtists.map(wd => wd._id).join(',')
       setPageTitle(scope.release.title + ' by ' + scope.release.renderedArtists)
 
-      //For testing purposes you can turn on certain features with a hash in the link
-      var feature = window.location.hash.substr(1);
-      //feature = 'artistsEvents';
-      scope.feature = {
-        merch: false,
-        tweet: false,
-        gold: false,
-        twitterFollowButtons: false,
-        moreFromArtists: false,
-        artistsEvents: false
-      }
+      scope.features = [{
+        moreFromArtists: true
+      }, {
+        gold: true
+      }, {
+        merch: true
+      }]
 
-      /*if (feature) {
-        scope.feature[feature] = true
+      if (document.body.clientWidth > 767) {
+        scope.activeTest = 'releasePurchaseNames'
+        splittests.releasePurchaseNames = new SplitTest({
+          name: 'release-purchase-names',
+          modifiers: {
+            control: function () {
+              console.log('control')
+              scope.releasePurchaseNames = false
+            },
+            'with-names': function () {
+              console.log('withnaes')
+              scope.releasePurchaseNames = true
+            }
+          },
+          onStarted: function () {
+            transformReleasePage.scope = scope
+            console.log('hi')
+            done(null, scope)
+          }
+        })
+        splittests.releasePurchaseNames.start()
       }
       else {
-        scope.feature = false
-      }*/
-      splittests.release1FeatureOrder = new SplitTest({
-        name: 'release-1-featuresorder',
-        dontCheckStarter: true,
-        modifiers: {
-          'gold-merch-more': function (_this) {
-            scope.features = [{
-              gold: true
-            }, {
-              merch: true
-            }, {
-              moreFromArtists: true
-            }]
-          },
-          'merch-gold-more' : function (_this) {
-            scope.features = [{
-              merch: true
-            }, {
-              gold: true
-            }, {
-              moreFromArtists: true
-            }]
-          },
-          'more-merch-gold' : function (_this) {
-            scope.features = [{
-              moreFromArtists: true
-            }, {
-              merch: true
-            }, {
-              gold: true
-            }]
-          }
-          ,
-          'more-gold-merch' : function (_this) {
-            scope.features = [{
-              moreFromArtists: true
-            }, {
-              gold: true
-            }, {
-              merch: true
-            }]
-          }
-        },
-        onStarted: function () {
-          scope.activeTest = 'release1FeatureOrder'
-          transformReleasePage.scope = scope;
-          done(null, scope)
-        }
-      })
-      splittests.release1FeatureOrder.start()
-      //done(null, scope);
-    });
-  });
+        transformReleasePage.scope = scope
+        scope.releasePurchaseNames = false
+        done(null, scope)
+      }
+    })
+  })
 }
 
 function completedReleasePage () {

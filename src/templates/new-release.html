@@ -137,11 +137,11 @@
                 </ul>
                 {{#purchaseLinks.length}}
                 <span class="cl-white"><h5 class="mb-2 mt-1">Stream It Your Way</h5></span>
-                <ul class="list--inline list--expander icon mb-1">
-                    {{#purchaseLinks}}<li class="mr-2 mb-1">
+                <ul class="list--inline list--expander icon mb-1 release-purchase-links {{#releasePurchaseNames}}show-names{{/releasePurchaseNames}}">
+                    {{#purchaseLinks}}<li class="{{^releasePurchaseNames}}mr-2 mb-1{{/releasePurchaseNames}}">
                         <a href="{{original}}"
                         target="_blank"
-                        class="button button--icon button--icon-lg button--white button--icon-no-offset mb-0"
+                        class="button button--icon button--icon-lg button--white button--icon-no-offset mb-0 "
                         click-action="Click Release Purchase"
                         click-category="Release Links"
                         click-label="{{label}}"
@@ -153,10 +153,13 @@
                             <i class="fa fa-fw fa-{{icon}}"></i>
                             {{/noIcon}}
                             {{#noIcon}}
-                                {{#name}}
-                                    <span class="icon-name">{{name}}</span>
-                                {{/name}}
+                                {{#iconLetter}}
+                                    <span class="icon-letter">{{iconLetter}}</span>
+                                {{/iconLetter}}
                             {{/noIcon}}
+                            {{#releasePurchaseNames}}
+                                <span class="name">{{name}}</span>
+                            {{/releasePurchaseNames}}
                         </a>
                     </li>{{/purchaseLinks}}
                 </ul>
