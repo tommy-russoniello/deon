@@ -136,7 +136,7 @@
 
 <script type="text/template"
         route="^(?:news|blog)\/?(?:\?.*)?$"
-        page-title="News"
+        page-title="Blog"
         transform="transformBlogPagination"
         source="$newshost/json/archive/pages/1.json">
     {{#loading}}
@@ -157,7 +157,7 @@
 
 <script type="text/template"
         route="^(?:news|blog)\/tags\/(.*)"
-        page-title="News"
+        page-title="Blog"
         transform="transformBlogPagination"
         source="$newshost/json/tags/$1/pages/1.json">
     {{#loading}}
