@@ -1018,6 +1018,19 @@ td.genres span:first-of-type:before {
   margin-bottom: 1.5rem;
 }
 
+.blog-md-container p + h1,
+.blog-md-container p + h2,
+.blog-md-container p + h3,
+.blog-md-container p + h4{
+  margin-bottom: 1.5rem;
+}
+
+.blog-md-container video {
+  width: 100%;
+  border: 1px solid #ddd;
+  margin-bottom: 1.5rem;
+}
+
 footer {
   margin-bottom: 2em;
   text-align: center;
