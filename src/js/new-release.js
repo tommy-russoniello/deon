@@ -85,22 +85,24 @@ var RELEASE_LINK_MAP = {
 /**
  * Returns a no-dupe list of all artists website details on the given tracks
  *
- * @param tracks List of tracks returned by /api/catalo/browse with the artistDetails property
+ * @param tracks List of tracks returned by /api/catalo/browse
+ * with the artistDetails property
  * @returns {Array[Object]}
  */
 function getAllTracksWebsiteArtists (tracks) {
-  var artists = [];
-  var artistIds = [];
-  tracks.forEach(function (track) {
-    track.artistDetails.forEach(function (artist) {
+  var artists = []
+  var artistIds = []
+
+  tracks.forEach((track) => {
+    track.artistDetails.forEach((artist) => {
       if (artistIds.indexOf(artist._id) == -1) {
-        artists.push(transformWebsiteDetails(artist));
-        artistIds.push(artist._id);
+        artists.push(transformWebsiteDetails(artist))
+        artistIds.push(artist._id)
       }
     })
   })
 
-  return artists;
+  return artists
 }
 
 /**
@@ -110,34 +112,52 @@ function getAllTracksWebsiteArtists (tracks) {
  * @returns {Array[Object]}
  */
 function getAllTracksArtistsUsers (tracks) {
-  var users = [];
-  var userIds = [];
-  tracks.forEach(function (track) {
-    track.artistUsers.forEach(function (user) {
+  var users = []
+  var userIds = []
+
+  tracks.forEach((track) => {
+    track.artistUsers.forEach((user) => {
       if (userIds.indexOf(user._id) == -1) {
-        users.push(user);
-        userIds.push(user._id);
+        users.push(user)
+        userIds.push(user._id)
       }
     })
   })
-  return users;
+  return users
 }
 
 /**
  * Transforms merch products returned from shopify
  *
- * @param {Object} obj Result of request to shopify
+ * @param {Object} args Result of request to shopify
  * @returns {Object}
  */
-function transformReleaseMerch (obj) {
-  shuffle(obj.products)
-  obj.products = obj.products.slice(0,8)
-  obj.products = obj.products.map(function (prod) {
-    prod.utm = '?utm_source=website&utm_medium=release_page'
-    return prod
+function processReleaseMerch (args) {
+  templateProcessor('release-merch', args, {
+    success: function (args) {
+      if (!args.result) {
+        betterRender(args.template, args.node, {
+          loading: false
+        })
+        return
+      }
+
+      const maxProducts = 8
+      const result = args.result
+      const scope = {
+        products: result.products
+      }
+
+      shuffle(scope.products)
+      scope.products = scope.products.slice(0, maxProducts)
+      scope.products = scope.products.map((prod) => {
+        prod.utm = '?utm_source=website&utm_medium=release_page'
+        return prod
+      })
+      scope.activeTest = cache(PAGE_RELEASE).activeTest
+      betterRender(args.template, args.node, scope)
+    }
   })
-  obj.activeTest = transformReleasePage.scope.activeTest
-  return obj
 }
 
 /**
@@ -147,21 +167,29 @@ function transformReleaseMerch (obj) {
  * @param {Array[Object]} obj.results The events
  * @param {Object}
  */
-function transformReleaseEvents (obj) {
-  var scope = transformReleasePage.scope
-  obj.results = transformEvents(obj.results)
-  obj.results = obj.results.slice(0, 10)
-  obj.artistsList = scope.releaseArtists
-  obj.listArtists = scope.releaseArtists.length <= 4;
+function processReleaseEvents (args) {
+  templateProcessor('release-events', args, {
+    transform: function (args) {
 
-  return obj;
+      const scope = cache(PAGE_RELEASE)
+      const maxEvents = 10
+
+      const obj = {}
+      obj.results = transformEvents(obj.results)
+      obj.results = obj.results.slice(0, maxEvents)
+      obj.artistsList = scope.releaseArtists
+      obj.listArtists = scope.releaseArtists.length <= 4
+
+      return obj
+    }
+  })
 }
 
 function getArtistsTwitters (artists) {
   artists.reduce(function (handles, artist) {
     if (artist.socials) {
       artist.socials.forEach(function (social) {
-        if(social.platform == 'twitter') {
+        if (social.platform == 'twitter') {
           handles.push({
             handle: getTwitterLinkUsername(social.link).substr(1)
           })
@@ -172,89 +200,88 @@ function getArtistsTwitters (artists) {
   }, [])
 }
 
-/**
- * Transforms the new release page
- *
- * @param {Object} obj Result of the request to get the release
- * @param {Function} done
- */
-function transformReleasePage (obj, done) {
-  var scope = {
-    release: mapRelease(obj)
-  }
-
-  requestJSON({
-    url: endpoint + '/catalog/browse/?albumId=' + scope.release._id,
-    withCredentials: true
-  }, function (err, body) {
-    if (err) {
-      return done(err);
-    }
-    transformTracks(body.results, function (err, tracks) {
-      tracks = tracks.map(function (track, index) {
-        track.trackNumber = index + 1;
-        return track;
-      })
-      if(err) {
-        return done(err);
+function processReleasePage (args) {
+  processor(args, {
+    success: function (args) {
+      const scope = {
+        release: mapRelease(args.result)
       }
 
-      scope.releaseArtists = getAllTracksWebsiteArtists(tracks)
-      scope.releaseArtistUsers = getAllTracksArtistsUsers(tracks)
-      scope.releaseArtistsLimited = scope.releaseArtists.length <= 6 ? scope.releaseArtists.slice() : []
-      scope.moreReleasesFetchUrl = endpoint +
-        '/catalog/release/' + scope.release._id + '/related'
+      requestJSON({
+        url: endpoint + '/catalog/browse/?albumId=' + scope.release._id,
+        withCredentials: true
+      }, (err, body) => {
+        if (err) {
+          done(err)
+          return
+        }
 
-      //All of the twitter handles of the artists, so we can create Twitter follow buttons
-      scope.artistTwitters = getArtistsTwitters(scope.releaseArtists)
+        transformTracks(body.results, (err, resultTracks) => {
+          tracks = resultTracks.map((track, index) => {
+            track.trackNumber = index + 1
+            return track
+          })
+          if (err) {
+            done(err)
+            return
+          }
 
-      scope.coverImage = scope.release.cover;
-      scope.tracks = tracks;
-      scope.hasGoldAccess = hasGoldAccess()
-      scope.artistIds = scope.releaseArtists.map(wd => wd._id).join(',')
-      setPageTitle(scope.release.title + ' by ' + scope.release.renderedArtists)
+          const artistListMax = 6
 
-      scope.features = [{
-        moreFromArtists: true
-      }, {
-        gold: true
-      }, {
-        merch: true
-      }]
+          scope.features = [{
+            moreFromArtists: true
+          }, {
+            gold: true
+          }, {
+            merch: true
+          }]
 
-      if (document.body.clientWidth > 767) {
-        scope.activeTest = 'releasePurchaseNames'
-        splittests.releasePurchaseNames = new SplitTest({
-          name: 'release-purchase-names',
-          modifiers: {
-            control: function () {
-              scope.releasePurchaseNames = false
-            },
-            'with-names': function () {
-              scope.releasePurchaseNames = true
-            }
-          },
-          onStarted: function () {
-            transformReleasePage.scope = scope
-            done(null, scope)
+          scope.releaseArtists = getAllTracksWebsiteArtists(tracks)
+          scope.releaseArtistUsers = getAllTracksArtistsUsers(tracks)
+          scope.releaseArtistsLimited = scope.releaseArtists.length <= 6 ? scope.releaseArtists.slice() : []
+          scope.moreReleasesFetchUrl = endpoint +
+            '/catalog/release/' + scope.release._id + '/related'
+
+          scope.coverImage = scope.release.cover
+          scope.tracks = tracks
+          scope.hasGoldAccess = hasGoldAccess()
+          setPageTitle(scope.release.title + ' by ' + scope.release.renderedArtists)
+
+          if (document.body.clientWidth > 767) {
+            scope.activeTest = 'releasePurchaseNames'
+            splittests.releasePurchaseNames = new SplitTest({
+              name: 'release-purchase-names',
+              modifiers: {
+                control: function () {
+                  scope.releasePurchaseNames = false
+                },
+                'with-names': function () {
+                  scope.releasePurchaseNames = true
+                }
+              },
+              onStarted: function () {
+                cache(PAGE_RELEASE, scope)
+                renderContent('new-release-page', scope)
+              }
+            })
+            splittests.releasePurchaseNames.start()
+          }
+          else {
+            cache(PAGE_RELEASE, scope)
+            renderContent('new-release-page', scope)
           }
         })
-        splittests.releasePurchaseNames.start()
-      }
-      else {
-        transformReleasePage.scope = scope
-        scope.releasePurchaseNames = false
-        done(null, scope)
-      }
-    })
+      })
+    }
   })
 }
 
 function completedReleasePage () {
-  startCountdownTicks();
+  startCountdownTicks()
 
-  var followButtons = document.querySelectorAll('[twitter-follow]');
-  followButtons.forEach(function (el) {
+  var followButtons = document.querySelectorAll('[twitter-follow]')
+
+  followButtons.forEach((el) => {
     twttr.widgets.createFollowButton(
       el.getAttribute('twitter-follow'),
       el,
@@ -277,16 +304,26 @@ function completedReleasePage () {
   */
 }
 
-function transformMoreReleases (obj, done) {
-  var pageScope = transformReleasePage.scope
-  var releases = obj.results.map(mapRelease)
-  shuffle(releases)
-  releases = releases.splice(0, releases.length >= 8 ? 8 : 6)
-  var scope = {
-    results: releases,
-    activeTest: pageScope.activeTest,
-    showArtistsList: pageScope.releaseArtistUsers.length <= 4,
-    artistsList: pageScope.releaseArtists
-  }
-  return scope
+function processRelatedReleases (args) {
+  templateProcessor('related-releases', args, {
+    success: function (args) {
+      const pageScope = cache(PAGE_RELEASE)
+      const maxReleases = 8
+      const releases = args.result.results
+        .map(mapRelease)
+        .splice(0, maxReleases)
+      const maxFromArtists = 4
+
+      shuffle(releases)
+
+      const scope = {
+        results: releases,
+        activeTest: pageScope.activeTest,
+        showArtistsList: pageScope.releaseArtistUsers.length <= maxFromArtists,
+        artistsList: pageScope.releaseArtists
+      }
+
+      betterRender(args.template, args.node, scope)
+    }
+  })
 }

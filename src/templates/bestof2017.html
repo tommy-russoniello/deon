@@ -1,6 +1,6 @@
 <script type="text/template"
-        mustache-name="voted-for-tweet"
-        template-name="voted-for-tweet"
+        data-partial
+        data-template="voted-for-tweet"
         >
 <form id="tweet-vote" onsubmit="submitTweetBestOf2017(event)">
   <textarea name="tweet" rows="3">{{votedForTweet}}</textarea>
@@ -14,8 +14,8 @@
 </script>
 
 <script type="text/template"
-        route="^[Bb]est[Oo]f2017\/results$"
-        page-title="Best of 2017 Results"
+        data-route="^[Bb]est[Oo]f2017\/results$"
+        data-title="Best of 2017 Results"
         transform="transformBestOf2017Results"
         completed="completedBestOf2017Results">
 <div class="container bestof2017 bestof2017-page">
@@ -55,8 +55,8 @@
 </script>
 
 <script type="text/template"
-        template-name=""
-        mustache-name="bestof2017-results"
+        data-template=""
+        data-partial data-template="bestof2017-results"
         >
       {{#results}}
         <div class="artist-row bestof2017-result empty no-top-song rank-{{rank}}" rank="{{rank}}" artist-id="{{artist._id}}">
@@ -68,15 +68,15 @@
       {{/results}}
 </script>
 
-<script type="text/template" mustache-name="bestof2017-topsong" template-name="bestof2017-topsong">
+<script type="text/template" data-partial data-template="bestof2017-topsong" data-template="bestof2017-topsong">
 {{#_id}}
-  <div class="top-song">{{>playSong}} <span class="top-song-name">{{title}} by {{artistsTitle}}</span></div>
+  <div class="top-song">{{>play-song}} <span class="top-song-name">{{title}} by {{artistsTitle}}</span></div>
   <div class="download-area {{#hasGold}}has-gold{{/hasGold}}">
     <a class="silent button button--cta download"
        target="_blank"
        title="Download Track"
        track-title="{{title}}"
-       action="accessDownloadOrModal"
+       onclick="accessDownloadOrModal(event, this)"
        href="{{downloadLink}}">
         <i class="fa fa-download"></i> <span class="txt">Download Song</span>
     </a>
@@ -88,8 +88,8 @@
 </script>
 
 <script type="text/template"
-        route="^[Bb]est[Oo]f2017$"
-        page-title="Best of 2017"
+        data-route="^[Bb]est[Oo]f2017$"
+        data-title="Best of 2017"
         transform="transformBestOf2017"
         completed="completedBestOf2017">
 <div class="bestof2017 bestof2017-page">

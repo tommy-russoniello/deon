@@ -957,6 +957,10 @@ table.drag-sortable tr {
   border-bottom: 1px solid transparent;
 }
 
+table.drag-sortable tr:active {
+  cursor: move;
+}
+
 table.drag-sortable tr.drag-active-top {
   border-top: 2px solid #000;
 }

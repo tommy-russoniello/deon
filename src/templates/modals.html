@@ -1,5 +1,5 @@
-  <script type="text/template"
-        template-name="release-art-modal">
+<script type="text/template"
+        data-template="release-art-modal">
     <div class="modal modal--artwork">
         <div class="pointer-events">
             <a href="{{src}}" target="_blank">
@@ -10,13 +10,13 @@
 </script>
 
 <script type="text/template"
-        template-name="gallery-modal">
+        data-template="gallery-modal">
     <div class="modal modal--artwork modal--gallery">
-        <img src="{{src}}" class="pointer-events" action="closeModal"/>
+        <img src="{{src}}" class="pointer-events" onclick="closeModal(event)"/>
     </div>
 </script>
 
-<script type="text/template" template-name="subscription-required-modal">
+<script type="text/template" data-template="subscription-required-modal">
     <div class="modal modal--background">
         <div class="banner" style="background-image:url(/img/banner.jpg)">
           <div class="banner-shade"></div>
@@ -37,13 +37,13 @@
             </div>
             {{^hasGold}}
                 {{#signedIn}}
-                    <a class="button button--gold" href="/gold/buy" action="closeModal">Get your Gold membership!</a>
+                    <a class="button button--gold" href="/gold/buy" onclick="closeModal(event)">Get your Gold membership!</a>
                 {{/signedIn}}
             {{/hasGold}}
             {{^signedIn}}
-                <a class="button button--gold" href="/gold/buy" action="closeModal">Sign up for Gold account!</a>
+                <a class="button button--gold" href="/gold/buy" onclick="closeModal(event)">Sign up for Gold account!</a>
             {{/signedIn}}
-            <button class="button--close faux" action="closeModal">
+            <button class="button--close faux" onclick="closeModal(event)">
               <i class="fa fa-remove"></i>
             </button>
             <span class="or">or</span>
@@ -52,7 +52,7 @@
     </div>
 </script>
 
-<script type="text/template" template-name="unsubscribe-gold-modal">
+<script type="text/template" data-template="unsubscribe-gold-modal">
   <div class="modal modal-sm">
     <div class="panel pointer-events">
       <form onsubmit="submitUnsubscribeGold(event)">
@@ -60,13 +60,13 @@
         <div class="modal-content">
           <p>Your feedback can help us improve Gold.</p>
           <div class="radio-list ml-2 mt-1">
-          {{#reasons}}
+          {{#each reasons}}
               <label class="radio">
                 <input value="{{.}}" type="radio" name="reason" />
                 <span></span>
                 {{.}}
               </label>
-          {{/reasons}}
+          {{/each}}
               <label>
                 <input value="other" type="radio" name="reason" />
                 <span></span>
@@ -75,26 +75,26 @@
               <input type="text" class="ml-1 mb-0" size="40" name="other" />
           </div>
         </div>
-        <button class="button--close faux" action="closeModal">
+        <button class="button--close faux" onclick="closeModal(event)">
           <i class="fa fa-remove"></i>
         </button>
         <button class="button button--cta">Unsubscribe</button>
         <span class="or">or</span>
-        <a action="closeModal">cancel</a>
+        <a onclick="closeModal(event)">cancel</a>
       </form>
     </div>
   </div>
 </script>
 
-<script type="text/template" template-name="freedownload-for-users-modal">
+<script type="text/template" data-template="freedownload-for-users-modal">
     <div class="modal">
         <div class="panel panel--padded pointer-events">
             <h1>Sign Up to Download!</h1>
             <div class="modal-content">
                 Get a Monstercat.com account to get the free download of {{trackTitle}}{{releaseTitle}}.
             </div>
-            <a class="button button--cta" href="/sign-up?redirect={{redirect}}" action="closeModal">Sign up to download!</a>
-            <button class="button--close faux" action="closeModal">
+            <a class="button button--cta" href="/sign-up?redirect={{redirect}}" onclick="closeModal(event)">Sign up to download!</a>
+            <button class="button--close faux" onclick="closeModal(event)">
               <i class="fa fa-remove"></i>
             </button>
         </div>

@@ -1,6 +1,6 @@
 
 <script type="text/template"
-        mustache-name="markdown-basic">
+        data-partial data-template="markdown-basic">
     <div class="container">
         {{#loading}}
         {{>loading-view}}
@@ -8,76 +8,92 @@
         {{#error}}
         <p>{{message}}</p>
         {{/error}}
-        {{#data}}
+        {{#if data}}
         <div class="panel md-container">
-        {{{data}}}
+            {{{data}}}
         </div>
-        {{/data}}
+        {{/if}}
     </div>
 </script>
 
 <script type="text/template"
-        route="^faqs(?:\/|\/general)?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/site/General%20Questions.md">
+        data-route="^faqs(?:\/|\/general)?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/site/General%20Questions.md"
+        data-template="page-faqs">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^faqs\/whitelisting\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md">
+        data-route="^faqs\/whitelisting\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md"
+        data-template="page-faqs-whitelisting">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^faqs/migration-notice\/?$"
+        data-route="^faqs/migration-notice\/?$"
         source-type="markdown"
-        transform="transformMarkdown"
-        completed="completedMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/connect/FAQ/Migration%20Notice.md">
+        data-process="processMarkdownPage"
+        data-template="page-faqs-migration-notice"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/connect/FAQ/Migration%20Notice.md">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^twitch-policy\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/Twitch%20Policy.md">
+        data-route="^twitch-policy\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/Twitch%20Policy.md"
+        data-template="page-twitch-policy">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^privacy-policy\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/connect/Privacy%20Policy.md">
+        data-route="^privacy-policy\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/connect/Privacy%20Policy.md"
+        data-template="page-privacy-policy">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^terms-of-service\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/connect/Terms%20of%20Service.md">
+        data-route="^terms-of-service\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/connect/Terms%20of%20Service.md"
+        data-template="page-terms-of-service">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^non-licensable-tracks\/?$"
+        data-route="^non-licensable-tracks\/?$"
         source-type="markdown"
-        transform="transformMarkdown"
-        source="https://connect.monstercat.com/handbook/licensing">
+        data-process="processMarkdownPage"
+        data-source="https://connect.monstercat.com/handbook/licensing"
+        data-template="page-non-licensable-tracks">
     {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^dev\/api\/connect\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/connect/api/alpha/README.md">
+        data-route="^dev\/api\/connect\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/connect/api/alpha/README.md"
+        data-template="page-dev-api-connect">
   {{>markdown-basic}}
 </script>
 
 <script type="text/template"
-        route="^halloween-stencils\/?$"
-        transform="transformMarkdown"
-        source="https://raw.githubusercontent.com/monstercat/docs/master/halloween-stencils.md">
+        data-route="^halloween-stencils\/?$"
+        data-process="processMarkdownPage"
+        data-no-cors
+        data-source="https://raw.githubusercontent.com/monstercat/docs/master/halloween-stencils.md"
+        data-template="page-halloween-stencils">
   {{>markdown-basic}}
 </script>

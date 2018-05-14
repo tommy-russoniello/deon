@@ -436,12 +436,12 @@ function renderArtistRowTrack (artistId, track) {
     track.releaseId = track.albums[0].releaseId
     var votes = track.votes + ' vote' + (track.votes == 1 ? '': 's');
     track.hasGold = hasGoldAccess();
-    render(topSongEl, getTemplate('bestof2017-topsong'), track);
+    betterRender(topSongEl, getTemplate('bestof2017-topsong'), track);
     updateArtistRowReleaseArt(artistId, track);
   }
   else {
     el.classList.toggle('no-top-song', true);
-    render(topSongEl, getTemplate('bestof2017-topsong'), false);
+    betterRender(topSongEl, getTemplate('bestof2017-topsong'), false);
   }
 
 }

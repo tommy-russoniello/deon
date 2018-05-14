@@ -1,94 +1,93 @@
 <script type="text/template"
-        route="^licensing\/content-creators\/?\??(.*)?$"
-        page-title="Licensing Music for YouTube, Twitch, and Mixer"
+        data-route="^licensing\/content-creators\/?\??(.*)?$"
+        data-title="Licensing Music for YouTube, Twitch, and Mixer"
+        data-process="processLicensingContentCreators"
+        data-template="licensing-content-creators-page"
         transform="transformLicensingContentCreators"
-        completed="completedContentCreatorLicensing">
+        completed="completedContentCreatorLicensing"
+        >
   <div class="licensing">
     <div class="banner" id="licensing">
       <div class="banner-shade"></div>
     </div>
     <div class="container">
       <div class="flex">
-      <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-6">
-        <h1>Music for Content Creators</h1>
-        <div class="licensing-box licensing-box--margin">
-          {{>licensingContentCreatorSellingPoints}}
-          <div class="licensing-cta licensing-cta-content-creators button-group">
-            {{>licensingContentCreatorCTAs}}
-            <div class="licensing-other-platforms"><a href="/licensing/other-platforms">Using another platform?</a></div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-6">
+          <h1>Music for Content Creators</h1>
+          <div class="licensing-box licensing-box--margin">
+            {{>licensingContentCreatorSellingPoints}}
+            <div class="licensing-cta licensing-cta-content-creators button-group">
+              {{>licensing-content-creator-ctas}}
+              <div class="licensing-other-platforms"><a href="/licensing/other-platforms">Using another platform?</a></div>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
   <div class="container">
-    {{#loading}}
-      {{>loading}}
-    {{/loading}}
-    {{#data}}
-      <div class="panel md-container licensing-content-creator-info">
-        <div class="flex">
-          <div class="licensing-box col-xs-12 col-sm-12 col-md-6">
-            <h2>How It Works</h2>
-            {{#splitTestControl}}
-              <h3>Thanks for your interest in using Monstercat's music!</h3>
-              <p>You can definitely use our music in your videos/streams.</p>
+    <div class="panel md-container licensing-content-creator-info">
+      <div class="flex">
+        <div class="licensing-box col-xs-12 col-sm-12 col-md-6">
+          <h2>How It Works</h2>
+          {{#if splitTestControl}}
+            <h3>Thanks for your interest in using Monstercat's music!</h3>
+            <p>You can definitely use our music in your videos/streams.</p>
 
-              <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. <strong>Don't worry!</strong> These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
+            <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. <strong>Don't worry!</strong> These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
 
-              <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
+            <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
 
-              <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
-            {{/splitTestControl}}
-            {{#splitTestHeaders}}
-              <h3>Thanks for your interest in using Monstercat's music!</h3>
-              <p>You can definitely use our music in your videos/streams.</p>
+            <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
+          {{/if}}
+          {{#if splitTestHeaders}}
+            <h3>Thanks for your interest in using Monstercat's music!</h3>
+            <p>You can definitely use our music in your videos/streams.</p>
 
-              <h3>Keep 100% of the Monetization</h3>
-              <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
+            <h3>Keep 100% of the Monetization</h3>
+            <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
 
-              <h3>No License = Copyright Claims</h3>
-              <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. Don't worry! These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
+            <h3>No License = Copyright Claims</h3>
+            <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. Don't worry! These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
 
-              <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
+            <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
 
-              <h3>Support the Artists</h3>
-              <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
-            {{/splitTestHeaders}}
-
-            <div class="button-group button-group--center">
-              {{>licensingContentCreatorCTAs}}
-            </div>
+            <h3>Support the Artists</h3>
+            <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
+          {{/if}}
+        </div>
+        <div class="button-group button-group--center">
+          {{>licensing-content-creator-ctas}}
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="flex">
+        <div class="licensing-box col-xs-12 faq col-lg-6">
+          <h2 id="faq">Frequently Asked Questions</h2>
+          <div
+              data-process="processMarkdownBare"
+              data-no-cors
+              data-source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md">
           </div>
         </div>
       </div>
-
-      <div class="panel md-container">
-        <div class="flex">
-          <div class="licensing-box col-xs-12 faq col-lg-6">
-            <h2 id="faq">Frequently Asked Questions</h2>
-            <div
-                template="markdown-bare"
-                source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md">
-            </div>
-          </div>
-        </div>
-      </div>
-    {{/data}}
+    </div>
     <div class="panel">
       <h3>Buy a License</h3>
       <div class="button-group button-group--center">
-        {{>licensingContentCreatorCTAs}}
+        {{>licensing-content-creator-ctas}}
       </div>
     </div>
   </div>
 </script>
+
 <script type="text/template"
-        route="^licensing\/?$"
-        page-title="Licensing"
-        transform="transformLicensing"
-        completed="completedLicensing">
+        data-route="^licensing\/?$"
+        data-title="Licensing"
+        data-process="processLicensingPage"
+        data-template="licensing-page"
+        >
   <div class="licensing v-stretch">
     <div class="banner" id="licensing">
       <div class="banner-shade"></div>
@@ -116,21 +115,23 @@
 </script>
 
 <script type="text/template"
-        route="^license\/?$"
+        data-route="^license\/?$"
         redirect="/licensing">
 </script>
 
 <!-- POLICY PAGES -->
 
 <script type="text/template"
-        route="^licensing\/twitch-policy\/?\??(.*)?$"
-        page-title="Twitch License Policy">
+        data-route="^licensing\/twitch-policy\/?\??(.*)?$"
+        data-title="Twitch License Policy"
+        >
   <div class="container">
     <h1>Twitch Licensing Policy</h1>
   </div>
   <div
-      template="markdown-simple"
-      source="https://raw.githubusercontent.com/monstercat/docs/master/Twitch%20Policy.md">
+      data-process="processMarkdownBare"
+      data-no-cors
+      data-source="https://raw.githubusercontent.com/monstercat/docs/master/Twitch%20Policy.md">
   </div>
   <div class="container panel">
     <h3>Buy a Twitch License</h3>
@@ -140,37 +141,34 @@
         <span class="subtitle">$5/mo or $100</span>
     </a>
     <span class="or">or</span>
-    <a href="/licensing/content-creators">read more</a>    
+    <a href="/licensing/content-creators">read more</a>
   </div>
 </script>
 
-<script type="text/template" template-name="markdown-simple" transform="transformMarkdown" completed="scrollToHighlightHash">
+<script type="text/template" data-template="markdown-simple" data-process="processMarkdownSimple">
 {{>markdown-basic}}
 </script>
 
 
-<script type="text/template" template-name="markdown-bare" transform="transformMarkdown" completed="scrollToHighlightHash">
-{{#loading}}
-{{>loading-view}}
-{{/loading}}
-{{#error}}
-<p>{{message}}</p>
-{{/error}}
-{{#data}}
+<script type="text/template" data-template="markdown-bare" data-process="processMarkdownBare">
 {{{data}}}
-{{/data}}
 </script>
 
 <script type="text/template"
-        route="^licensing\/youtube-policy\/?\??(.*)?$"
-        page-title="Monstercat YouTube Licensing Policy">
+        data-route="^licensing\/youtube-policy\/?\??(.*)?$"
+        data-title="Monstercat YouTube Licensing Policy"
+        data-template="youtube-policy-page"
+        data-process="processPage"
+        >
   <div class="container">
     <h1>YouTube Licensing Policy</h1>
   </div>
   <div
       class="reading-md"
-      template="markdown-simple"
-      source="https://raw.githubusercontent.com/monstercat/docs/master/YouTube%20Policy.md">
+      data-process="processMarkdownSimple"
+      data-source="https://raw.githubusercontent.com/monstercat/docs/master/YouTube%20Policy.md"
+      data-no-cors
+      >
   </div>
   <div class="container panel">
     <h3>Buy a YouTube License</h3>
@@ -185,10 +183,11 @@
 </script>
 
 <script type="text/template"
-        route="^licensing\/other-platforms\/?\??(.*)?$"
-        page-title="Licensing Music for Facebook, Instagram, and more"
-        transform="transformLicensingOtherPlatformsPage">
-{{#data}}
+        data-route="^licensing\/other-platforms\/?\??(.*)?$"
+        data-title="Licensing Music for Facebook, Instagram, and more"
+        data-process="processLicensingOtherPlatformsPage"
+        data-template="licensing-other-platforms-page"
+        >
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
     <div class="panel paragraphs">
@@ -203,14 +202,14 @@
         <div class="form-group">
           <label>Platforms</label>
           <ul class="checkboxes">
-            {{#platforms}}
+            {{#each platforms}}
               <li>
                 <label>
                   <input type="checkbox" name="{{.}}" value ="1" />
                   {{.}}
                 </label>
               </li>
-            {{/platforms}}
+            {{/each}}
             <li>
               <label>Other:</label>
               <input type="text" name="other" class="small" size="20" />
@@ -228,13 +227,12 @@
     </div>
   </div>
 </div>
-{{/data}}
 </script>
 
 <!-- MUSTACHES -->
 
 <script type="text/template"
-        mustache-name="licensingContentCreatorCTAs">
+        data-partial data-template="licensing-content-creator-ctas">
 <a class="button button--full button-cta button--youtube button-cta--mobile" role="licensing-cta" href="/account/services?vendor=youtube">
     <span class="title">YouTube</span>
     <span class="subtitle">$10/mo or $200</span>
@@ -250,7 +248,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="licensingOurContentCreators">
+        data-partial data-template="licensingOurContentCreators">
   <h2>Our Content Creators</h2>
   <p>Some of the great streamers and YouTubers using Monstercat music to make their content great.</p><!-- what year is it? -->
   <ul class="clients">
@@ -264,7 +262,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="licensingContentCreatorSellingPoints">
+        data-partial data-template="licensingContentCreatorSellingPoints">
   <ul class="selling-points">
     <li>Get whitelisted to use our music</li>
     <li>Pay monthly or prepay for 20 months</li>
@@ -273,9 +271,9 @@
 </script>
 
 <script type="text/template"
-        mustache-name="licensing-modal-main">
+        data-partial data-template="licensing-modal-main">
   <div class="section content-creators flex-buttons">
-      <a class="button button-cta button-cta--mobile" href="/sync" action="closeModal">
+      <a class="button button-cta button-cta--mobile" href="/sync" onclick="closeModal(event)">
         <span class="title">Commercial</span>
         <span class="subtitle">Movies, TV Shows</span>
       </a>
@@ -285,58 +283,42 @@
 <!-- MODALS -->
 
 <script type="text/template"
-        template-name="track-licensing-modal"
+        data-template="track-licensing-modal"
         transform="loadReleaseAndTrack">
     <div class="modal modal--licensing-track modal--licensing">
         <div class="panel pointer-events">
             <h1>License This Track</h1>
-            {{#loading}}
-            {{>loading-inner-view}}
-            {{/loading}}
-            {{#error}}
-            <p>{{message}}</p>
-            {{/error}}
-            {{#data}}
-            {{>licensing-modal-main}}
-            <div class="section crediting">
-              <h3>Credit the Artists</h3>
-              <div class="flex">
-                <div class="col-xs-12 col-sm-6 flex-buttons">
-                  <button action="showCrediting" credit-type="youtube" class="button button-cta button-cta--mobile button--youtube">
-                    <span class="title">YouTube</span>
-                    <span class="subtitle">on Description</span>
-                  </button>
-                  <button action="showCrediting" credit-type="other" class="button button-cta button-cta--mobile">
-                    <span class="title">Other</span>
-                    <span class="subtitle">Facebook/Twitter</span>
-                  </button>
+            {{#if loading}}
+              {{>loading-inner-view}}
+            {{else}}
+              {{#if error}}
+                <p>{{message}}</p>
+              {{else}}
+                {{>licensing-modal-main}}
+                <div class="section crediting">
+                  <h3>Credit the Artists</h3>
+                  <div class="flex">
+                    <div class="col-xs-12 col-sm-6 flex-buttons">
+                      <button onclick="showCrediting(event, this)" credit-type="youtube" class="button button-cta button-cta--mobile button--youtube">
+                        <span class="title">YouTube</span>
+                        <span class="subtitle">in Description</span>
+                      </button>
+                      <button onclick="showCrediting(event, this)" credit-type="other" class="button button-cta button-cta--mobile">
+                        <span class="title">Other</span>
+                        <span class="subtitle">Facebook/Twitter</span>
+                      </button>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 flex-buttons">
+                      <textarea onclick="copyCrediting(event,this)" class="copycredits hide" credit-type="youtube">{{track.copycredit}}</textarea>
+                      <textarea onclick="copyCrediting(event, this)" class="copycredits hide" credit-type="other">{{track.copycreditOther}}</textarea>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 flex-buttons">
-                  <textarea action="copyCrediting" class="copycredits hide" credit-type="youtube">{{track.copycredit}}</textarea>
-                  <textarea action="copyCrediting" class="copycredits hide" credit-type="other">{{track.copycreditOther}}</textarea>
-                </div>
-              </div>
-            </div>
-            {{/data}}
-            <button class="button--close faux" action="closeModal">
+              {{/if}}
+            {{/if}}
+            <button class="button--close faux" onclick="closeModal(event)">
                 <i class="fa fa-remove"></i>
             </button>
         </div>
     </div>
 </script>
-
-<script type="text/template"
-        template-name="release-licensing-modal"
-        transform="loadRelease"
-        >
-    <div class="modal modal--licensing-release modal--licensing">
-        <div class="panel pointer-events">
-            <h1>License This Release</h1>
-            {{>licensing-modal-main}}
-            <button class="button--close faux" action="closeModal">
-                <i class="fa fa-remove"></i>
-            </button>
-        </div>
-    </div>
-</script>
-

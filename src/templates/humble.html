@@ -1,9 +1,9 @@
 <script type="text/template"
-        route="^humble"
-        page-title="Humble Bundle Redeem"
-        transform="transformHumbleBundleRedeemPage"
-        completed="completedHumbleBundleRedemeePage">
-{{#data}}
+        data-route="^humble"
+        data-title="Humble Bundle Redeem"
+        data-process="processHumbleBundleRedeemPage"
+        data-template="humble-bundle-page"
+        >
 <div class="container">
   <div class="panel panel--dark humble-header">
     <img src="https://assets.monstercat.com/humblestreaming.png" alt="Humble Streaming Bundle" />
@@ -63,9 +63,9 @@
           <a href="/account/services">View licenses</a>
         {{/doneTwitchStep}}
         {{^doneTwitchStep}}
-          <form class="humble-step-action" trigger-target="submitHumbleTwitch" data-set="humble-twitch">
+          <form class="humble-step-action" onsubmit="submitHumbleTwitch(event, this)">
             <div><input type="text" name="username" placeholder="username" /></div>
-            <button class="btn button--cta" action="submitHumbleTwitch" trigger="submitHumbleTwitch" data-set-target="humble-twitch" role="submit-humble-twitch">Submit</button>
+            {{>submit-button}}
           </form>
         {{/doneTwitchStep}}
       {{/showTwitchStep}}
@@ -77,7 +77,7 @@
   <div class="panel">
     <h2>Have a question?</h2>
     {{#isSignedIn}}
-    <button class="button" action="showIntercom" role="feedback">
+    <button class="button" onclick="showIntercom(event, this)" role="feedback">
         <i class="fa fa-comments-o"></i>
         Talk to us
     </button>  
@@ -87,5 +87,4 @@
     {{/isSignedIn}}
   </div>
 </div>
-{{/data}}
 </script>

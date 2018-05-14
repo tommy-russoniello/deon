@@ -1,9 +1,8 @@
 <script type="text/template"
-        route="^browse"
-        page-title="Browse Music"
-        transform="transformBrowseMusic"
-        completed="completedBrowseMusic">
-    {{#data}}
+        data-route="^browse"
+        data-title="Browse Music"
+        data-process="processBrowseMusicPage"
+        data-template="browse-music-page">
     <div class="container">
         <header class="flex top-title">
             <div class="col-xs-6">
@@ -21,82 +20,83 @@
             </div>
         </header>
         <div class="flex panel panel--mobile">
-            <div class="col-xs-12 col-sm-12 col-md-2 browse-filters" source="$endpoint/catalog/browse/filters"
-                 template="browse-filters">
+            <div class="col-xs-12 col-sm-12 col-md-2 browse-filters"
+                 data-source="$endpoint/catalog/browse/filters"
+                 data-process="processBrowseFilters">
             </div>
             <div class="col-xs-12 col-sm-12 col-md-10" role="browse-pages"></div>
             <div class="col-xs-12 col-sm-12 col-md-2"></div>
             <div class="col-xs-12 col-sm-12 col-md-10">
                 <div class="button-group text center">
-                    <button action="browseMore" role="browse-more" class="hide" disabled>Show More</button>
+                    <button onclick="browseMore(event, this)" class="hide" role="browse-more" disabled>Show More</button>
                 </div>
             </div>
         </div>
     </div>
-    {{/data}}
 </script>
 
 <script type="text/template"
-        template-name="browse-filters"
-        completed="completedBrowseFilters">
-    {{#loading}}{{>loading-view}}{{/loading}}
-    {{#error}}<p>{{message}}</p>{{/error}}
+        data-template="browse-filters"
+        data-process="processBrowseFilters"
+        >
     {{#data}}
     <div data-set="browse-filters">
-    <fieldset class="filter-group">
-      <h4>Release Type</h4>
-      <ul class="filter-list" role="filters-list-types"></ul>
-      <select name="type" onchange="addBrowseFilter(null, this)">
-        <option value="">Release Type</option>
-        {{#types}}
-        <option value="{{.}}">{{.}}</option>
-        {{/types}}
-      </select>
-    </fieldset>
-    <fieldset class="filter-group">
-      <h4>Genre</h4>
-      <ul class="filter-list" role="filters-list-genres"></ul>
-      <select name="genre" onchange="addBrowseFilter(null, this)">
-        <option value="">Genre</option>
-        {{#genres}}
-        <option value="{{name}}">{{name}}</option>
-        {{/genres}} 
-      </select>
-    </fieldset>
-    <fieldset class="filter-group">
-      <h4>Tag</h4>
-      <ul class="filter-list" role="filters-list-tags"></ul>
-      <select name="tag" onchange="addBrowseFilter(null, this)">
-        <option value="">Tag</option>
-        {{#tags}}
-        <option value="{{.}}">{{.}}</option>
-        {{/tags}}
-      </select>
-    </fieldset>
-    </div>
-    <div class="button-group button-group--filters">
-        <button class="button--cta button--full" action="filterBrowseMusic" data-set-target="browse-filters">Filter</button>
-        <button class="button--full" action="filterBrowseMusic">Clear</button>
+        <form onsubmit="submitFilterBrowseMusic(event, this)">
+            <fieldset class="filter-group">
+              <h4>Release Type</h4>
+              <ul class="filter-list" role="filters-list-types"></ul>
+              <select name="type" onchange="addBrowseFilter(null, this)">
+                <option value="">Release Type</option>
+                {{#each types}}
+                <option value="{{.}}">{{.}}</option>
+                {{/each}}
+              </select>
+            </fieldset>
+            <fieldset class="filter-group">
+              <h4>Genre</h4>
+              <ul class="filter-list" role="filters-list-genres"></ul>
+              <select name="genre" onchange="addBrowseFilter(null, this)">
+                <option value="">Genre</option>
+                {{#each genres}}
+                <option value="{{name}}">{{name}}</option>
+                {{/each}} 
+              </select>
+            </fieldset>
+            <fieldset class="filter-group">
+              <h4>Tag</h4>
+              <ul class="filter-list" role="filters-list-tags"></ul>
+              <select name="tag" onchange="addBrowseFilter(null, this)">
+                <option value="">Tag</option>
+                {{#tags}}
+                <option value="{{.}}">{{.}}</option>
+                {{/tags}}
+              </select>
+            </fieldset>
+            <div class="button-group button-group--filters">
+                <button class="button--cta button--full">Filter</button>
+                <button class="button--full" onclick="clearFilterBrowseMusic(event, this)" type="button">Clear</button>
+            </div>
+        </form>
     </div>
     {{/data}}
 </script>
 
-<script type="text/template" template-name="browse-filter-item">
+<script type="text/template" data-template="browse-filter-item">
     <li>
-        <input type="hidden" name="{{type}}s" value="{{value}}"/>
-        <button action="removeBrowseFilter">{{value}} <i class="fa fa-close"></i></button>
+        <input type="hidden" name="{{type}}s[{{index}}]" value="{{value}}"/>
+        <button type="button" onclick="removeBrowseFilter(event, this)">{{value}} <i class="fa fa-close"></i></button>
     </li>
 </script>
 
 <script type="text/template"
-        template-name="browse-page">
-    <ul source="{{source}}" template="music-browse" class="music-browse"></ul>
+        data-template="browse-page">
+    <ul data-source="{{source}}" data-process="processMusicBrowseResults" class="music-browse"></ul>
 </script>
 
 <script type="text/template"
-        template-name="music-browse"
-        transform="transformMusicBrowseResults"
-        completed="completedMusicBrowseResults">
+        data-template="music-browse"
+        data-process="processMusicBrowseResults"
+        >
     {{#loading}}
     <li>{{>loading-view}}</li>
     {{/loading}}
@@ -104,45 +104,45 @@
     <li><p>{{message}}</p></li>
     {{/error}}
     {{#data}}
-    {{#results}}
-    <li catalog-id="{{catalogId}}">
-        <div class="bgbox bgbox--browse">
-            <div class="banner banner--scaled">
-                <div class="banner" style="background-image: url('{{coverBig}}')"></div>
-                <div class="banner-shade banner-shade--darker"></div>
-            </div>
-            <div class="cl-white">
-                <div class="details-box clearfix">
-                    <a href="/release/{{catalogId}}">
-                        <img class="artwork" src="{{cover}}"/>
-                        <h2 release-id="{{_id}}" catalog-id="{{catalogId}}">{{title}}</h2>
-                    </a>
-                    <h3>{{artists}}</h3>
-                    <label>
-                        {{>albumReleaseDates}}
-                    </label>
-                    <label>{{type}}</label>
+        {{#each results}}
+        <li catalog-id="{{catalogId}}">
+            <div class="bgbox bgbox--browse">
+                <div class="banner banner--scaled">
+                    <div class="banner" style="background-image: url('{{coverBig}}')"></div>
+                    <div class="banner-shade banner-shade--darker"></div>
+                </div>
+                <div class="cl-white">
+                    <div class="details-box clearfix">
+                        <a href="/release/{{catalogId}}">
+                            <img class="artwork" src="{{cover}}"/>
+                            <h2 release-id="{{_id}}" catalog-id="{{catalogId}}">{{title}}</h2>
+                        </a>
+                        <h3>{{artists}}</h3>
+                        <label>
+                            {{>album-release-dates}}
+                        </label>
+                        <label>{{type}}</label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <table>
-            <tbody>
-                {{#tracks}}
-                <tr dblc-action="playSongDblC">
-                    <td class="shrink">{{trackNumber}}.</td>
-                    <td class="shrink nohpad">{{>playSong}}</td>
-                    {{>trackCells}}
-                    <td class="push-right">
-                        {{>trackButtons}}
-                    </td>
-                </tr>
-                {{/tracks}}
-            </tbody>
-        </table>
-    </li>
-    {{/results}}
-    {{^results}}
-    <li class="error"><p>No results found.</li>
-    {{/results}}
+            <table>
+                <tbody>
+                    {{#each tracks}}
+                    <tr dblc-action="playSongDblC">
+                        <td class="shrink">{{trackNumber}}.</td>
+                        <td class="shrink nohpad">{{>play-song}}</td>
+                        {{>track-cells}}
+                        <td class="push-right">
+                            {{>track-buttons}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </li>
+        {{/each}}
+        {{#unless total}}
+        <li class=""><p>No results found.</li>
+        {{/unless}}
     {{/data}}
 </script>

@@ -20,15 +20,15 @@ function CountdownBanner (id, opts) {
     this.info = getTemplate(opts.infoTemplate);
   }
 
-  this.start = function (callback) {
+  this.start = function start (callback) {
     var timeToReveal = this.revealDate.getTime() - new Date().getTime();
 
     //If it isn't time to display it just yet we don't show anything
     //and we check back more or less at the reveal date
     if(timeToReveal > 0) {
-      setTimeout(function () {
+      setTimeout(() => {
         this.start(callback);
-      }.bind(this), timeToReveal);
+      }, timeToReveal);
       return
     }
 
@@ -41,7 +41,7 @@ function CountdownBanner (id, opts) {
     }
   };
 
-  this.render = function () {
+  this.render = function render () {
     var now = new Date().getTime();
     var to;
     if(now > this.startDate.getTime()) {
@@ -66,19 +66,19 @@ function CountdownBanner (id, opts) {
       info: this.info
     }
 
-    render(this.bannerEl, getTemplate('countdown-banner'), scope);
+    betterRender(this.bannerEl, 'countdown-banner', scope);
     this.bannerEl.classList.toggle('show', true);
     startCountdownTicks(); //Always on for black friday
   }
 
-  this.hideBanner = function () {
+  this.hideBanner = function hideBanner () {
     this.bannerEl.style.display = 'none';
     this.bannerEl.innerHTML = '';
   }
 
-  this.countdownEnd = function () {
-    setTimeout(function () {
+  this.countdownEnd = function countdownEnd () {
+    setTimeout(() => {
       this.render();
-    }.bind(this), 1000);
+    }, 1000);
   }
 }

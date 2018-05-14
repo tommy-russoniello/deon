@@ -1,15 +1,19 @@
 function toast (opts) {
-  var container = document.querySelector('[role="toasts"]')
-  if (!container) return
-  var div = document.createElement('div')
-  var template = document.querySelector('[template-name="toast"]')
-  if (!template) return
-  render(div, template.textContent, opts)
-  var el = div.firstElementChild
+  const container = findNode('[role="toasts"]')
+
+  if (!container) {
+    return
+  }
+  const div = document.createElement('div')
+
+  betterRender('toast', div, opts)
+  const el = div.firstElementChild
+  const defaultShowTime = 3000
+
   container.appendChild(el)
-  setTimeout(function () {
+  setTimeout(() => {
     container.removeChild(el)
-  }, opts.time || 3000)
+  }, opts.time || defaultShowTime)
 }
 
 function toasty (obj, time) {
@@ -26,30 +30,37 @@ function toasty (obj, time) {
       time: time
     })
   }
-  toast(obj)
+  return toast(obj)
+}
+
+function terror (err) {
+  if (err) {
+    toasty(new Error(err))
+    return true
+  }
+
+  return false
+}
+
+function renderModal (name, scope) {
+  const modalContainer = findNode('[role="modals"] [role="container"]')
+
+  betterRender(name, modalContainer, scope)
 }
 
 function openModal (name, data) {
-  var el         = getTemplateEl(name)
-  var opts       = getElementSourceOptions(el)
-  var container  = document.querySelector('[role="modals"]')
-  opts.container = container.querySelector('[role="container"]')
-  opts.data      = data
-  if (opts.source) {
-    loadSource(opts)
-  }
-  else {
-    renderTemplateOptions(opts)
-  }
-  document.querySelector('body').classList.add('showing-modal')
-  container.classList.add('open')
+  const modalsEl  = findNode('[role="modals"]')
+
+  renderModal(name, data)
+  findNode('body').classList.add('showing-modal')
+  modalsEl.classList.add('open')
 }
 
 function closeModal () {
-  var container = document.querySelector('[role="modals"]')
+  var container = findNode('[role="modals"]')
   if(container != null) {
     container.classList.remove('open')
-    document.querySelector('body').classList.remove('showing-modal')
+    findNode('body').classList.remove('showing-modal')
     var x = container.querySelector('[role="container"]').firstElementChild
     if(x != null) {
       x.parentElement.removeChild(x)
@@ -59,7 +70,7 @@ function closeModal () {
 
 function togglePassword (e, el) {
   var target = 'input[name="' + el.getAttribute('toggle-target') + '"]'
-  var tel    = document.querySelector(target)
+  var tel    = findNode(target)
   if (!tel) return
   var type   = tel.getAttribute('type') == 'password' ? 'text' : 'password'
   var cls    = type == 'password' ? 'eye-slash' : 'eye'
@@ -73,7 +84,7 @@ function togglePassword (e, el) {
 
 function simpleUpdate (err, obj, xhr) {
   if (err) return window.alert(err.message)
-  loadSubSources(document.querySelector('[role="content"]'), true, true)
+  loadSubSources(findNode('[role="content"]'), true, true)
 }
 
 function reloadPage () {
@@ -81,18 +92,18 @@ function reloadPage () {
 }
 
 function toggleNav(){
-  document.querySelector("[role='nav']").classList.toggle('open')
-  document.querySelector("[role='nav-button']").classList.toggle('active')
+  findNode("[role='nav']").classList.toggle('open')
+  findNode("[role='nav-button']").classList.toggle('active')
 }
 
 function closeNav(){
-  document.querySelector("[role='nav']").classList.remove('open')
-  document.querySelector("[role='nav-button']").classList.remove('active')
+  findNode("[role='nav']").classList.remove('open')
+  findNode("[role='nav-button']").classList.remove('active')
 }
 
 function stickyPlayer(){
   var threshold = 150
-  var el = document.querySelector("[role='fixed']")
+  var el = findNode("[role='fixed']")
   window.addEventListener('scroll', function(){
     if(window.scrollY >= threshold) {
       el.classList.add('fixed');

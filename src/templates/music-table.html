@@ -1,84 +1,80 @@
 <script type="text/template"
-        route="^catalog"
-        page-title="Catalog Music"
-        transform="transformCatalogMusic"
-        completed="completedCatalogMusic">
-    {{#data}}
+        data-route="^catalog"
+        data-title="Catalog Music"
+        data-process="processCatalogPage"
+        data-template="catalog-page"
+        >
     <div class="container">
         <div class="flex" data-set="browse-filters">
-            <div class="col-xs-12 browse-filters browse-filters--table" source="$endpoint/catalog/browse/filters"
-                 template="catalog-filters">
+            <div class="col-xs-12 browse-filters browse-filters--table"
+                 data-source="$endpoint/catalog/browse/filters"
+                 data-process="processCatalogFilters">
             </div>
             <div class="col-xs-12 catalog-table" role="catalog-pages"></div>
         </div>
     </div>
-    {{/data}}
 </script>
 
 <script type="text/template"
-        transform="transformCatalogFilters"
-        completed="completedCatalogFilters"
-        template-name="catalog-filters">
-    {{#loading}}{{>loading-view}}{{/loading}}
-    {{#error}}<p>{{message}}</p>{{/error}}
+        data-process="processCatalogFilters"
+        data-template="catalog-filters"
+        >
     {{#data}}
     <div class="flex">
-      <div class="col-xs-12 col-md-10 flex browse-fieldsets">
+      <form onsubmit="submitFilterBrowseMusic(event, this)" class="col-xs-12 col-md-10 flex browse-fieldsets">
         <fieldset class="filter-group">
-          <input type="text" placeholder="Search" name="search" value="{{search}}" trigger-target="filterBrowseMusic" />
+          <input type="text" placeholder="Search" name="search" value="{{search}}" />
         </fieldset>
         <fieldset class="filter-group">
           <select name="type" onchange="addBrowseFilter(null, this)">
             <option value="">Release Type</option>
-            {{#types}}
-            <option value="{{.}}">{{.}}</option>
-            {{/types}}
+            {{#each types}}
+              <option value="{{.}}">{{.}}</option>
+            {{/each}}
           </select>
         </fieldset>
         <fieldset class="filter-group">
           <select name="genre" onchange="addBrowseFilter(null, this)">
             <option value="">Genre</option>
-            {{#genres}}
-            <option value="{{name}}">{{name}}</option>
-            {{/genres}}
+            {{#each genres}}
+              <option value="{{name}}">{{name}}</option>
+            {{/each}}
           </select>
         </fieldset>
         <fieldset class="filter-group">
           <select name="tag" onchange="addBrowseFilter(null, this)">
             <option value="">Tag</option>
-            {{#tags}}
-            <option value="{{.}}">{{.}}</option>
-            {{/tags}}
+            {{#each tags}}
+              <option value="{{.}}">{{.}}</option>
+            {{/each}}
           </select>
         </fieldset>
-      </div>
-
-      <div class="col-xs-12 col-md-2 button-group button-group--filters">
-          <button class="button--cta button--full" action="filterBrowseMusic" trigger="filterBrowseMusic" data-set-target="browse-filters">Apply</button>
-      </div>
-    </div>
-    <div>
+        <div class="col-xs-12 col-md-2 button-group button-group--filters">
+            <button class="button--cta button--full">Apply</button>
+        </div>
+      </form>
     </div>
     {{/data}}
 </script>
 
 <script type="text/template"
-        template-name="catalog-page">
-    <div template="catalog-rows" source="{{source}}"></div>
+        data-template="catalog-rows-group">
+    <div
+         data-process="processCatalogResults"
+         data-source="{{source}}">
+    </div>
     </footer>
 </script>
 
 <script type="text/template"
-        mustache-name="catalog-sorting-header">
+        data-partial data-template="catalog-sorting-header">
 <a href="#" class="{{#sorting}}sorting-active {{/sorting}}{{#desc}}sorting-desc {{/#desc}}{{#asc}}sorting-asc{{/asc}}">{{label}}</a>
 </script>
 
 <script type="text/template"
-        template-name="catalog-rows"
-        transform="transformMusicCatalogResults"
-        completed="completedBrowseFilters">
-  {{#loading}}{{>loading-view}}{{/loading}}
-  {{#error}}<p>{{message}}</p>{{/error}}
+        data-template="catalog-rows"
+        data-process="processCatalogResults"
+        >
   {{#data}}
   <header class="flex">
     <div class="col-xs-12 col-sm-6 browse-table-tags">
@@ -87,37 +83,40 @@
       <ul class="filter-list" role="filters-list-tags"></ul>
     </div>
     <div class="col-xs-12 col-sm-6 pagination-right">
-      {{>searchPagination}}
+      {{>search-pagination}}
     </div>
   </header>
   <table class="one-line">
     <thead>
       <tr>
         <th></th>
-        {{#tableHeaders}}
+        {{#each tableHeaders}}
           <th class="{{#xsHidden}}col-xs-hidden col-md-visible{{/xsHidden}}{{#active}} active{{/active}}">
             <a href="{{href}}">
-              {{label}} 
-              {{#active}}<span class="fa {{#asc}}fa-sort-asc{{/asc}}{{#desc}}fa-sort-desc{{/desc}}"></span>{{/active}}
-              {{^active}}<span class="fa fa-sort"></span>{{/active}}
+              {{label}}
+              {{#if active}}
+                <span class="fa {{#asc}}fa-sort-asc{{/asc}}{{#desc}}fa-sort-desc{{/desc}}"></span>
+              {{else}}
+                <span class="fa fa-sort"></span>
+              {{/if}}
             </a>
           </th>
-        {{/tableHeaders}}
+        {{/each}}
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {{^results.length}}
+      {{#unless results.length}}
       <tr>
         <td colspan="9" class="empty-message">
           No tracks found.
         </td>
       </tr>
-      {{/results.length}}
-      {{#results}}
+      {{/unless}}
+      {{#each results}}
       <tr dblc-action="playSongDblC">
         <td>
-          {{>playSong}}
+          {{>play-song}}
         </td>
         <td class="longer-width">
           <div class="scroll-container"
@@ -148,11 +147,11 @@
         <td class="col-xs-hidden col-md-visible">
           {{releaseDate.month}}&nbsp;{{releaseDate.day}},&nbsp;{{releaseDate.year}}
         </td>
-        <td>{{>trackButtons}}</td>
+        <td>{{>track-buttons}}</td>
       </tr>
-      {{/results}}
+      {{/each}}
     </tbody>
   </table>
-  <footer class="pagination-right">{{>searchPagination}}</footer>
+  <footer class="pagination-right">{{>search-pagination}}</footer>
   {{/data}}
 </script>

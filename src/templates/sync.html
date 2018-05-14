@@ -1,8 +1,9 @@
 <script type="text/template"
-        route="^sync\/thank-you"
-        page-title="Sync - Monstercat"
-        transform=""
->
+        data-route="^sync\/thank-you"
+        data-title="Sync - Monstercat"
+        data-template="sync-thank-you-page"
+        data-process="processPage"
+        >
 <div class="container">
   <div class="panel">
     <h1>Thank you!</h1>
@@ -12,9 +13,10 @@
 </script>
 
 <script type="text/template"
-        route="^sync"
-        page-title="Sync - Monstercat"
-        transform="transformSyncPage"
+        data-route="^sync"
+        data-title="Sync - Monstercat"
+        data-process="processSyncPage"
+        data-template="sync-page"
 >
 <div class="top-banner top-banner--sync cl-white">
   <div class="banner" style="background-image: url('https://assets.monstercat.com/sync/banner.jpg')">
@@ -53,8 +55,8 @@
 
   <div class="panel">
     <h2 class="line-top">Featured Sync Tracks</h2>
-    <div  source="$endpoint/catalog/browse/?tags=Featured%20Sync&limit=12"
-          template="sync-tracks"
+    <div  data-source="$endpoint/catalog/browse/?tags=Featured%20Sync&limit=12"
+          data-process="processSyncTracks"
           >
     </div>
   </div>
@@ -67,7 +69,7 @@
         <br />
       </div>
       <div class="col-md-6">
-        <form id="sync-contact-form" data-set="commercial-license-form" trigger-target="commercial-license-form">
+        <form id="sync-contact-form" onsubmit="submitSyncContactForm(event, this)">
           <div id="errorForm"></div>
           <div class="flex">
             <div class="col-xs-12 col-sm-6">
@@ -81,7 +83,7 @@
             </div>
           </div>
           <div class="flex submit-wrapper">
-            <input id="submitBtn" type="submit" data-set-target="commercial-license-form" trigger="commercial-license-form" action="submitSyncContactForm" value="License our music" tabindex="6" class="button expand"/>
+            <input id="submitBtn" type="submit" value="License our music" tabindex="6" class="button expand"/>
           </div>
         </form>
       </div>
@@ -105,7 +107,7 @@
 </script>
 
 <script type="text/template"
-        template-name="sync-project-modal">
+        data-template="sync-project-modal">
   <div class="modal modal--sync-project">
     <div class="panel pointer-events">
       <h2>{{name}}</h2>
@@ -121,8 +123,8 @@
 </script>
 
 <script type="text/template"
-        transform="transformSyncTracks"
-        template-name="sync-tracks">
+        data-process="processSyncTracks"
+        data-template="sync-tracks">
 <ul class="art-list art-list--play art-list--full-width sync-tracks">
   {{#data}}
     {{#results}}
@@ -131,16 +133,16 @@
             <img src="/img/artwork.jpg" class="preload" />
             <img src="{{release.cover}}" />
             <a  class="button button--cta"
-                index="{{index}}"
-                action="playSong"
+                data-index="{{index}}"
+                onclick="playSong(event, this)"
                 role="play-song"
-                play-link="{{playUrl}}"
-                title="{{title}}"
-                artists-title="{{artistsTitle}}"
-                track-id="{{_id}}"
-                {{#licensable}}licensable{{/licensable}}
-                {{#playlistId}}playlist-id="{{playlistId}}"{{/playlistId}}
-                release-id="{{releaseId}}">
+                data-play-link="{{playUrl}}"
+                data-title="{{title}}"
+                data-artists-title="{{artistsTitle}}"
+                data-track-id="{{_id}}"
+                data-release-id="{{releaseId}}"
+                data-licensable
+                >
                 <i class="fa fa-play"></i>
                   Play
             </a>

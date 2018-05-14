@@ -1,5 +1,5 @@
 <script type="text/template"
-        template-name="notice-complete-profile">
+        data-template="notice-complete-profile">
 <div id="notice-complete-profile" onclick="clickCompleteProfile(event)">
   <div class="notice--blue">
     <div class="container">
@@ -10,7 +10,7 @@
 </script>
 
 <script type="text/template"
-        template-name="notice-link">
+        data-template="notice-link">
 <button
   onclick="clickCloseLinkNotice(event, '{{name}}')"
   class="button button-sm button--cta button--transparent pull-right"
@@ -27,7 +27,7 @@
 </a>
 </script>
 
-<script type="text/template" template-name="complete-profile-modal">
+<script type="text/template" data-template="complete-profile-modal">
     <div class="modal modal--complete-profile">
       <div class="panel pointer-events" id="complete-profile-modal">
         <h1>Complete Your Profile</h1>
@@ -68,7 +68,7 @@
             <button class="button button--cta">Save</button>
           </form>
         </div>
-        <button class="button--close faux" action="closeModal">
+        <button class="button--close faux" onclick="closeModal(event, this)">
           <i class="fa fa-remove"></i>
         </button>
       </div>
@@ -76,7 +76,7 @@
 </script>
 
 <script type="text/template"
-        template-name="notice-gold-shop-code">
+        data-template="notice-gold-shop-code">
 <div class="notice--blue-link">
   <button
     onclick="closeGoldShopDiscountNotice()"

@@ -1,33 +1,68 @@
-function transformRedirectTo (obj) {
-  obj = obj || {}
-  var url = getRedirectTo()
-  obj.redirectTo = encodeURIComponent(url)
-  return obj
-}
-
-function transformSignIn (o) {
-  if(isSignedIn()) {
-    toasty('You are already logged in');
-    return go('/account');
+/*==================================
+=            PROCESSORS            =
+==================================*/
+function processSignInPage (args) {
+  console.log('args', args)
+  if (isSignedIn()) {
+    toasty('You are already logged in')
+    go('/account')
+    return
   }
-  o = transformRedirectTo(o)
-  o.continueTo = getSignInContinueTo()
-  trackSignUpEvents();
-  return o
+  const scope = {}
+  const url = getRedirectTo()
+
+  scope.redirectTo = encodeURIComponent(url)
+  scope.continueTo = getSignInContinueTo()
+  trackSignUpEvents()
+  renderContent(args.template, scope)
 }
 
+/*===============================
+=            ACTIONS            =
+===============================*/
 function submitSignIn (e, el) {
-  var data = getTargetDataSet(el);
-  signIn(data, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
-    if (xhr.status != 209)
-      return onSignIn()
-    go('/authenticate-token')
+  submitForm(e, {
+    validate: function (data, errs) {
+      if (!data.email) {
+        errs.push('Email is required')
+      }
+
+      if (!data.password) {
+        errs.push('Password is required')
+      }
+
+      return errs
+    },
+    action: function (args) {
+      signIn(args.data, (err, obj, xhr) => {
+        actionier.off(args.form)
+        if (terror(err)) {
+          formErrors(args.form, err)
+          return
+        }
+        if (xhr.status != 209) {
+          onSignIn()
+          return
+        }
+        go('/authenticate-token')
+      })
+    }
+  })
+}
+
+function submitSignUp (e, el) {
+  submitForm(e, {
+    transformData: transformSubmittedAccountData,
+    validate: validateSignUp,
+    action: function (args) {
+      signUpAt(args.data, '/signup')
+    }
   })
 }
 
 function signIn (data, done) {
-  data.password = data.password.toString();
+  data.password = data.password.toString()
+  console.log('data', data)
   requestJSON({
     url: endhost + '/signin',
     method: 'POST',
@@ -40,10 +75,10 @@ function authenticateTwoFactorToken (e, el) {
   requestJSON({
     url: endhost + '/signin/token',
     method: 'POST',
-    data: getTargetDataSet(el),
+    data: getDataSet(el),
     withCredentials: true
   }, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
+    if (err) { return toasty(new Error(err.message)) }
     onSignIn()
   })
 }
@@ -54,26 +89,26 @@ function resendTwoFactorToken (e, el) {
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
+    if (err) { return toasty(new Error(err.message)) }
     toasty(strings.tokenResent)
   })
 }
 
 function onSignIn(done) {
-  if(!done) {
+  if (!done) {
     done = function () {
-      go(getRedirectTo());
+      go(getRedirectTo())
     }
   }
   getSession(function (err, sess) {
-    if (err) return toasty(new Error(err.message))
+    if (err) { return toasty(new Error(err.message)) }
     session = sess
     trackUser()
     renderHeader()
     renderHeaderMobile()
-    siteNotices.completeProfileNotice.start();
+    siteNotices.completeProfileNotice.start()
     //siteNotices.goldShopCodeNotice.start()
-    done();
+    done()
   })
 }
 
@@ -83,127 +118,119 @@ function signOut (e, el) {
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
+    if (err) { return toasty(new Error(err.message)) }
     session.user = null
     untrackUser()
     renderHeader()
     renderHeaderMobile()
-    siteNotices.completeProfileNotice.close();
+    siteNotices.completeProfileNotice.close()
     go("/")
   })
 }
 
 function recoverPassword (e, el) {
-  var data = getTargetDataSet(el)
-  data.returnUrl = location.protocol + '//' + location.host + '/reset-password?key=:code'
-  requestJSON({
+  submitForm(e, {
+    transformData: function (data) {
+      data.returnUrl = location.protocol + '//' + location.host + '/reset-password?key=:code'
+      return data
+    },
+    successMsg: strings.passwordResetEmail,
     url: endhost + '/password/send-verification',
-    method: 'POST',
-    withCredentials: true,
-    data: data
-  }, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
-    window.alert(strings.passwordResetEmail)
+    method: 'POST'
   })
 }
 
-function transformPasswordReset (obj) {
-  obj = obj || {};
-  var key = queryStringToObject(window.location.search).key;
-  obj.missingKey = !key;
-  return obj;
+function processPasswordResetPage (args) {
+  pageProcessor(args, {
+    transform: function () {
+      const obj = {}
+      var key = searchStringToObject().key
+
+      obj.missingKey = !key
+      return obj
+    }
+  })
 }
 
 function updatePassword (e, el) {
-  var data = getTargetDataSet(el)
-  if (!data.password) return window.alert(strings.passwordMissing)
-  if (data.password != data.confirmPassword) return window.alert(strings.passwordDoesntMatch)
-  data.code = queryStringToObject(window.location.search).key
-  requestJSON({
-    url: endhost + '/password/reset',
-    method: 'POST',
-    withCredentials: true,
-    data: data
-  }, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
-    window.alert(strings.passwordReset)
-    go('/signin')
+  submitForm(e, {
+    validate: function (data, errs) {
+      if (!data.password) {
+        errs.push(strings.passwordMissing)
+      }
+
+      if (data.password != data.confirmPassword) {
+        errs.push(strings.passwordDoesntMatch)
+      }
+
+      return errs
+    }
   })
 }
 
 function signUp (data, where, done) {
-  data.password = data.password.toString();
+  data.password = data.password.toString()
   requestJSON({
     url: endpoint + where,
     method: 'POST',
     withCredentials: true,
     data: data
   }, function (err, obj, xhr) {
-    if(err) {
-      return done(err);
+    if (err) {
+      return done(err)
     }
-    onSignIn(done);
-  });
+    onSignIn(done)
+  })
 }
 
-function signUpAt (e, el, where) {
-  var data = getTargetDataSet(el);
-  data = transformSubmittedAccountData(data);
-  signUp(data, where, function (err, obj, xhr) {
-    if (err) return toasty(new Error(err.message))
+function signUpAt (data, where) {
+  signUp(data, where, (err, obj, xhr) => {
+    if (terror(err)) {
+      return
+    }
     go(getRedirectTo())
-  });
+  })
 }
-
 
 function validateSignUp (data, errors) {
-  var errors = validateAccountData(data);
+  errors = errors.concat(validateAccountData(data))
 
-  if(!data.password && !data.password_confirmation) {
-    errors.push('Password is required');
+  if (!data.password && !data.password_confirmation) {
+    errors.push('Password is required')
   }
 
-  if(!data.email || data.email.indexOf('@') == -1) {
-    errors.push('A valid email is required');
+  if (!data.email || data.email.indexOf('@') == -1) {
+    errors.push('A valid email is required')
   }
+
+  console.log('errors', errors)
 
   return errors
 }
 
-function submitSignUp (e, el) {
-  var data = getTargetDataSet(el)
-  data = transformSubmittedAccountData(data);
-  var errors = validateSignUp(data)
-  if(errors.length) {
-    errors.forEach(function (err) {
-      toasty(new Error(err));
-    })
-    return
-  }
-  signUpAt(e, el, '/signup')
-}
 
 function getRedirectTo () {
-  return queryStringToObject(window.location.search).redirect || "/"
+  return searchStringToObject().redirect || "/"
 }
 
 function getSignInContinueTo () {
   var redirectTo = getRedirectTo()
   var continueTo = false
 
-  if(redirectTo.substr(0, '/account/services'.length) == '/account/services') {
-    var qos = redirectTo.substr(redirectTo.indexOf('?')+1)
+  if (redirectTo.substr(0, '/account/services'.length) == '/account/services') {
+    var qos = redirectTo.substr(redirectTo.indexOf('?') + 1)
     var qo = queryStringToObject(qos)
+
     continueTo = {
       buying: qo
     }
-    if(qo.ref == 'gold') {
+    if (qo.ref == 'gold') {
       continueTo.buying.gold = true
     }
-    continueTo.msg = false;
+    continueTo.msg = false
   }
 
-  if(redirectTo.indexOf('bestof2017') >= 0) {
+  if (redirectTo.indexOf('bestof2017') >= 0) {
     continueTo = {
       msg: 'voting on <a href="/bestof2017">Best of 2017</a>'
     }
@@ -212,59 +239,59 @@ function getSignInContinueTo () {
   return continueTo
 }
 
-function transformSignUp () {
-  var redirectTo = getRedirectTo()
-  var continueTo = getSignInContinueTo()
+function processSignUpPage (args) {
+  const redirectTo = getRedirectTo()
+  const continueTo = getSignInContinueTo()
 
-  if(isSignedIn()) {
-    toasty('You are already logged in');
-    return go('/account');
+  if (isSignedIn()) {
+    toasty('You are already logged in')
+    return go('/account')
   }
 
-  obj = {
+  const scope = {
     countries: getAccountCountries(),
     continueTo: continueTo,
     redirectTo: encodeURIComponent(redirectTo)
   }
 
-  var qo = queryStringToObject(window.location.search)
+  var qo = searchStringToObject()
 
-  if(qo.email) {
-    obj.email = qo.email
+  if (qo.email) {
+    scope.email = qo.email
   }
 
-  if(qo.location) {
-    obj.placeNameFull = qo.location
+  if (qo.location) {
+    scope.placeNameFull = qo.location
   }
 
-  if(qo.promotions || qo.location) {
-    obj.emailOptIns = {
-      promotions:true
+  if (qo.promotions || qo.location) {
+    scope.emailOptIns = {
+      promotions: true
     }
   }
 
-  return obj
+  renderContent(args.template, scope)
+
+  google.maps.event.addDomListener(window, 'load', initLocationAutoComplete)
+  trackSignUpEvents()
+  initLocationAutoComplete()
 }
 
 function mapConfirmSignup () {
-  var obj = queryStringToObject(window.location.search)
-  if (!Object.keys(obj).length) return
+  var obj = searchStringToObject()
+
+  if (!Object.keys(obj).length) { return }
   obj.countries = getAccountCountries()
-  if(obj.email == 'undefined') {
+  if (obj.email == 'undefined') {
     obj.email = ''
   }
   return obj
 }
 
-function completedSignUp () {
-  google.maps.event.addDomListener(window, 'load', initLocationAutoComplete);
-  trackSignUpEvents();
-  initLocationAutoComplete()
-}
-
 function trackSignUpEvents () {
-  var redirectTo = getRedirectTo();
-  if(redirectTo == '/account/services?ref=gold') {
+  var redirectTo = getRedirectTo()
+
+  if (redirectTo == '/account/services?ref=gold') {
     recordSubscriptionEvent('Redirect to Sign Up', 'Gold Redirect to Signup')
   }
 }

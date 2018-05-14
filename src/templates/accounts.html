@@ -1,83 +1,67 @@
 <script type="text/template"
-    route="^verify\/(.*)"
-    source="$endhost/invite/info/$1"
-    transform="transformVerify"
-    completed="completedVerify"
-    page-title="Verify"
+    data-route="^verify\/(.*)"
+    data-source="$endhost/invite/info/$1"
+    data-process="processVerifyPage"
+    data-title="Verify"
+    data-template="verify-page"
     >
     <div class="container">
-        {{#loading}}
-        {{>loading-view}}
-        {{/loading}}
-        {{#error}}
-        <p>{{message}}</p>
-        {{/error}}
         {{#data}}
-        <h1>Complete Signup</h1>
-        {{^isSignedIn}}
-            <form onsubmit="false" data-set="verify" data-submit-action="verifyInvite" class="col-xs-12 col-md-6 panel">
-                <input type="hidden" name="code" value="{{code}}" />
-                <table class="form signup-verify">
-                    <tbody>
-                        <tr>
-                            <th>Real Name</th>
-                            <td>
-                                <input type="text"
-                                       name="realName"
-                                       placeholder=""
-                                       value="" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Password</th>
-                            <td>
-                                <input type="password"
-                                       name="password"
-                                       placeholder="a secret"/>
-                                <button
-                                    class="faux password"
-                                    action="togglePassword"
-                                    tabindex="999"
-                                    toggle-target="password">
-                                    <i class="fa fa-eye-slash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Location</th>
-                            <td>
-                                {{>location-autocomplete}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button button--cta">Submit</button>
-            </form>
-        {{/isSignedIn}}
-        {{#isSignedIn}}
-        <p>You are already signed in.</p>
-        {{/isSignedIn}}
+            <h1>Complete Signup</h1>
+            {{#unless isSignedIn}}
+                <form onsubmit="submitVerifyInvite(event, this)" class="col-xs-12 col-md-6 panel">
+                    <input type="hidden" name="code" value="{{code}}" />
+                    <table class="form signup-verify">
+                        <tbody>
+                            <tr>
+                                <th>Real Name</th>
+                                <td>
+                                    <input type="text"
+                                           name="realName"
+                                           placeholder=""
+                                           value="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Password</th>
+                                <td>
+                                    {{>password-field}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>
+                                    {{>location-autocomplete}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button button--cta">Submit</button>
+                </form>
+            {{else}}
+            <p>You are already signed in.</p>
+            {{/unless}}
         {{/data}}
     </div>
 </script>
 
 <script type="text/template"
-        route="^(signin|sign-in)"
-        transform="transformSignIn"
-        page-title="Sign In">
-    {{#data}}
+        data-route="^(signin|sign-in)"
+        data-process="processSignInPage"
+        data-title="Sign In"
+        data-template="sign-in-page"
+        >
     <div class="container">
-        {{^continueTo}}
-        <h1>Sign In</h1>
-        {{/continueTo}}
-        {{#continueTo}}
-        <div class="panel">
-            <h1>Sign In to Continue</h1>
-            <p>Sign in or create an account to continue {{>continueTo}}.</p>
-        </div>
-        {{/continueTo}}
+        {{#unless continueTo}}
+            <h1>Sign In</h1>
+        {{else}}
+            <div class="panel">
+                <h1>Sign In to Continue</h1>
+                <p>Sign in or create an account to continue {{>continueTo}}.</p>
+            </div>
+        {{/unless}}
         <div class="flex sign-split">
-            <form onsubmit="false" data-set="credentials" data-submit-action="submitSignIn" class="col-xs-12 col-md-6 panel">
+            <form onsubmit="submitSignIn(event, this)" class="col-xs-12 col-md-6 panel">
                 <h2>With Email</h2>
                 {{>sign-in-fields}}
                 <div class="button-group button-group--margin">
@@ -90,17 +74,17 @@
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Social</h2>
                 <div class="button-group button-group--margin">
-                    <button class="button--social button--half button--fb" action="clickSignInFacebook"><i class="fa fa-social-f"></i> Sign In</button>
-                    <button class="button--social button--half button--g" action="clickSignInGoogle"><i class="fa fa-social-g"></i> Sign In</button>
+                    <button class="button--social button--half button--fb" onclick="clickSignInFacebook(event, this)"><i class="fa fa-social-f"></i> Sign In</button>
+                    <button class="button--social button--half button--g" onclick="clickSignInGoogle(event, this)"><i class="fa fa-social-g"></i> Sign In</button>
                 </div>
             </div>
         </div>
     </div>
-    {{/data}}
 </script>
 
 <script type="text/template"
-        mustache-name="birthday-fields"
+        data-partial
+        data-template="birthday-fields"
         >
 <select name="birthday_month" class="birthday-month" value="{{birthday_month}}">
     <option value="01">Jan</option>
@@ -153,7 +137,8 @@
 </script>
 
 <script type="text/template"
-        mustache-name="sign-in-fields"
+        data-partial
+        data-template="sign-in-fields"
         >
 <table class="form mobile">
     <tbody>
@@ -169,17 +154,7 @@
         <tr>
             <th>Password</th>
             <td>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="a secret"/>
-                <button
-                    class="faux password"
-                    action="togglePassword"
-                    toggle-target="password"
-                    type="button">
-                    <i class="fa fa-eye-slash"></i>
-                </button>
+                {{>password-field}}
             </td>
         </tr>
     </tbody>
@@ -187,133 +162,133 @@
 </script>
 
 <script type="text/template"
-        route="authenticate-token"
-        page-title="Sign In 2 Factor">
+        data-route="authenticate-token"
+        data-title="Sign In 2 Factor">
     <div class="container">
         <h1>Authenticate Token</h1>
         <div class="panel">
-            <table class="form mobile" data-set="auth-token">
-                <tr>
-                    <th>Token</th>
-                    <td>
-                        <input type="text" name="token" placeholder="Enter Here"/>
-                    </td>
-                </tr>
-            </table>
-            <div class="button-group">
-                <button class="button--cta button--full" action="authenticateTwoFactorToken" data-set-target="auth-token">Authorize</button>
-                <button class="button--full" action="resendTwoFactorToken">Resend Token</button>
-            </div>
+            <form onsubmit="authenticateTwoFactorToken(event, this)">
+                <table class="form mobile">
+                    <tr>
+                        <th>Token</th>
+                        <td>
+                            <input type="text" name="token" placeholder="Enter Here"/>
+                        </td>
+                    </tr>
+                </table>
+                <div class="button-group">
+                    <button class="button--cta button--full">Authorize</button>
+                    <button class="button--full" type="button" onclick="resendTwoFactorToken(event, this)">Resend Token</button>
+                </div>
+            </form>
         </div>
     </div>
 </script>
 
 <script type="text/template"
-        route="^forgot-password"
-        page-title="Forgot Password?">
+        data-route="^forgot-password"
+        data-title="Forgot Password?"
+        >
     <div class="container">
         <h1>Forgot Password?</h1>
         <div class="panel">
-        <table class="form mobile" data-set="credentials">
-            <tbody>
-                <tr>
-                    <th>Email</th>
-                    <td>
-                        <input
-                            type="text"
-                            name="email"
-                            placeholder="kitty@monstercat.com"/>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="button-group">
-            <button class="button--cta button--full" action="recoverPassword" data-set-target="credentials">Send Reset Link</button>
-        </div>
+            <form onsubmit="recoverPassword(event, this)">
+                <table class="form mobile">
+                    <tbody>
+                        <tr>
+                            <th>Email</th>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="email"
+                                    placeholder="kitty@monstercat.com"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="button-group">
+                    <button class="button--cta button--full">Send Reset Link</button>
+                </div>
+            </form>
         </div>
     </div>
 </script>
 
 <script type="text/template"
-        route="^reset-password"
-        page-title="Reset Password"
-        transform="transformPasswordReset"
+        data-route="^reset-password"
+        data-title="Reset Password"
+        data-process="processPasswordResetPage"
+        data-template="reset-password-page"
         >
+    {{#data}}
     <div class="container">
-        {{#data}}
-            <h1>Reset Password</h1>
-            <div class="panel">
+        <h1>Reset Password</h1>
+        <div class="panel">
             {{#missingKey}}
                 <p>No key provided.</p>
             {{/missingKey}}
-
             {{^missingKey}}
-            <table class="form mobile" data-set="password">
-                <tbody>
-                    <tr>
-                        <th>Password</th>
-                        <td>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="New Password"/>
-                            <button
-                                class="faux password"
-                                action="togglePassword"
-                                toggle-target="password">
-                                <i class="fa fa-eye-slash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Confirm</th>
-                        <td>
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                placeholder="Confirm Password"/>
-                            <button
-                                class="faux password"
-                                action="togglePassword"
-                                toggle-target="confirmPassword">
-                                <i class="fa fa-eye-slash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <form onsubmit="updatePassword(event, this)">
+                <table class="form mobile">
+                    <tbody>
+                        <tr>
+                            <th>Password</th>
+                            <td>
+                                {{>password-field}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Confirm</th>
+                            <td>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    placeholder="Confirm Password"/>
+                                <button
+                                    class="faux password"
+                                    type="button"
+                                    onclick="togglePassword(event, this)"
+                                    toggle-target="confirmPassword">
+                                    <i class="fa fa-eye-slash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="button-group">
                     <button
-                        class="button--cta button-full"
-                        action="updatePassword"
-                        data-set-target="password">
+                        class="button--cta button-full">
                         Update Password
                     </button>
                 </div>
-            </div>
-            {{/missingKey}}
-        {{/data}}
+            </form>
+        </div>
+        {{/missingKey}}
     </div>
+    {{/data}}
 </script>
 
 <script type="text/template"
-        route="^confirm-sign-up"
-        page-title="Confirm Sign Up"
+        data-route="^confirm-sign-up"
+        data-title="Confirm Sign Up"
         completed="completedSignUp"
-        transform="mapConfirmSignup">
+        transform="mapConfirmSignup"
+        >
     <div class="container">
         <h1>Confirm Sign Up</h1>
         <div class="panel">
         {{#data}}
-        <table class="form mobile" data-set="credentials" trigger-target="signUpSocial">
-            {{>signup-fields}}
-            <input type="hidden" name="token" value="{{token}}"/>
-            <input type="hidden" name="submitWhere" value="{{submitWhere}}"/>
-            <input type="hidden" name="name" value="{{name}}"/>
-        </table>
-        <div class="button-group">
-            <button class="button--cta button--full" action="signUpSocial" trigger="signUpSocial" data-set-target="credentials">Sign Up</button>
-        </div>
+        <form onsubmit="signUpSocial(event, this)">
+            <table class="form mobile">
+                {{>signup-fields}}
+                <input type="hidden" name="token" value="{{token}}"/>
+                <input type="hidden" name="submitWhere" value="{{submitWhere}}"/>
+                <input type="hidden" name="name" value="{{name}}"/>
+            </table>
+            <div class="button-group">
+                <button class="button--cta button--full">Sign Up</button>
+            </div>
+        </form>
         {{/data}}
         {{^data}}
         <p>Nothing here.</p>
@@ -323,58 +298,57 @@
 </script>
 
 <script type="text/template"
-        route="^sign-up"
-        page-title="Sign Up"
-        completed="completedSignUp"
-        transform="transformSignUp">
+        data-route="^sign-up"
+        data-title="Sign Up"
+        data-process="processSignUpPage"
+        data-template="sign-up-page"
+        >
     <div class="container">
-        {{#data}}
-            {{^continueTo}}
+        {{#unless continueTo}}
             <h1>Sign Up</h1>
-            {{/continueTo}}
-
-            {{#continueTo}}
+        {{else}}
             <div class="panel">
                 <h1>Sign Up to Continue</h1>
                 <p>Create an account or sign in to continue {{>continueTo}}.</p>
             </div>
-            {{/continueTo}}
+        {{/unless}}
         <div class="flex sign-split">
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Email</h2>
-                <table class="form mobile" data-set="credentials" trigger-target="signUp">
-                    {{>signup-fields}}
-                </table>
-                <div class="button-group">
-                    <button class="button--cta button--full" action="submitSignUp" trigger="signUp" data-set-target="credentials">Sign Up</button>
-                    or <a href="/signin?redirect={{redirectTo}}">sign in</a>
-                </div>
+                <form onsubmit="submitSignUp(event, this)">
+                    <table class="form mobile">
+                        {{>signup-fields}}
+                    </table>
+                    <div class="button-group">
+                        <button class="button--cta button--full">Sign Up</button>
+                        or <a href="/signin?redirect={{redirectTo}}">sign in</a>
+                    </div>
+                </form>
             </div>
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Social</h2>
                 <div class="button-group">
-                    <button class="button--social button--half button--fb" action="clickSignUpFacebook"><i class="fa fa-social-f"></i> Sign Up</button>
-                    <button class="button--social button--half button--g" action="clickSignUpGoogle"><i class="fa fa-social-g"></i> Sign Up</button>
+                    <button class="button--social button--half button--fb" onclick="clickSignUpFacebook(event)"><i class="fa fa-social-f"></i> Sign Up</button>
+                    <button class="button--social button--half button--g" onclick="clickSignUpGoogle(event)"><i class="fa fa-social-g"></i> Sign Up</button>
                 </div>
             </div>
         </div>
-        {{/data}}
     </div>
 </script>
 
 <script type="text/template"
-        route="^account\/gold\/?"
-        page-title="My Gold Features"
-        transform="transformAccountGold"
-        completed="completedAccountGold"
+        data-route="^account\/gold\/?"
+        data-title="My Gold Features"
+        data-process="processAccountGoldPage"
+        data-template="account-gold-page"
         >
     <div id="account-gold">
-        {{#loading}}
+        {{#if loading}}
             {{>loading-view}}
-        {{/loading}}
-        {{#error}}
+        {{/if}}
+        {{#err}}
             {{>error}}
-        {{/error}}
+        {{/err}}
         {{#data}}
             <div class="top-banner top-banner--no-margin top-banner--account-gold">
                 <div class="banner">
@@ -385,31 +359,28 @@
                 </div>
                 <div class="container flex">
                     <div class="col-xs-12 col-sm-12 col-md-12 cl-white featured-details">
-                        {{#isSignedIn}}
+                        {{#if isSignedIn}}
                             <a href="/account/services" class="button button--cta pull-right ml-1 mt-4">Subscriptions</a>
                             <a href="/account" class="button button--cta pull-right button--icon button--icon-left mt-4">
                                 <i class="fa fa-chevron-left"></i>
                                 My Account
                             </a>
                             <h1 class="title uppercase">My Gold Features</h1>
-                            {{#hasGoldAccess}}
+                            {{#if hasGoldAccess}}
                                 <p>Hey {{displayName}},
-                                    {{#hasFreeGold}}
-                                    you have a free Gold subscription.
-                                    {{/hasFreeGold}}
-                                    {{^hasFreeGold}}
-                                    you've been Gold for {{gold.months}} month<span class="s" num="{{gold.months}}"></span>. {{thankYou}}
-                                    {{/hasFreeGold}}</p>
-                            {{/hasGoldAccess}}
-                            {{^hasGoldAccess}}
+                                    {{#if hasFreeGold}}
+                                        you have a free Gold subscription.
+                                    {{else}}
+                                        you've been Gold for {{gold.months}} month<span class="s" num="{{gold.months}}"></span>. {{thankYou}}
+                                    {{/if}}</p>
+                            {{else}}
                                 <p>Hey {{displayName}}, to use these features you'll need to <a href="/gold/buy">get Gold</a>.</p>
-                            {{/hasGoldAccess}}
-                        {{/isSignedIn}}
-                        {{^isSignedIn}}
+                            {{/if}}
+                        {{else}}
                             <h1>Gold Features</h1>
                             <p>You aren't logged in. <a href="/sign-in">Sign in</a>.</p>
                             <p>Gold is a monthly subscription for supporting the artists, downloading music, early streaming, and more.</p>
-                        {{/isSignedIn}}
+                        {{/if}}
 
                         {{^hasGoldAccess}}
                             <br /><a href="/gold/buy" class="button button--gold button--icon">Get Gold  <i class="fa fa-chevron-right"></i></a>
@@ -422,10 +393,9 @@
                     </div>
                 </div>
             </div>
-            {{#hasGoldAccess}}
+            {{#if hasGoldAccess}}
             <div class="container">
-                <div class="flex flex-pt {{#hasGoldAccess}}{{/hasGoldAccess}}">
-                    {{#hasGoldAccess}}
+                <div class="flex flex-pt">
                     <div class="panel panel--daxrk rewards col-md-6 col-sm-12 col-xs-12">
                         <h2>Shop Discounts</h2>
                         <p>Each month you have Gold you get a new shop discount code. Stay subscribed for bigger discounts.</p>
@@ -448,192 +418,162 @@
                             </tr>
                         </table>
                     </div>
-                    {{/hasGoldAccess}}
-                    <div class="col-xs-12 {{#hasGoldAccess}}col-md-6{{/hasGoldAccess}}{{^hasGoldAccess}}col-md-12{{/hasGoldAccess}} panel" id="shop-codes">
+                    <div class="col-xs-12 col-md-6 panel" id="shop-codes">
                         <h2>Current Code</h2>
-                        {{#hasGoldAccess}}
-                                {{#currentCode}}
-                                <p class="code-description">
-                                    <input class="code" size="32" type="text" value="{{code}}" role="clipboard" />{{>copy-clipboard-button}}
-                                    gets you <span class="discount">{{discountText}}</span>.
-                                    <br /><small>{{#expires}}
-                                    Single use and expires on {{expiresFormatted}}.
-                                    {{/expires}}
-                                    {{^expires}}
-                                        Single use and does not expire.
-                                    {{/expires}}
-                                    Next code in <span role="countdown" to="{{nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
-                                </p>
-                                {{/currentCode}}
-                                <div class="button-group">
-                                    <a href="https://shop.monstercat.com/?utm_source=gold&utm_campaign=shop_discount" class="button button--cta button--icon" target="_blank">
-                                        Go to Shop
-                                        <i class="fa fa-external-link"></i>
-                                    </a>
-                                </div>
-                        {{/hasGoldAccess}}
-                        {{^hasGoldAccess}}
-                        <p>Get a discount code in the <a href="https://shop.monstercat.com">Monstercat Shop</a> every month that you have <a href="/gold">Gold</a>.</p>
+                        {{#currentCode}}
+                        <p class="code-description">
+                            <input class="code" size="32" type="text" value="{{code}}" role="clipboard" />{{>copy-clipboard-button}}
+                            gets you <span class="discount">{{discountText}}</span>.
+                            <br /><small>{{#expires}}
+                            Single use and expires on {{expiresFormatted}}.
+                            {{/expires}}
+                            {{^expires}}
+                                Single use and does not expire.
+                            {{/expires}}
+                            Next code in <span role="countdown" to="{{nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
+                        </p>
+                        {{/currentCode}}
                         <div class="button-group">
-                            <a href="/gold/buy" class="button">Get Monstercat Gold</a>
+                            <a href="https://shop.monstercat.com/?utm_source=gold&utm_campaign=shop_discount" class="button button--cta button--icon" target="_blank">
+                                Go to Shop
+                                <i class="fa fa-external-link"></i>
+                            </a>
                         </div>
-                        {{/hasGoldAccess}}
                     </div>
 
                 </div>
                 <div class="flex sign-split">
                     <div class="col-xs-12 col-md-6 panel" id="reddit">
                         <h2>/r/Monstercat Flair</h2>
-                        {{#hasGoldAccess}}
                             {{#self}}
                             <p>Put in your reddit username to get an exclusive <strong>Monstercat Gold</strong> flair on the <a href="https://www.reddit.com/r/monstercat">Monstercat Subreddit</a>.</p>
-                            <table class="form mobile" data-set="reddit-flair" trigger-target="saveRedditUsername">
-                                <tbody>
-                                    <tr>
-                                        <th>reddit username</th>
-                                        <td><input type="text" name="redditUsername" placeholder="Username" value="{{redditUsername}}" /></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="button-group">
-                                <button class="button--full" action="saveRedditUsername" trigger="saveRedditUsername" data-set-target="reddit-flair">Save</button>
-                            </div>
+                            <form onsubmit="submitSaveRedditUsername(event, this)">
+                                <table class="form mobile" data-set="reddit-flair" trigger-target="saveRedditUsername">
+                                    <tbody>
+                                        <tr>
+                                            <th>reddit username</th>
+                                            <td><input type="text" name="redditUsername" placeholder="Username" value="{{redditUsername}}" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="button-group">
+                                    {{>submit-button text="Save" class=" "}}
+                                </div>
+                            </form>
                             {{/self}}
-                        {{/hasGoldAccess}}
-                        {{^hasGoldAccess}}
-                        <p>Get an exclusive <strong>Monstercat Gold</strong> flair on the <a href="https://www.reddit.com/r/monstercat">Monstercat Subreddit</a>.</p>
-                        <div class="button-group">
-                            <a href="/gold/buy" class="button">Get Monstercat Gold</a>
-                        </div>
-                        {{/hasGoldAccess}}
                     </div>
                     <div class="col-xs-12 col-md-6 panel">
                         <h2>Gold-only Discord Chat</h2>
                         <p>Join us on our <a href="https://discord.gg/j8N75GN">Discord server</a> in the exclusive Gold members only chat. Please join the server before using the form below.</p>
-                        {{>joinGoldDiscord}}
-                        {{^hasGoldAccess}}
-                        <div class="button-group">
-                            <a href="/gold/buy" class="button">Get Monstercat Gold</a>
-                        </div>
-                        {{/hasGoldAccess}}
+                        {{>join-gold-discord}}
                     </div>
                 </div>
             </div>
-            {{/hasGoldAccess}}
+            {{/if}}
         {{/data}}
     </div>
 </script>
 
 <script type="text/template"
-        route="^(account\/?$|account\/?\?(.*)$)"
-        source="$endpoint/self"
-        page-title="My Account"
-        completed="completedAccount"
-        transform="mapAccount">
+        data-route="^(account\/?$|account\/?\?(.*)$)"
+        data-source="$endpoint/self"
+        data-title="My Account"
+        data-process="processAccountPage"
+        data-template="account-page"
+        >
     <div class="container">
         <a href="/account/services" class="button button--cta pull-right ml-1">Subscriptions</a>
         {{#data}}
-            {{#hasGoldAccess}}
+            {{#if hasGoldAccess}}
                 <a href="/account/gold" class="button button--gold-dark pull-right button--icon">
                     My Gold Features
                     <i class="fa fa-chevron-right"></i>
                 </a>
-            {{/hasGoldAccess}}
-            {{^hasGoldAccess}}
+            {{else}}
                 <a href="/gold/buy" class="button button--gold-dark pull-right">Upgrade to Gold</a>
-            {{/hasGoldAccess}}
+            {{/if}}
         {{/data}}
         <h1>My Account</h1>
         <div class="flex sign-split">
 
             <div class="col-xs-12 col-md-6 panel">
                 <h2>Account</h2>
-                {{#loading}}
-                {{>/loading-view}}
-                {{/loading}}
                 {{#error}}
-                <p>{{message}}</p>
-                <p><a href="/signin?redirect=account">Sign in</a> to view this page.</a></p>
+                    <p>{{message}}</p>
+                    <p><a href="/signin?redirect=account">Sign in</a> to view this page.</a></p>
                 {{/error}}
                 {{#data}}
-                <table class="form mobile" trigger-target="saveAccount">
-                    <tbody data-set="account">
-                        <tr>
-                            <th>Email</th>
-                            <td>{{email}}</td>
-                        </tr>
-                        <tr>
-                            <th>Display Name</th>
-                            <td><input type="text"
-                                       name="name"
-                                       value="{{name}}"
-                                       placeholder="Nickname"
-                                       data-set-target="account"
-                                       initial-value="{{name}}" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Full Name</th>
-                            <td><input type="text"
-                                       name="realName"
-                                       value="{{realName}}"
-                                       placeholder="Jon GQ Winter"
-                                       data-set-target="account"
-                                       initial-value="{{realName}}" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Location</th>
-                            <td>
-                                {{>location-autocomplete}}
-                                {{#locationLegacy}}
-                                    <p>Your country is currently <strong>{{location}}</strong>. Add your city above.</p>
-                                {{/locationLegacy}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Birthday</th>
-                            <td>
-                                {{>birthday-fields}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th valign="top">Email me about</th>
-                            <td>
-                                {{>account-email-optins}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Change Password</th>
-                            <td>
-                                <input type="password"
-                                       name="password"
-                                       placeholder="New Password">
-                                <button
-                                    class="faux password"
-                                    action="togglePassword"
-                                    toggle-target="password">
-                                    <i class="fa fa-eye-slash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="button-group button-group--margin">
-                    <button class="button--cta button--full"
-                            action="saveAccount"
-                            trigger="saveAccount"
-                            data-set-target="account">
-                        Save
-                    </button>
-                    <button class="button--danger button--full" action="signOut">Sign Out</button>
-                </div>
+                <form onsubmit="submitSaveAccount(event)">
+                    <table class="form mobile">
+                        <tbody data-set="account">
+                            <tr>
+                                <th>Email</th>
+                                <td>{{account.email}}</td>
+                            </tr>
+                            <tr>
+                                <th>Display Name</th>
+                                <td><input type="text"
+                                           name="name"
+                                           value="{{account.name}}"
+                                           placeholder="Nickname"
+                                           data-set-target="account"
+                                           initial-value="{{name}}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Full Name</th>
+                                <td><input type="text"
+                                           name="realName"
+                                           value="{{account.realName}}"
+                                           placeholder="Jon GQ Winter"
+                                           data-set-target="account"
+                                           initial-value="{{realName}}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>
+                                    {{#account}}
+                                        {{>location-autocomplete}}
+                                    {{/account}}
+                                    {{#if locationLegacy}}
+                                        <p>Your country is currently <strong>{{account.location}}</strong>. Add your city above.</p>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Birthday</th>
+                                <td>
+                                    {{>birthday-fields}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th valign="top">Email me about</th>
+                                <td>
+                                    {{>account-email-optins}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Change Password</th>
+                                <td>
+                                    {{>password-field}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="button-group button-group--margin">
+                        <button class="button--cta button--full">
+                            Save
+                        </button>
+                        <button class="button--danger button--full" type="button" onclick="signOut(event)">Sign Out</button>
+                    </div>
+                </form>
             </div>
             <div class="col-xs-12 col-md-6 panel">
                 <div id="settings">
                     <h2>Settings</h2>
-                    <div source="$endpoint/self/settings"
-                         template="account-settings">
+                    <div data-source="$endpoint/self/settings"
+                         data-process="processAccountSettings">
                     </div>
                 </div>
                 <hr class="mt-4 mb-4" />
@@ -642,49 +582,53 @@
                     {{#twoFactor}}
                     <p>Two-factor auth is currently <strong>enabled</strong>.</p>
                     <br />
-                    <button action="disableTwoFactor">Disable</button>
+                    <button onclick="disableTwoFactor(event, this)" type="button">Disable</button>
                     {{/twoFactor}}
                     {{#enableTwoFactor}}
-                    <table class="form mobile" data-set="2-factor">
-                        <tbody>
-                            <tr>
-                                <th>Country Code</th>
-                                <td>
-                                    <select name="countryCode">
-                                        <option value="" selected>Select</option>
-                                        {{#countries}}
-                                        <option value="{{dial_code}}">{{name}} ({{dial_code}})</option>
-                                        {{/countries}}
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Phone Number</th>
-                                <td>
-                                    <input type="text" name="number" placeholder="Phone Number"/>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="button-group">
-                        <button class="button--full" action="enableTwoFactor" data-set-target="2-factor">Enable</button>
-                    </div>
+                    <form onsubmit="enableTwoFactor(event, this)">
+                        <table class="form mobile">
+                            <tbody>
+                                <tr>
+                                    <th>Country Code</th>
+                                    <td>
+                                        <select name="countryCode">
+                                            <option value="" selected>Select</option>
+                                            {{#countries}}
+                                            <option value="{{dial_code}}">{{name}} ({{dial_code}})</option>
+                                            {{/countries}}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>
+                                        <input type="text" name="number" placeholder="Phone Number"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="button-group">
+                            <button class="button--full" type="button">Enable</button>
+                        </div>
+                    </form>
                     {{/enableTwoFactor}}
                     {{#confirmingTwoFactor}}
                     <p>Enter the token to confirm your phone number and complete your two factor setup.</p>
-                    <table class="form mobile" data-set="confirm-auth-token">
-                        <tr>
-                            <th>Token</th>
-                            <td>
-                                <input type="text" name="token" placeholder="Enter Here"/>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="button-group">
-                        <button class="button--cta button--full" action="confirmTwoFactor" data-set-target="confirm-auth-token">Confirm Two Factor</button>
-                        <button class="button--full" action="resendTwoFactorToken">Resend Token</button>
-                        <button class="button--full" action="disableTwoFactor">Cancel</button>
-                    </div>
+                    <form onsubmit="confirmTwoFactor(event, this)">
+                        <table class="form mobile" data-set="confirm-auth-token">
+                            <tr>
+                                <th>Token</th>
+                                <td>
+                                    <input type="text" name="token" placeholder="Enter Here"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="button-group">
+                            <button class="button--cta button--full">Confirm Two Factor</button>
+                            <button class="button--full" type="button" onclick="resendTwoFactorToken(event, this)">Resend Token</button>
+                            <button class="button--full" type="button" onclick="disableTwoFactor(event, this)">Cancel</button>
+                        </div>
+                    </form>
                     {{/confirmingTwoFactor}}
                 </div>
                 {{/data}}
@@ -694,86 +638,96 @@
 </script>
 
 <script type="text/template"
-        template-name="account-settings"
-        transform="transformAccountSettings">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <p>{{message}}</p>
-    {{/error}}
+        data-template="account-settings"
+        data-process="processAccountSettings">
     {{#data}}
-    <table class="form mobile">
-        <tbody data-set="settings">
-            <tr id="preferred-download">
-                <th>Preferred Download Format</th>
-                <td>
-                    <select name="preferredDownloadFormat"
-                            initial-value="{{preferredDownloadFormat}}">
-                        {{#downloadOptions}}
-                        <option value="{{value}}"
-                                {{#selected}}selected{{/selected}}>
-                            {{name}}
-                        </option>
-                        {{/downloadOptions}}
-                    </select>
-                    <span class="note">
-                    See more about MP3 quality
-                    <a href="http://wiki.hydrogenaud.io/index.php?title=LAME#Recommended_encoder_settings"
-                       target="_blank">here</a>.
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <label>
-                        <input type="checkbox"
-                               name="hideNonLicensableTracks"
-                               initial-value="{{hideNonLicensableTracks}}"
-                            {{#hideNonLicensableTracks}}checked{{/hideNonLicensableTracks}}/>
-                        Skip Non-licensable Tracks
-                    </label>
-                </th>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <label>
-                        <input type="checkbox"
-                               name="blockNonLicensableTracks"
-                               initial-value="{{blockNonLicensableTracks}}"
-                            {{#blockNonLicensableTracks}}checked{{/blockNonLicensableTracks}}/>
-                        Block Non-licensable Tracks
-                    </label>
-                </th>
-            </tr>
-            <tr>
-                <th colspan="2">
-                    <label>
-                        <input type="checkbox"
-                               name="playlistPublicByDefault"
-                               initial-value="{{playlistPublicByDefault}}"
-                            {{#playlistPublicByDefault}}checked{{/playlistPublicByDefault}}/>
-                        Make Playlists Public By Default
-                    </label>
-                </th>
-            </tr>
-        </tbody>
-    </table>
-    <div source="$endpoint/self/social-signins"
-         template="social-settings">
-    </div>
-    <div class="button-group">
-        <button class="button--cta button--full"
-                action="saveAccountSettings"
-                data-set-target="settings">
-            Update Settings
-        </button>
-    </div>
+    <form onsubmit="submitSaveAccountSettings(event, this)">
+        <table class="form mobile">
+            <tbody data-set="settings">
+                <tr id="preferred-download">
+                    <th>Preferred Download Format</th>
+                    <td>
+                        <select name="preferredDownloadFormat"
+                                initial-value="{{settings.preferredDownloadFormat}}">
+                            {{#each downloadOptions}}
+                            <option value="{{value}}"
+                                    {{#if selected}}selected{{/if}}>
+                                {{name}}
+                            </option>
+                            {{/each}}
+                        </select>
+                        <span class="note">
+                        See more about MP3 quality
+                        <a href="http://wiki.hydrogenaud.io/index.php?title=LAME#Recommended_encoder_settings"
+                           target="_blank">here</a>.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <label>
+                            <input type="checkbox"
+                                   name="hideNonLicensableTracks"
+                                   initial-value="{{settingshideNonLicensableTracks}}"
+                                   {{#if settings.hideNonLicensableTracks}}checked{{/if}}/>
+                            Skip Non-licensable Tracks
+                        </label>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <label>
+                            <input type="checkbox"
+                                   name="blockNonLicensableTracks"
+                                   initial-value="{{settings.blockNonLicensableTracks}}"
+                                {{#if settings.blockNonLicensableTracks}}checked{{/if}}/>
+                            Block Non-licensable Tracks
+                        </label>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <label>
+                            <input type="checkbox"
+                                   name="playlistPublicByDefault"
+                                   initial-value="{{settings.playlistPublicByDefault}}"
+                                   {{#if settings.playlistPublicByDefault}}checked{{/if}}/>
+                            Make Playlists Public By Default
+                        </label>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+        <div data-source="$endpoint/self/social-signins"
+             data-process="processSocialSettings">
+        </div>
+        <div class="button-group">
+            {{>submit-button text="Update Settings"}}
+        </div>
+    </form>
     {{/data}}
 </script>
 
 <script type="text/template"
-        mustache-name="signup-fields">
+        data-partial
+        data-template="password-field"
+>
+<input type="password"
+       name="password"
+       placeholder="a secret"/>
+<button
+    class="faux password"
+    onclick="togglePassword(event, this)"
+    tabindex="999"
+    type="button"
+    toggle-target="password">
+    <i class="fa fa-eye-slash"></i>
+</button>
+</script>
+
+<script type="text/template"
+        data-partial
+        data-template="signup-fields">
     <tbody>
         <tr>
             <th>Email</th>
@@ -787,16 +741,7 @@
         <tr>
             <th>Password</th>
             <td>
-                <input type="password"
-                       name="password"
-                       placeholder="a secret"/>
-                <button
-                    class="faux password"
-                    action="togglePassword"
-                    tabindex="999"
-                    toggle-target="password">
-                    <i class="fa fa-eye-slash"></i>
-                </button>
+                {{>password-field}}
             </td>
         </tr>
         <tr>
@@ -823,7 +768,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="account-email-optins">
+        data-partial data-template="account-email-optins">
     <div class="checkbox email-optin-checkbox">
         <label>
             <input type="checkbox" checked disabled />
@@ -836,7 +781,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="account-email-optin-news">
+        data-partial data-template="account-email-optin-news">
 <div class="checkbox email-optin-checkbox">
     <label>
         <input type="checkbox" name="emailOptIns[news]"{{#emailOptIns.news}} checked="checked"{{/emailOptIns.news}} value="1" />
@@ -846,7 +791,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="account-email-optin-merch">
+        data-partial data-template="account-email-optin-merch">
 <div class="checkbox email-optin-checkbox">
     <label>
         <input type="checkbox" name="emailOptIns[merch]"{{#emailOptIns.merch}} checked="checked"{{/emailOptIns.merch}} value="1" />
@@ -856,7 +801,7 @@
 </script>
 
 <script type="text/template"
-        mustache-name="account-email-optin-events">
+        data-partial data-template="account-email-optin-events">
 <div class="checkbox email-optin-checkbox">
     <label>
         <input type="checkbox" name="emailOptIns[events]"{{#emailOptIns.events}} checked="checked"{{/emailOptIns.events}} value="1" />
@@ -866,28 +811,28 @@
 </script>
 
 <script type="text/template"
-        template-name="social-settings"
-        transform="transformSocialSettings">
+        data-template="social-settings"
+        data-process="processSocialSettings">
     {{#data}}
         <div class="button-group">
         {{#facebookEnabled}}
-        <button class="button--social button--half button--fb" action="unlinkFacebook">
+        <button class="button--social button--half button--fb" onclick="unlinkFacebook(event, this)" type="button">
             <i class="fa fa-social-f"></i> Unlink Account
         </button>
         {{/facebookEnabled}}
         {{^facebookEnabled}}
-        <button class="button--social button--half button--fb" action="enableFacebookSignin">
+        <button class="button--social button--half button--fb" onclick="enableFacebookSignin(event, this)" type="button">
             <i class="fa fa-social-f"></i> Link Account
         </button>
         {{/facebookEnabled}}
 
         {{#googleEnabled}}
-        <button class="button--social button--half button--g" action="unlinkGoogle">
+        <button class="button--social button--half button--g" onclick="unlinkGoogle(event, this)" type="button">
             <i class="fa fa-social-g"></i> Unlink Account
         </button>
         {{/googleEnabled}}
         {{^googleEnabled}}
-        <button class="button--social button--half button--g" action="enableGoogleSignin">
+        <button class="button--social button--half button--g" onclick="enableGoogleSignin(event, this)" type="button">
             <i class="fa fa-social-g"></i> Link Account
         </button>
         {{/googleEnabled}}
@@ -896,38 +841,29 @@
 </script>
 
 <script type="text/template"
-        mustache-name="joinGoldDiscord">
-{{#hasGoldAccess}}
-<div data-set="discord-join-info" trigger-target="joinDiscord">
-	<table class="form mobile">
-		<tbody>
-			<tr>
-					<th>Discord Username & Identifier</th>
-					<td><input type="text" placeholder="Example#0000" name="discordId"/></td>
-			</tr>
-		</tbody>
-	</table>
-	<div class="button-group">
-		<button type="button"
-			class="action-toggle"
-			action="joinDiscord" 
-			data-set-target="discord-join-info">
-			Join Discord 
-			<i class="fa fa-spin fa-refresh fa-fw on"></i>
-		</button>
-	</div>
-  <div role="response"></div>
-</div>
-{{/hasGoldAccess}}
+        data-partial
+        data-template="join-gold-discord">
+{{#if hasGoldAccess}}
+<form onsubmit="submitJoinDiscord(event, this)" role="join-discord">
+    <div>
+        <table class="form mobile">
+            <tbody>
+                <tr>
+                    <th>Discord Username &amp; Identifier</th>
+                    <td><input type="text" placeholder="Example#0000" name="discordId"/></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="button-group">
+            {{>submit-button text="Join Discord" class="action-toggle"}}
+        </div>
+      <div role="response"></div>
+    </div>
+{{/if}}
 </script>
 
-<script type="text/template" template-name="joinDiscordResponse">
-{{#loading}}{{/loading}}
-{{#error}}
-<p class="error-box">{{message}}</p>
-{{/error}}
+<script type="text/template" data-template="joinDiscordResponse">
 {{#data}}
-<br/>
 <p class="success-box">
 Success please join the following channels with the links below:<br/><br/>
 {{#goldJoinUrl}}
@@ -941,9 +877,9 @@ Success please join the following channels with the links below:<br/><br/>
 </script>
 
 <script type="text/template"
-        mustache-name="required"><span class="required">*</span></script>
+        data-partial data-template="required"><span class="required">*</span></script>
 
 <script type="text/template"
-        mustache-name="continueTo">
+        data-partial data-template="continueTo">
 {{#buying}}{{#vendor}}a <strong>{{vendor}}</strong> license for <strong>{{identity}}</strong>{{/vendor}}{{#gold}}a <strong><a href="/gold">Gold subscription</a></strong>{{/gold}}{{/buying}}
 {{#msg}}{{{msg}}}{{/msg}}</script>

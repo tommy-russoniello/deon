@@ -218,25 +218,27 @@ function getTrackNumber (track, releaseId) {
 }
 
 function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
+  var d = new Date();
+
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+
+  document.cookie = cname + "=" + cvalue + "; " + expires;
 }
 
 function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length,c.length);
-        }
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') {
+      c = c.substring(1);
     }
-    return "";
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length,c.length);
+    }
+  }
+  return "";
 }
 
 /**
@@ -246,10 +248,10 @@ function getCookie(cname) {
 function shuffle(a) {
   var j, x, i
   for (i = a.length - 1; i > 0; i--) {
-      j = Math.floor(Math.random() * (i + 1))
-      x = a[i]
-      a[i] = a[j]
-      a[j] = x
+    j = Math.floor(Math.random() * (i + 1))
+    x = a[i]
+    a[i] = a[j]
+    a[j] = x
   }
 }
 
@@ -351,9 +353,10 @@ function youTubeUserToChannelID (user, done) {
 }
 
 function copyToClipboard (e) {
-  var parent = findParentWith(e.target, 'div');
+  var parent = findParentWith(e.target, 'div', false)
   var input = parent.querySelector('textarea,input[type=text]');
   var error = false;
+
   if(!input) {
     toasty(new Error("Can't find textbox to copy."));
     return
@@ -393,13 +396,39 @@ function hookValueSelects (selects) {
   })
 }
 
+function bindOnEnter () {
+  const els = document.querySelectorAll('[onenter]')
+  console.log('els', els);
+
+  for (var i = 0; i < els.length; i++) {
+    const node = els[i]
+    const name = node.getAttribute('onenter')
+    const fn = window[name]
+
+    if (!fn) {
+      console.log('not a function: ' + name)
+    }
+
+    function callback (e) {
+      console.log('e.keyCode', e.keyCode)
+      if (e.keyCode == 13) {
+        console.log('DO IT')
+        fn(e, this)
+      }
+    }
+
+    node.removeEventListener('keydown', callback) //To avoid double calling
+    node.addEventListener('keydown', callback)
+  }
+}
+
 var actionier = {
   on: function (el) {
     el.disabled = true
     el.classList.toggle('on', true)
   },
   off: function (el) {
-    el.disabled = true
+    el.disabled = false
     el.classList.toggle('on', false)
   },
   isOn: function (el) {
@@ -520,4 +549,39 @@ var EPPZScrollTo =
     // Start animation.
     this.scrollVerticalTickToPosition(currentPosition, targetPosition, duration);
   }
-};
+}
+
+function renderHeader () {
+  var data = transformCurrentUrl()
+
+  if (session) {
+    data.user = session ? session.user : null
+  }
+  betterRender('navigation', '#navigation', {
+    data: data
+  })
+}
+
+function renderLoading () {
+  renderContent('loading-view')
+}
+
+function renderError (err) {
+  renderContent('error', {err: err})
+}
+
+function renderContent (template, scope) {
+  const node = findNode('[role=content]')
+
+  betterRender(template, node, scope)
+}
+
+function betterRender (template, node, scope) {
+  const el = render(template, scope, node)
+
+  loadNodeSources(el)
+}
+
+function findParentOrSelf (node, matcher) {
+  return findParentWith(node, matcher, true)
+}

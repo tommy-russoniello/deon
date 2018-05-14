@@ -1,32 +1,37 @@
 <script type="text/template"
-        route="^release-claim"
-        page-title="Remove YouTube Claim">
+        data-route="^release-claim"
+        data-title="Remove YouTube Claim"
+        data-process="processPage"
+        data-template="release-claim-page"
+        >
     <div class="container">
         <h1>YouTube Release Claim</h1>
         <div class="panel">
             <p>If you have recieved a claim on your whitelisted YouTube channel you can release it here. Please fill out the form below.</p>
             <br/>
-            <table class="form mobile">
-                <tbody data-set="youtube-claim">
-                    <tr>
-                        <th>YouTube Video Id</th>
-                        <td>
-                            <input type="text" name="videoId" placeholder="Video Id"/>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="button-group">
-                <button class="button--full actionier" action="removeYouTubeClaim" data-set-target="youtube-claim">
-                    <span class="actionier-off">Release Claims</span>
-                    <span class="actionier-on">Submitting...</span>
-                </button>
-            </div>
+            <form onsubmit="submitRemoveYouTubeClaim(event, this)">
+                <table class="form mobile">
+                    <tbody>
+                        <tr>
+                            <th>YouTube Video Id</th>
+                            <td>
+                                <input type="text" name="videoId" placeholder="Video Id"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="button-group">
+                    <button class="button--full actionier">
+                        <span class="actionier-off">Release Claims</span>
+                        <span class="actionier-on">Submitting...</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </script>
 
-<script type="text/template" mustache-name="vendor-selector">
+<script type="text/template" data-partial data-template="vendor-selector">
     <select name="vendor">
         <option value="">Select One</option>
         <option>YouTube</option>

@@ -1,18 +1,12 @@
 <script type="text/template"
-        route="^artists\/?"
-        transform="transformRoster"
-        completed="completedRoster"
-        page-title="Artists">
+        data-route="^artists\/?"
+        data-process="processRosterPage"
+        data-template="page-roster"
+        data-title="Artists">
     <div class="container">
         <h1>Artists</h1>
         <div class="panel">
-            {{#data}}
-            <!-- desktop year selector -->
             <ul class="col-xs-hidden col-sm-visible button-list">
-                <!--<li>
-                    <a class="button {{^selectedYear}}selected-year{{/selectedYear}}" 
-                        href="/artists">Featured</a>
-		</li>-->
                 {{#years}}
                     <li>
                         <a class="button {{#selected}}selected-year{{/selected}}"
@@ -31,26 +25,20 @@
                 </select>
             </div>
             <div
-            source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,{{selectedYear}}"
-                 template="roster-year">
+                data-source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,{{selectedYear}}"
+                data-process="processRosterYear"
+                role="roster-artists"
+                >
             </div>
-            {{/data}}
         </div>
     </div>
 </script>
 
 <script type="text/template"
-        template-name="roster-year"
-        transform="transformRosterYear">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <p>{{message}}</p>
-    {{/error}}
-    {{#data}}
+        data-template="roster-year"
+        data-process="processRosterYear">
     <ul class="art-list artist-list">
-        {{#results}}
+        {{#each results}}
         <li>
             <a class="silent" href="/artist/{{uri}}" title="{{name}}">
                 {{#image}}
@@ -69,7 +57,6 @@
                 </div>
             </a>
         </li>
-        {{/results}}
+        {{/each}}
     </ul>
-    {{/data}}
 </script>

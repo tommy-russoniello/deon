@@ -1,7 +1,9 @@
 <script type="text/template"
-        route="^account\/services\/?(\?.*)?$"
-        completed="completedServices"
-        transform="transformServices">
+        data-route="^account\/services\/?(\?.*)?$"
+        data-template="account-services-page"
+        data-process="processServicesPage"
+        data-title="Account Services"
+        >
     {{#data}}
     <div class="container services">
         <a href="/account" class="button button--cta pull-right button--icon button--icon-left">
@@ -9,45 +11,48 @@
             My Account
         </a>
         <h1>Manage Services</h1>
-        {{#hasLegacy}}
+        {{#if hasLegacy}}
         <div class="panel">
             <p>
                 You have a legacy account. Please access your subscription from
                 <a target="_blank" href="http://connect.monstercat.com">Monstercat Connect</a>.
             </p>
         </div>
-        {{/hasLegacy}}
-        {{^hasLegacy}}
+        {{else}}
         <div class="flex">
             {{#user}}
             <div class="col-xs-12 col-lg-4 col-lg-last panel panel--dark">
                 {{#gold}}
                     <h1>Gold Membership</h1>
-                    <h2 class="pricing pricing--gold">{{#humble}}<span style="text-decoration: line-through; color: inherit; font-weight: normal;">$5/month</span> <i class="fa fa-arrow-right"></i> $0{{/humble}}{{^humble}}$5/month{{/humble}}</h2>
+                    <h2 class="pricing pricing--gold">
+                        {{#if humble}}
+                            <span style="text-decoration: line-through; color: inherit; font-weight: normal;">$5/month</span> <i class="fa fa-arrow-right"></i> $0
+                        {{else}}
+                            $5/month
+                        {{/if}}</h2>
                     <p>Monstercat Gold Membership allows you to download any of the music in FLAC, MP3, and WAV formats.</p>
-                    {{#permanent}}
-                        <p>You have Gold Membership.</p>
-                    {{/permanent}}
-                    {{#subscribed}}
+                    {{#if permanent}}
+                        <p>You have a free Gold Membership.</p>
+                    {{/if}}
+                    {{#if subscribed}}
                         {{>gold-subscription}}
-                    {{/subscribed}}
-                    {{^has}}
+                    {{/if}}
+                    {{#unless has}}
                     <br/>
                     <ul>
                         <li>Unlimited download and streaming access to the Monstercat catalog (800+ full songs)</li>
                         <li>Direct support via e-mail and on site.</li>
                     </ul>
-                    <div data-set="subscribe-gold" class="services-form" trigger-target="subscribeGold">
-                        <input type="text" name="trialCode" placeholder="{{#humble}}Humble Bundle Code{{/humble}}{{^humble}}Special Code (optional){{/humble}}" />
-                        <button class="button--gold"
-                                action="subscribeGold"
-                                trigger="subscribeGold"
-                                data-set-target="subscribe-gold">
-                            Subscribe
-                            <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
-                        </button>
+                    <div class="services-form">
+                        <form onsubmit="submitSubscribeGold(event, this)">
+                            <input type="text" name="trialCode" placeholder="{{#humble}}Humble Bundle Code{{/humble}}{{^humble}}Special Code (optional){{/humble}}" />
+                            <button class="button--gold">
+                                Subscribe
+                                <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
+                            </button>
+                        </form>
                     </div>
-                    {{/has}}
+                    {{/unless}}
                 {{/gold}}
             </div>
             {{/user}}
@@ -60,7 +65,7 @@
                 <p>Coming from <strong>Humble Bundle</strong>? <a href="/humble">Go here</a> to set up your license.</p>
                 <br />
                 <p>To prepay for 20 months go <a href="/account/services/buyout">here</a>.</p>
-                {{#user.isSignedIn}}
+                {{#if user.isSignedIn}}
                 <br/>
                 <table>
                     <thead>
@@ -74,36 +79,35 @@
                             <th>Options</th>
                         </tr>
                     </thead>
-                    <tbody source="$endpoint/self/whitelist"
-                        template="whitelist-licenses"
-                        role="whitelists"
-                        transform="transformWhitelists">
+                    <tbody data-source="$endpoint/self/whitelist"
+                           data-process="processWhitelists"
+                           role="whitelists"
+                           >
                     </tbody>
                 </table>
-                {{/user.isSignedIn}}
-                <div data-set="new-license" class="services-form" trigger-target="subscribeNewLicense">
-                    {{>vendor-selector}}
-                    <input type="text" name="identity" placeholder="Channel_ID" size="30" />
-                    <button
-                        action="subscribeNewLicense"
-                        trigger="subscribeNewLicense"
-                        data-set-target="new-license">
-                        Subscribe
-                        <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
-                    </button>
-                    <span class="or">or</span>
-                    <button
-                        action="buyoutNewLicense"
-                        data-set-target="new-license">
-                        Prepay for 20 Months
-                        <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
-                    </button>
-                    {{>channel-id-help-text}}
+                {{/if}}
+                <div class="services-form">
+                    <form onsubmit="submitSubscribeNewLicense(event, this)" role="subscribe-new-license">
+                        {{>vendor-selector}}
+                        <input type="text" name="identity" placeholder="Channel_ID" size="30" />
+                        <button>
+                            Subscribe
+                            <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
+                        </button>
+                        <span class="or">or</span>
+                        <button
+                            type="button"
+                            onclick="clickBuyoutNewLicense(event, this)">
+                            Prepay for 20 Months
+                            <span class="working-spinner"><i class="fa fa-spin fa-cog"></i></span>
+                        </button>
+                        {{>channel-id-help-text}}
+                    </form>
                 </div>
-                {{#user.isSignedIn}}
-                <br/>
-                <p>Have a YouTube dispute? Release claims <a href="/release-claim">here</a>.</p>
-                {{/user.isSignedIn}}
+                {{#if user.isSignedIn}}
+                    <br/>
+                    <p>Have a YouTube dispute? Release claims <a href="/release-claim">here</a>.</p>
+                {{/if}}
             </div>
         </div>
 
@@ -123,31 +127,33 @@
             </table>
             <div><span class="total-cost">$<span role="total-cost">0.00</span></span>/month</div>
             <br/>
-            {{#showSignUp}}
-            <div id="sign-on" data-submit-action="checkoutSubscriptions" trigger-target="checkoutSubscriptions">
-                <div role="sign-on-errors"></div>
-                <div role="sign-on-fields" class="sign-on-fields">
-                    {{>services-sign-up}}
+            <form onsubmit="checkoutSubscriptions(event, this)">
+                {{#if showSignUp}}
+                    <div id="sign-on">
+                        <div role="sign-on-errors"></div>
+                        <div role="sign-on-fields" class="sign-on-fields">
+                            {{>services-sign-up}}
+                        </div>
+                    </div>
+                <br />
+                {{/if}}
+                <div>
+                   {{>payment-method-recurring}}
+                   <button class="button--cta">
+                        Complete Purchase
+                    </button>
                 </div>
-            </div>
-            <br />
-            {{/showSignUp}}
-            <div data-set="pay-method">
-               {{>payment-method-recurring}}
-               <button class="button--cta"
-                       action="checkoutSubscriptions" data-set-target="pay-method" trigger="checkoutSubscriptions">
-                    Complete Purchase
-                </button>
-            </div>
+            </form>
         </div>
-        {{/hasLegacy}}
+        {{/if}}
     </div>
     {{/data}}
 </script>
 
 <script type="text/template"
-        mustache-name="services-sign-up"
-        template-name="services-sign-up"
+        data-partial
+        data-template="services-sign-up"
+        data-template="services-sign-up"
         >
 <input type="hidden" name="signOnMethod" value="sign-up" />
 <h3>Register</h3>
@@ -156,13 +162,13 @@
 </table>
 <p>
 Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOnMethod(event, 'sign-in')">Sign in</a>.
-<br />Create an account with <a action="checkoutSubscriptions" data-social="facebook">Facebook</a> or <a action="checkoutSubscriptions" data-social="google">Google</a>.</p>.
+<br />Create an account with <a onclick="checkoutSubscriptions(event, this)" data-social="facebook">Facebook</a> or <a onclick="checkoutSubscriptions(event, this)" data-social="google">Google</a>.</p>.
 </p>
 </script>
 
 <script type="text/template"
-        mustache-name="services-sign-in"
-        template-name="services-sign-in"
+        data-partial data-template="services-sign-in"
+        data-template="services-sign-in"
         >
 <input type="hidden" name="signOnMethod" value="sign-in" />
 <h3>Login</h3>
@@ -170,35 +176,36 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
     {{>sign-in-fields}}
 </table>
 <!--
-<button class="button--social button--half button--fb" action="signInFacebook"><i class="fa fa-social-f"></i> Sign In</button>
-<button class="button--social button--half button--g" action="signInGoogle"><i class="fa fa-social-g"></i> Sign In</button>
+<button class="button--social button--half button--fb" onclick="signInFacebook(event, this)"><i class="fa fa-social-f"></i> Sign In</button>
+<button class="button--social button--half button--g" onclick="signInGoogle(event, this)"><i class="fa fa-social-g"></i> Sign In</button>
 -->
 <p>New here? <a class="switch-sign-on" onclick="servicesChangeSignOnMethod(event, 'sign-up')">Create an account</a>.
-<br />Log in with <a action="checkoutSubscriptions" data-social="facebook">Facebook</a> or <a action="checkoutSubscriptions" data-social="google">Google</a>.</p>
+<br />Log in with <a onclick="checkoutSubscriptions(event, this)" data-social="facebook">Facebook</a> or <a onclick="checkoutSubscriptions(event, this)" data-social="google">Google</a>.</p>
 </script>
 
 <script type="text/template"
-        template-name="gold-subscription"
-        mustache-name="gold-subscription"
+        data-template="gold-subscription"
+        data-partial data-template="gold-subscription"
         transform="transformGoldSubscription">
-    {{^canceled}}
-    <label>Gold Subscription Active</label>
-    <p>You are subscribed for $5.00 USD a month</p>
-    <p>Your next invoice will be charged on {{nextBillingDate}}</p>
-    <br>
-    <button class="button--gold" action="clickUnsubscribeGold">Cancel Subscription</button>
-    {{/canceled}}
-    {{#canceled}}
-    <label>You have Gold Membership.</label>
-    <p>Your Gold Membership will expire on {{endDate}}</p>
-    <div data-set="subscribe-gold" class="services-form">
-        <input type="text" name="trialCode" placeholder="Special Code"/>
-        <button class="button--gold" action="subscribeGold" data-set-target="subscribe-gold">Re-Subscribe</button>
-    </div>
-    {{/canceled}}
+    {{#unless canceled}}
+        <label>Gold Subscription Active</label>
+        <p>You are subscribed for $5.00 USD a month</p>
+        <p>Your next invoice will be charged on {{nextBillingDate}}</p>
+        <br>
+        <button class="button--gold" onclick="clickUnsubscribeGold(event)">Cancel Subscription</button>
+    {{else}}
+        <label>You have Gold Membership.</label>
+        <p>Your Gold Membership will expire on {{endDate}}</p>
+        <div class="services-form">
+            <form onsubmit="submitSubscribeGold(event, this)">
+                <input type="text" name="trialCode" placeholder="Special Code"/>
+                <button class="button--gold">Re-Subscribe</button>
+            </form>
+        </div>
+    {{/unless}}
 </script>
 
-<script type="text/template" mustache-name="payment-method">
+<script type="text/template" data-partial data-template="payment-method">
     <label>
         <input type="radio" name="method" value="paypal">
         <span><i class="fa fa-fw fa-cc-paypal"></i></span>
@@ -209,12 +216,12 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
     </label>
 </script>
 
-<script type="text/template" mustache-name="payment-method-recurring">
+<script type="text/template" data-partial data-template="payment-method-recurring">
 <div class="recurring-warning-germany hide"><strong>Warning:</strong> PayPal cannot process recurring payments for German users. Please use Stripe.</div>
 {{>payment-method}}
 </script>
 
-<script type="text/template" mustache-name="channel-id-help-text">
+<script type="text/template" data-partial data-template="channel-id-help-text">
 <div class="vendor-help none">
     <div class="help-text YouTube">http:s//www.youtube.com/channel/<strong>Channel_ID</strong></div>
     <div class="help-text Twitch">https://www.twitch.tv/<strong>Channel_ID</strong></div>
@@ -223,7 +230,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </div>
 </script>
 
-<script type="text/template" template-name="subscription-row">
+<script type="text/template" data-template="subscription-row">
     <tr>
         <td>
             {{name}}
@@ -235,7 +242,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
             ${{cost}}
         </td>
         <td>
-            <button class="faux" action="removeSub">
+            <button class="faux" onclick="removeSub(event, this)">
                 <i class="fa fa-trash-o"></i>
             </button>
         </td>
@@ -243,8 +250,8 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        template-name="whitelist-licenses"
-        transform="transformWhitelists">
+        data-template="licenses-rows"
+        data-process="processWhitelists">
     {{#loading}}
     <tr><td colspan="8"><i class="fa fa-refresh fa-spin"></i></td></tr>
     {{/loading}}
@@ -253,7 +260,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
     {{/error}}
     {{#data}}
     {{#results}}
-    <tr s-data-set data-set="whitelist-{{_id}}" class="{{#blacklisted}}blacklisted{{/blacklisted}}">
+    <tr s-data-set class="{{#blacklisted}}blacklisted{{/blacklisted}}">
         {{#blacklisted}}
             <td class="vendor">{{vendorName}}</td>
             <td class="identity">{{identity}}</td>
@@ -263,11 +270,6 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
         {{/blacklisted}}
         {{^blacklisted}}
             <td>
-                {{#resume}}
-                <input type="hidden" name="id" value="{{_id}}"/>
-                <input type="hidden" name="amount" value="{{amount}}"/>
-                {{/resume}}
-                <input type="hidden" name="vendor" value="{{vendor}}"/>
                 {{vendorName}}
             </td>
             <td>
@@ -277,46 +279,53 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
             <td>{{paid}}</td>
             <td>${{remaining}}</td>
             <td>
-                {{#cost}}
-                ${{cost}}
-                {{/cost}}
-                {{^cost}}
-                N/A
-                {{/cost}}
+                {{#if cost}}
+                    ${{cost}}
+                {{else}}
+                    N/A
+                {{/if}}
             </td>
             <td>
-                {{#subscriptionActive}}
-                    Next Payment: {{nextBillingDate}}
-                {{/subscriptionActive}}
-                {{^subscriptionActive}}
-                    {{#nextBillingDate}}
+                {{#if subscriptionActive}}
+                    {{#if nextBillingDate}}
+                        Next Payment: {{nextBillingDate}}
+                    {{/if}}
+                {{else}}
+                    {{#if nextBillingDate}}
                         Expires: {{nextBillingDate}}
-                    {{/nextBillingDate}}
-                {{/subscriptionActive}}
+                    {{/if}}
+                {{/if}}
             </td>
             <td>
-                {{#licenseUrl}}
-                <a href="{{licenseUrl}}"
-                   title="Open license document."
-                   target="_blank">View License</a>
-                {{/licenseUrl}}
-                {{^canBuyOut}}
-                <a href="/account/services/buyout/{{_id}}">Prepay 20 Months</a>
-                {{/canBuyOut}}
-                {{#cancel}}
-                <button class="faux"
-                        action="cancelLicenseSubscription"
-                        whitelist-id="{{_id}}">
-                    Cancel Subscription
-                </button>
-                {{/cancel}}
-                {{#resume}}
-                <button class="faux"
-                        action="resumeLicenseSubscription"
-                        data-set-target="whitelist-{{_id}}">
-                    Resume Subscription
-                </button>
-                {{/resume}}
+                <form onsubmit="resumeLicenseSubscription(event, this)">
+                    {{#resume}}
+                    <input type="hidden" name="id" value="{{_id}}"/>
+                    <input type="hidden" name="amount" value="{{amount}}"/>
+                    {{/resume}}
+                    <input type="hidden" name="identity" value="{{identity}}"/>
+                    <input type="hidden" name="vendor" value="{{vendor}}"/>
+                    {{#if licenseUrl}}
+                    <a href="{{licenseUrl}}"
+                       title="Open license document."
+                       target="_blank">View License</a>
+                    {{/if}}
+                    {{#unless canBuyOut}}
+                    <a href="/account/services/buyout/{{_id}}">Prepay 20 Months</a>
+                    {{/unless}}
+                    {{#cancel}}
+                    <button class="faux"
+                            type="button"
+                            onclick="cancelLicenseSubscription(event, this)"
+                            data-whitelist-id="{{_id}}">
+                        Cancel Subscription
+                    </button>
+                    {{/cancel}}
+                    {{#resume}}
+                    <button class="faux">
+                        Resume Subscription
+                    </button>
+                    {{/resume}}
+                </form>
             </td>
         {{/blacklisted}}
     </tr>
@@ -328,8 +337,10 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="^account\/services\/processing"
-        completed="completedProcessing">
+        data-route="^account\/services\/processing"
+        data-process="processServicesProcessingPage"
+        data-template="services-processing-page"
+        >
     <div class="container">
         <h1>Payment Processing <i class="fa fa-spin fa-gear"></i></h1>
         <p>Your payment is being processed. Please wait.</p>
@@ -337,9 +348,11 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="^account\/services\/subscribed"
+        data-route="^account\/services\/subscribed"
+        data-process="processServicesPage"
         transform="transformSubscribed"
-        completed="redirectServices">
+        completed="redirectServices"
+        >
     <div class="container">
         <h1>Subscribed!</h1>
         <p>You have been succefully subscribed! You will be redirected to your services in 5 seconds.</p>
@@ -347,7 +360,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="^account\/services\/unsubscribed\/?"
+        data-route="^account\/services\/unsubscribed\/?"
         completed="redirectServices">
     <div class="container">
         <h1>Unsubscribed</h1>
@@ -357,7 +370,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 
 <script type="text/template"
         transform="transformCanceledPayment"
-        route="^account\/services\/canceled-payment\/?$">
+        data-route="^account\/services\/canceled-payment\/?$">
     <div class="container">
         <h1>Payment Canceled</h1>
         <p>The payment has been canceled. Go back to <a href="{{returnUrl}}">{{returnLabel}}</a>.</p>
@@ -365,8 +378,8 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="^account\/services\/buyout\/purchased\/?"
-        page-title="Purchased Whitelist"
+        data-route="^account\/services\/buyout\/purchased\/?"
+        data-title="Purchased Whitelist"
         completed="redirectServices">
     <div class="container">
         <h1>Purchased Whitelist!</h1>
@@ -375,45 +388,48 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="account\/services\/error"
-        page-title="Payment Error">
+        data-route="account\/services\/error"
+        data-title="Payment Error">
     <div class="container">
         <h1>An error occured.</h1>
         <p>An error occured while working with the payment information provided. Please contact support.</p>
     </div>
 </script>
 
-<script type="text/template" template-name="resume-whitelist">
+<script type="text/template" data-template="resume-whitelist">
     <div class="modal panel">
-        <div class="pointer-events" data-set="resume-payment">
-            <input type="hidden" name="id" value="{{id}}">
-            <input type="hidden" name="vendor" value="{{vendor}}">
-            <input type="hidden" name="identity" value="{{identity}}">
-            {{#amount}}
-            <input type="hidden" name="amount" value="{{amount}}">
-            {{/amount}}
-            <table class="form">
-                <tr>
-                    <th>Platform</th>
-                    <td>{{vendor}}</td>
-                </tr>
-                <tr>
-                    <th>Channel Id</th>
-                    <td>{{identity}}</td>
-                </tr>
-            </table>
-            {{>payment-method-recurring}}
-            <button action="resumeLicenseConfirm" data-set-target="resume-payment">Resume Payments</button>
-            <button action="closeModal">Cancel</button>
+        <div class="pointer-events">
+            <form onsubmit="resumeLicenseConfirm(event, this)">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="vendor" value="{{vendor}}">
+                <input type="hidden" name="identity" value="{{identity}}">
+                {{#if amount}}
+                <input type="hidden" name="amount" value="{{amount}}">
+                {{/if}}
+                <table class="form">
+                    <tr>
+                        <th>Platform</th>
+                        <td>{{vendor}}</td>
+                    </tr>
+                    <tr>
+                        <th>Channel Id</th>
+                        <td>{{identity}}</td>
+                    </tr>
+                </table>
+                {{>payment-method-recurring}}
+                <button>Resume Payments</button>
+                <button onclick="closeModal(event, this)" type="button">Cancel</button>
+            </form>
         </div>
     </div>
 </script>
 
 <script type="text/template"
-        route="^account\/services\/buyout\/?(\?.*)?$"
-        transform="transformBuyWhitelist"
-        completed="buyWhitelistComplete"
-        page-title="Purchase Whitelist">
+        data-route="^account\/services\/buyout\/?(\?.*)?$"
+        data-process="processBuyWhitelistPage"
+        data-title="Purchase Whitelist"
+        data-template="buy-whitelist-page"
+        >
     <div class="container">
         {{#data}}
             <h1>Purchase Whitelist</h1>
@@ -421,7 +437,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                 <p>Pre-pay your whitelist license for 20 months. All videos created with the
                     cleared Monstercat catalog during this time period will never
                     receive content-ID claims.</p>
-                <div data-set="new-license" trigger-target="buyNewLicense">
+                <form onsubmit="submitBuyLicense(event, this)" role="buy-new-licence">
                     <input type="hidden" name="amount" value="20000">
                     <table class="form mobile">
                         <tbody>
@@ -449,9 +465,9 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                     </table>
                     {{>payment-method}}
                     <div class="button-group">
-                        <button class="button--full" trigger="buyNewLicense" action="buyNewLicense" data-set-target="new-license">Purchase Whitelisting</button>
+                        <button class="button--full">Purchase Whitelisting</button>
                     </div>
-                </div>
+                </form>
             </div>
 
         {{/data}}
@@ -459,33 +475,29 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        route="^account\/services\/buyout\/(.+)$"
-        transform="transformBuyOut"
-        completed="completedBuyOut"
-        source="$endpoint/self/whitelist/$1"
-        page-title="Whitelist Prepay">
+        data-route="^account\/services\/buyout\/(.+)$"
+        data-process="processServicesBuyoutPage"
+        data-source="$endpoint/self/whitelist/$1"
+        data-title="Whitelist Prepay"
+        data-template="services-buyout-page"
+        >
     <div class="container">
         <h1>Prepay for 20 Months of Whitelist</h1>
         <div class="panel">
             <p>Pre-pay the rest of your whitelist license. All videos created with the
                 cleared Monstercat catalog during this time period will never receive content-ID claims.</p>
-            {{#loading}}
-            <i class="fa fa-spin fa-refresh"></i>
-            {{/loading}}
-            {{#error}}
-            <p>{{message}}</p>
-            {{/error}}
             {{#data}}
-            <div data-set="buy-out-license" trigger-target="buyLicense">
+            <form onsubmit="submitBuyLicense(event, this)" role="buy-new-licence">
                 <input type="hidden" name="amount" value="{{amountRemaining}}"/>
                 <input type="hidden" name="id" value="{{_id}}"/>
+                <input type="hidden" name="vendor" value="{{vendor}}"/>
+                <input type="hidden" name="identity" value="{{identity}}"/>
                 <table class="form mobile">
                     <tbody>
                         <tr>
                             <th>Vendor</th>
                             <td>
                                 <input type="text"
-                                       name="vendor"
                                        value="{{vendor}}"
                                        disabled />
                             </td>
@@ -494,7 +506,6 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                             <th>Identity</th>
                             <td>
                                 <input type="text"
-                                       name="identity"
                                        value="{{identity}}"
                                        disabled />
                             </td>
@@ -509,7 +520,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                 </table>
                 {{>payment-method}}
                 <div class="button-group">
-                    <button class="button--full" trigger="buyLicense" action="buyLicenseAction" data-set-target="buy-out-license">Buy License</button>
+                    {{>submit-button text="Buy License" class="button--full"}}
                 </div>
             </div>
             {{/data}}

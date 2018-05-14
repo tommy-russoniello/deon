@@ -1,24 +1,25 @@
 <script type="text/template"
-        route="^(?:news|blog)\/(?:article|posts|[\d+\-]+)\/([^\/\?]*)\/?"
-        page-title="Article"
-        transform="transformPost"
-        completed="completedPost"
-        source="$newshost/json/posts/$1.json">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
+        data-route="^(?:news|blog)\/(article|[\d+\-]+|posts|preview)\/([^\/\?]*)\/?"
+        data-title="Article"
+        data-process="processBlogPostPage"
+        data-template="blog-post-page"
+        >
+    {{#if error}}
     <div class="container panel">
         <p>Article not found.</p>
+        {{#error}}
+            <div class="errors-container">
+                {{message}}
+            </div>
+        {{/error}}
     </div>
-    {{/error}}
+    {{/if}}
     {{#data}}
     <div class="top-banner top-banner--blog">
         <div class="banner">
             <div class="banner" style="background-image:url({{image}})"></div>
         </div>
     </div>
-    
     <div class="panel panel--article">
         <header>
             <h1 class="title uppercase">{{title}}</h1>
@@ -52,29 +53,22 @@
         </header>
         <div class="md-container blog-md-container">
             <div
-                template="markdown-post"
-                source="$newshost/{{path}}">
+                data-process="processMarkdownPost"
+                {{#unless ../markdownCors}}data-no-cors{{/unless}}
+                data-source="{{../markdownUrl}}">
             </div>
         </div>
     </div>
-    
     {{/data}}
 </script>
 
-<script type="text/template" template-name="markdown-post" transform="transformMarkdownPost" completed="completedMarkdownPost">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <p>{{message}}</p>
-    {{/error}}
-    {{#data}}
-        {{{data}}}
-    {{/data}}
+<script type="text/template" data-template="markdown-post" data-process="processMarkdownPost">
+    {{{data}}}
 </script>
 
 <script type="text/template"
-        mustache-name="blog-featured">
+        data-partial
+        data-template="blog-featured">
 
         <div class="top-banner top-banner--blog-featured">
             <div class="banner">
@@ -105,7 +99,8 @@
 </script>
 
 <script type="text/template"
-        mustache-name="blog-article">
+        data-partial
+        data-template="blog-article">
         <article class="flex">
             <div class="col-xs-12 col-sm-12 col-md-6 article-banner{{#isOdd}} col-md-last{{/isOdd}} banner--scaled">
                 <a href="{{link}}" class="side-banner"
@@ -135,86 +130,76 @@
 </script>
 
 <script type="text/template"
-        route="^(?:news|blog)\/?(?:\?.*)?$"
-        page-title="Blog"
-        transform="transformBlogPagination"
-        source="$newshost/json/archive/pages/1.json">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <div class="container panel">
-        <p>{{message}}.</p>
-    </div>
-    {{/error}}
+        data-route="^(?:news|blog)\/?(?:\?.*)?$"
+        data-title="Blog"
+        data-process="processBlogPagination"
+        data-source="$newshost/json/archive/pages/1.json"
+        data-template="blog-page-container"
+        data-no-cors
+        >
     {{#data}}
     <div
-        template="blog-page"
-        source="$newshost/json/archive/pages/{{page}}.json">
+        data-process="processBlogPage"
+        data-no-cors
+        data-source="$newshost/json/archive/pages/{{page}}.json">
     </div>
     {{/data}}
 </script>
 
 <script type="text/template"
-        route="^(?:news|blog)\/tags\/(.*)"
-        page-title="Blog"
-        transform="transformBlogPagination"
-        source="$newshost/json/tags/$1/pages/1.json">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <div class="container panel">
-        <p>An error has occured.</p>
-    </div>
-    {{/error}}
+        data-route="^(?:news|blog)\/tags\/(.*)"
+        data-title="Blog"
+        data-process="processBlogPagination"
+        data-template="blog-page-tag-container"
+        data-source="$newshost/json/tags/$1/pages/1.json"
+        data-no-cors
+        >
     {{#data}}
     <div
-        template="blog-page"
-        source="$newshost/json/tags/{{tag}}/pages/{{page}}.json">
+        data-process="processBlogPage"
+        data-source="$newshost/json/tags/{{tag}}/pages/{{page}}.json"
+        data-no-cors
+        >
     </div>
     {{/data}}
 </script>
 
 <script type="text/template"
-        transform="transformBlog"
-        template-name="blog-page">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <div class="container panel">
-        <p>{{message}}.</p>
-    </div>
-    {{/error}}
+        data-process="processBlogPage"
+        data-template="blog-page">
     {{#data}}
+        {{#each tags}}
+            <div class="container tag-header">
+                <h1>Posts tagged with "{{.}}"</h1>
+            </div>
+        {{/each}}
 
-    {{#tag}}
-        <div class="container tag-header">
-            <h1>Posts tagged with "{{.}}"</h1>
-        </div>
-    {{/tag}}
-
-    {{#results}}
-    {{#featured}} {{>blog-featured}} {{/featured}}
-    {{^featured}} {{>blog-article}} {{/featured}}
-    {{/results}}
-    {{#showPagination}} {{>blogPagination}} {{/showPagination}}
+        {{#each results}}
+            {{#if featured}}
+                {{>blog-featured}}
+            {{else}}
+                {{>blog-article}}
+            {{/if}}
+        {{/each}}
+        {{#if showPagination}}
+            {{>blog-pagination}}
+        {{/if}}
     {{/data}}
 </script>
 
 <script type="text/template"
-        mustache-name="blogPagination">
-    {{#total}}
+        data-partial
+        data-template="blog-pagination">
+    {{#if total}}
     <div class="container pagination pad-vertical pagination--blog text center">
-        {{#previous}}
-        <a href="?{{previous}}" class="button button--cta">Previous</a>
-        {{/previous}}
+        {{#if previous}}
+            <a href="?{{previous}}" class="button button--cta">Previous</a>
+        {{/if}}
         <label>{{showingFrom}} - {{showingTo}} of {{total}}</label>
-        {{#next}}
-        <a href="?{{next}}" class="button button--cta">Next</a>
-        {{/next}}
+        {{#if next}}
+            <a href="?{{next}}" class="button button--cta">Next</a>
+        {{/if}}
     </div>
-    {{/total}}
+    {{/if}}
 </script>
 

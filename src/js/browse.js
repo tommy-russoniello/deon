@@ -1,117 +1,183 @@
-var browseMusicLimit = 25
-var browseUri = '/browse' // TODO 'music'
+const browseMusicLimit = 25
+const browseUri = '/browse' // TODO 'music'
+const browseMusicFilters = [
+  'tags',
+  'genres',
+  'types'
+]
 
-function transformBrowseMusic (obj) {
-  obj = obj || {}
-  var q    = queryStringToObject(window.location.search)
-  q.limit  = (q.pages || 0) * browseMusicLimit
-  q.skip   = 0
-  obj.query = objectToQueryString(q)
-  return obj
-}
+function processBrowseMusicPage (args) {
+  let q = searchStringToObject()
 
-function mapFilterString (str) {
-  return str.substr(0, str.lastIndexOf('s'))
-}
+  q.limit = (q.pages || 0) * browseMusicLimit
+  q.skip = 0
+  const scope =  {
+    query: objectToQueryString(q)
+  }
 
-function completedBrowseFilters () {
-  var q = queryStringToObject(window.location.search)
-  filterBrowseMusic.filters.forEach(function (filter) {
-    var cel = document.querySelector('[role="filters-list-' + filter + '"]')
-    if (!cel) return
-    var values = (q[filter] || '').split(',').map(mapStringTrim).filter(filterNil)
-    values.forEach(function (value) {
-      var el = createFilterItem(mapFilterString(filter), value)
-      cel.appendChild(el)
-    })
-  })
-}
+  renderContent('browse-music-page', scope)
 
-function createFilterItem (type, value) {
-  var div = document.createElement('div')
-  var template = getTemplateEl('browse-filter-item')
-  render(div, template.textContent, {
-    type: type,
-    value: value
-  })
-  return div.firstElementChild
-}
-
-function completedBrowseMusic () {
-  var q = getBrowseMusicQuery()
+  q = getBrowseMusicQuery()
   q.limit = browseMusicLimit * (parseInt(q.pages) || 1)
   q.skip = 0
   delete q.pages
   openBrowsePage(q)
 }
 
+function mapFilterString (str) {
+  return str.substr(0, str.lastIndexOf('s'))
+}
+
+function processBrowseFilters (args) {
+  templateProcessor('browse-filters', args, {
+    success: function (args) {
+      betterRender(args.template, args.node, {data: args.result})
+      renderBrowseFilters()
+    }
+  })
+}
+
+function renderBrowseFilters () {
+  const q = searchStringToObject()
+
+  browseMusicFilters.forEach((filter) => {
+    const cel = document.querySelector('[role="filters-list-' + filter + '"]')
+
+    if (!cel) {
+      return
+    }
+    const values = (q[filter] || '')
+      .split(',')
+      .map(mapStringTrim)
+      .filter(filterNil)
+
+    values.forEach((value) => {
+      const el = createFilterItem(mapFilterString(filter), value)
+
+      if (!el) {
+        return
+      }
+
+      cel.appendChild(el)
+    })
+  })
+}
+
+function createFilterItem (type, value) {
+  const div = document.createElement('div')
+
+  const node = findNode('[name="' + type + 's[]"][value="' + value + '"]')
+
+  if (node) {
+    return
+  }
+
+  const num = findNodes('[name^="' + type + 's"]').length
+
+  betterRender('browse-filter-item', div, {
+    type: type,
+    value: value,
+    index: num
+  })
+  return div.firstElementChild
+}
+
 function openBrowsePage (q) {
   var cel = document.querySelector('[role="browse-pages"]')
-  if (!cel) return
-  var tel = getTemplateEl('browse-page')
+
+  if (!cel) {
+    return
+  }
   var div = document.createElement('div')
-  render(div, tel.textContent, {
+
+  betterRender('browse-page', div, {
     source: endpoint + '/catalog/browse/?' + objectToQueryString(q)
   })
   var ul = div.firstElementChild
+
   cel.appendChild(ul)
-  loadSubSources(ul)
+  loadNodeSources(ul)
 }
 
-function transformMusicBrowseResults (obj, done) {
-  var tracks = obj.results
-  var playIndexOffset = obj.skip || 0
+function processMusicBrowseResults (args) {
+  let result = {}
 
-  //Here we're taking all the tracks and putting them under a release object
-  var rmap = {}
-  tracks.forEach(function (track, index, arr) {
-    var release = track.release
-    if(release) {
-      release.inEarlyAccess = track.inEarlyAccess
-      if (!rmap[release._id]) {
-        rmap[release._id] = track.release
-      }
-      release = rmap[release._id]
-      if (!release.tracks) release.tracks = []
-      release.tracks.push(track)
+  templateProcessor('music-browse', args, {
+    hasLoading: true,
+    hasError: true,
+    transform: function (args) {
+      result = args.result
+      const tracks = result.results
+      let playIndexOffset = result.skip || 0
+      const scope = Object.assign({}, result)
+
+      //Here we're taking all the tracks and putting them under a release object
+      const rmap = {}
+
+      tracks.forEach((track, index, arr) => {
+        let release = track.release
+
+        if (release) {
+          release.inEarlyAccess = track.inEarlyAccess
+          if (!rmap[release._id]) {
+            rmap[release._id] = track.release
+          }
+          release = rmap[release._id]
+          if (!release.tracks) {
+            release.tracks = []
+          }
+          release.tracks.push(track)
+        }
+      })
+      const releases = Object.keys(rmap)
+        .map((key) => {
+          return rmap[key] })
+        .sort(sortRelease)
+
+      releases.forEach((release) => {
+        mapRelease(release)
+        release.tracks.forEach((track, index, arr) => {
+          mapTrack(track)
+          if(track.streamable) {
+            track.index = playIndexOffset
+            track.trackNumber = index + 1
+            playIndexOffset++
+          }
+        })
+        release.tracks.sort(sortTracks)
+      })
+
+      scope.results = releases
+      scope.hasGoldAccess = hasGoldAccess()
+      return scope
+    },
+    completed: function () {
+      completedMusicBrowseResults(result)
     }
   })
-  var releases = Object.keys(rmap).map(function (key) { return rmap[key] }).sort(sortRelease)
-  releases.forEach(function(release) {
-    mapRelease(release)
-    release.tracks.forEach(function (track, index, arr) {
-      mapTrack(track)
-      if(track.streamable) {
-        track.index = playIndexOffset
-        track.trackNumber = index + 1
-        playIndexOffset++
-      }
-    })
-    release.tracks.sort(sortTracks)
-  })
-
-  obj.results = releases
-  obj.total = obj.total
-  obj.hasGoldAccess = hasGoldAccess()
-  done(null, obj)
 }
 
 function getBrowseMoreButton () {
   return document.querySelector('[role="browse-more"]')
 }
 
-function completedMusicBrowseResults (source, obj) {
+function completedMusicBrowseResults (data) {
   player.set(buildTracks())
-  var el = getBrowseMoreButton()
-  if (!el) return
-  var data = obj.data
-  var method = data && data.results && data.skip + data.results.length >= data.total ? "add" : "remove"
+
+  const el = getBrowseMoreButton()
+
+  if (!el) {
+    return
+  }
+
   el.disabled = false
-  el.classList[method]('hide')
+  const hide = !(data && data.results && data.skip + data.results.length <= data.total)
+
+  el.classList.toggle('hide', hide)
   mergeBrowseResults()
   startCountdownTicks()
   //Rebuild the indexes so that the index attribute matches their actual position on the page
-  document.querySelectorAll('[play-link]').forEach(function (el, index) {
+  document.querySelectorAll('[play-link]').forEach((el, index) => {
     el.setAttribute('index', index)
   })
 
@@ -147,24 +213,42 @@ mergeBrowseResults.forEachMerger = function forEachMerger (arr) {
 }
 
 function addBrowseFilter (e, el) {
-  var cel = document.querySelector('[role="filters-list-' + el.name + 's"]')
-  var el = createFilterItem(el.name, el.value)
-  cel.appendChild(el)
+  const cel = document.querySelector('[role="filters-list-' + el.name + 's"]')
+  const newEl = createFilterItem(el.name, el.value)
+
+  if (!newEl) {
+    return
+  }
+
+  cel.appendChild(newEl)
 }
 
 function removeBrowseFilter (e, el) {
-  var li = el.parentElement
+  const li = el.parentElement
   li.parentElement.removeChild(li)
 }
 
 function getBrowseMusicQuery () {
-  return queryStringToObject(window.location.search)
+  return searchStringToObject()
 }
 
-function filterBrowseMusic (e, el) {
-  var q = getBrowseMusicQuery()
-  var data = getTargetDataSet(el) || {}
-  filterBrowseMusic.filters.forEach(function (key) {
+function clearFilterBrowseMusic (e) {
+  console.log('TODO: clear the browse stuff')
+}
+
+function submitFilterBrowseMusic (e, el) {
+  e.preventDefault()
+  const q = getBrowseMusicQuery()
+  const data = getDataSet(el)
+
+  const tags = findNode('.browse-table-tags')
+
+  if (tags) {
+    const tagData = getDataSet(tags)
+    Object.assign(data, tagData)
+  }
+
+  browseMusicFilters.forEach((key) => {
     if (data[key] && data[key].length > 0) {
       q[key] = data[key]
     } else {
@@ -176,7 +260,8 @@ function filterBrowseMusic (e, el) {
   if(data.search) {
     q.search = data.search
 
-    var bpm = parseInt(q.search)
+    const bpm = parseInt(q.search)
+
     if(!isNaN(bpm)) {
       q.search = 'bpm:' + bpm
     }
@@ -186,11 +271,6 @@ function filterBrowseMusic (e, el) {
   }
   go('?' + objectToQueryString(q))
 }
-filterBrowseMusic.filters = [
-  'tags',
-  'genres',
-  'types'
-]
 
 function autoBrowseMore () {
   var btn = getBrowseMoreButton()

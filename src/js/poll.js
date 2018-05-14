@@ -1,33 +1,44 @@
-function transformMixContest(obj){
-  obj = obj || {}
+function processMixContestPage (args) {
+  const obj = {}
+
   obj.pollId = '58598b657ee1060824844edc'
-  return obj
+  renderContent(args.template, obj)
 }
-function transformVotesBreakdown(obj){
+
+function transformVotesBreakdown (obj){
   var votes = obj
   obj = {}
   obj.votes = votes
   return obj
 }
-function transformMixContestPoll(obj){
-  obj.audioLink = 'https://s3.amazonaws.com/data.monstercat.com/blobs/4fdf34f9d1729db933a191cf34ed6dcd37adc7a7'
-  obj.tournamentImage = '/img/tournament-final.jpg'
-  obj.startDate = new Date('2016-12-20T21:30:00Z') // UTC = PST + 8
-  obj.endDate = new Date('2016-12-24T02:00:00Z') // UTC = PST + 8
 
-  var today = new Date()
-  obj.votingOpen = obj.endDate > today && obj.startDate < today
-  obj.cover = "/img/mixcontest.jpg" 
+function processMixContestPoll (args){
+  tempalteProcessor('mix-contest', args, {
+    success: function (args) {
+        console.log('args', args);
+      const obj = {}
 
-  var choices = []
-  for (var i = 0; i<obj.choices.length; i++){
-    choices.push({
-      'index': i, 
-      'choice': obj.choices[i]
-    })
-  }
-  obj.choices = choices
-  return obj
+      obj.audioLink = 'https://s3.amazonaws.com/data.monstercat.com/blobs/4fdf34f9d1729db933a191cf34ed6dcd37adc7a7'
+      obj.tournamentImage = '/img/tournament-final.jpg'
+      obj.startDate = new Date('2016-12-20T21:30:00Z') // UTC = PST + 8
+      obj.endDate = new Date('2016-12-24T02:00:00Z') // UTC = PST + 8
+
+      var today = new Date()
+      obj.votingOpen = obj.endDate > today && obj.startDate < today
+      obj.cover = "/img/mixcontest.jpg"
+
+      var choices = []
+      for (var i = 0; i < args.result.choices.length; i++) {
+        choices.push({
+          'index': i,
+          'choice': args.result.choices[i]
+        })
+      }
+      obj.choices = choices
+      renderContent(args.template, obj)
+    }
+  })
+
 }
 
 function pollCountdownEnd () {
@@ -78,53 +89,3 @@ function createVote (e, el) {
   })
 }
 
-/* admin functions */
-
-function isPollManager(){
-  if (!isSignedIn()) return false
-  return session.user.type.indexOf('poll_manager') > -1
-}
-
-function transformPoll(obj){
-  obj = obj || {}
-  obj.hasPollAccess = isPollManager()
-  return obj
-}
-
-function createPoll (e, el) {
-  var data = getTargetDataSet(el)
-  if (!data || !data.question || !data["choices[]"]) return
-  var choices = data["choices[]"].filter(function(v){return v!==''})
-  requestJSON({
-    url: endpoint + '/poll',
-    method: 'POST',
-    data: {
-      question: data.question,
-      choices: choices,
-      maxChoices: data.maxChoices,
-      minChoices: data.minChoices,
-      multiChoice: data.multiChoice || false,
-      multiVote: data.multiVote || false
-    },
-    withCredentials: true
-  }, function (err, obj, xhr) {
-    if (err) return window.alert(err.message)
-    else {
-      toasty('<span class="pointer-events">Success, your new Poll has been created with id: ' + obj._id + '.</span>', 5000)
-    }
-  })
-}
-
-function addChoice (e, el){
-  var table = document.querySelector("[role=create-poll-table]")
-  var counter = table.querySelectorAll(".choice").length
-  var el = createChoice(counter+1)
-  table.appendChild(el)
-}
-
-function createChoice (number) {
-  var table = document.createElement('table')
-  var template = getTemplateEl('poll-choice')
-  render(table, template.textContent, {number: number})
-  return table.firstElementChild.firstElementChild
-}

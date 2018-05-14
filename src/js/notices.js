@@ -4,50 +4,52 @@ function SiteNotice (args) {
   this.template = ''
   this.hideForDays = 7
   this.hideOnClick = false
-  for(var k in args) {
+  for (var k in args) {
     this[k] = args[k]
   }
   if (!this.transform) {
-    this.transform = function (done) {
+    this.transform = function transform (done) {
       done(null, {})
     }
   }
   else if (typeof this.transform == 'object') {
     var data = Object.assign({}, this.transform)
-    this.transform = function (done) {
+
+    this.transform = function transform (done) {
       done(null, data)
     }
   }
 
   if (!this.completed) {
-    this.completed = function () {}
+    this.completed = function completed () {
+    }
   }
 
   if (!this.shouldOpen) {
-    this.shouldOpen = function () {
+    this.shouldOpen = function shouldOpen () {
       return true
     }
   }
 }
 
-SiteNotice.prototype.start = function () {
+SiteNotice.prototype.start = function start () {
   var scope = {}
 
   if (!this.shouldOpen() || !this.isCookieExpired()) {
     this.close()
     return
   }
-  this.transform(function (err, result) {
+  this.transform((err, result) => {
     scope = result
     this.render(scope)
-  }.bind(this))
+  })
 }
 
-SiteNotice.prototype.getCookieName = function () {
+SiteNotice.prototype.getCookieName = function getCookieName () {
   return 'hide_notice_' + this.name
 }
 
-SiteNotice.prototype.isCookieExpired = function () {
+SiteNotice.prototype.isCookieExpired = function isCookieExpired () {
   var iso = getCookie(this.getCookieName())
 
   if (!iso || !iso.length) {
@@ -58,23 +60,25 @@ SiteNotice.prototype.isCookieExpired = function () {
   return expired
 }
 
-SiteNotice.prototype.getNoticeEl = function () {
-  var el = document.querySelector('#site-notices [notice=' + this.name + ']')
+SiteNotice.prototype.getNoticeEl = function getNoticeEl () {
+  var el = findNode('#site-notices [notice=' + this.name + ']')
+
   if (!el) {
     var div = document.createElement('div')
+
     div.setAttribute('notice', this.name)
     div.setAttribute('class', 'notice-container')
-    document.querySelector('#site-notices').appendChild(div)
+    findNode('#site-notices').appendChild(div)
     return div
   }
 
   return el
 }
 
-SiteNotice.prototype.render = function (scope) {
+SiteNotice.prototype.render = function render (scope) {
   var noticeEl = this.getNoticeEl()
 
-  render(noticeEl, getTemplateEl(this.template).textContent, scope)
+  betterRender(noticeEl, this.template, scope)
   noticeEl.classList.toggle('hide', false)
   var height = noticeEl.getBoundingClientRect().height
 
@@ -154,7 +158,7 @@ function submitCompleteProfile (e) {
     form.disabled = false
   }
 
-  var data = getDataSet(document.querySelector("[role=complete-profile-form]"), true, true)
+  var data = getDataSet(findNode("[role=complete-profile-form]"), true, true)
 
   data = transformSubmittedAccountData(data)
   var exclude = {
@@ -164,7 +168,7 @@ function submitCompleteProfile (e) {
   var errors = validateAccountData(data, exclude)
 
   if (errors.length) {
-    errors.forEach(function (er) {
+    errors.forEach((er) => {
       toasty(new Error(er))
     })
     return
@@ -179,7 +183,7 @@ function submitCompleteProfile (e) {
   button.innerHTML = 'Submitting...'
   form.disabled = true
 
-  update('self', null, data, function (err, obj) {
+  update('self', null, data, (err, obj) => {
     resetButton()
     if (err) return toasty(new Error(err.message))
     toasty('Profile complete, thank you!')
@@ -222,12 +226,13 @@ siteNotices.instinctNotice = new SiteNotice({
 =            GOLD DISCOUNT CODE            =
 ==========================================*/
 var goldShopNextCodeDate = ''
+
 siteNotices.goldShopCodeNotice = new SiteNotice({
   hideForDays: 40,
   name: 'gold-discount',
   template: 'notice-gold-shop-code',
   transform: function (done) {
-    requestSelfShopCodes(function (err, result) {
+    requestSelfShopCodes((err, result) => {
       if (err) {
         return done(err)
       }
@@ -237,7 +242,7 @@ siteNotices.goldShopCodeNotice = new SiteNotice({
 
       goldShopNextCodeDate = new Date(result.nextCodeDate).toISOString()
       done(null, result)
-    }.bind(this))
+    })
   },
   shouldOpen: function () {
     return isSignedIn() && hasGoldAccess()

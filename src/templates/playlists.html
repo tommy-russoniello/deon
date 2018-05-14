@@ -1,73 +1,57 @@
 <script type="text/template"
-        template-name="select-playlist">
-    {{#loading}}
-    <option disabled checked>Loading...</option>
-    {{/loading}}
-    {{#error}}
-    {{/error}}
-    {{#data}}
-    <option value="" checked>Add to Playlist</option>
-    {{#results}}
-    <option value="{{_id}}">{{name}}</option>
-    {{/results}}
-    {{/data}}
-</script>
-
-<script type="text/template"
-        template-name="add-to-playlist-modal"
-        transform="transformAddToPlaylist">
+        data-template="add-to-playlist-modal"
+        >
     <div class="modal">
         <div class="panel pointer-events">
             <h2 class="mv-0">Add to Playlist</h2>
-            {{#loading}}
-            {{>loading-inner-view}}
-            {{/loading}}
-            {{#error}}
-            <p>{{message}}</p>
-            {{/error}}
-            {{#data}}
-            <div class="playlists">
-                <h5 class="mt-2">Add to New Playlist</h5>
-                <div data-set="playlist" trigger-target="createAndAddToPlaylist">
-                    <input name="name"
-                        class="mv-1 mh-0 input--big xs-expando xs-expando-m"
-                        type="text"
-                        size="30"
-                        placeholder="Playlist Name"
-                        autocomplete="off">
-                    <button action="createAndAddToPlaylist"
-                        class="mv-1 mh-0 xs-expando xs-expando-m"
-                        trigger="createAndAddToPlaylist"
-                        data-set-target="playlist"
-                        track-id="{{trackId}}"
-                        release-id="{{releaseId}}">
-                        Create and Add
-                    </button>
-                </div>
-                <h5 class="mt-1 mb-1">Add to Existing Playlist</h5>
-                <table>
-                    <tbody>
-                        {{#results}}
-                        <tr action="addToPlaylist"
-                            class="actionier"
-                            playlist-id="{{_id}}"
-                            track-id="{{trackId}}"
-                            release-id="{{releaseId}}">
-                            <td>{{name}}</td>
-                            <td class="text right">
-                                <i class="fa fa-plus actionier-off"></i>
-                                <span class="actionier-on"><i class="fa fa-spin fa-refresh"></i></span>
-                            </td>
-                        </tr>
-                        {{/results}}
-                        {{^results}}
-                        <tr><td colspan="2">No Playlists.</td></tr>
-                        {{/results}}
-                    </tbody>
-                </table>
-            </div>
-            {{/data}}
-            <button class="button--close faux" action="closeModal">
+            {{#if loading}}
+                {{>loading-inner-view}}
+            {{else}}
+                {{#if error}}
+                    <p>{{message}}</p>
+                {{else}}
+                    <div class="playlists">
+                        <h5 class="mt-2">Add to New Playlist</h5>
+                        <form onsubmit="createAndAddToPlaylist(event, this)">
+                            <input type="hidden" name="releaseId" value="{{releaseId}}" />
+                            <input type="hidden" name="trackId" value="{{trackId}}" />
+                            <input name="name"
+                                class="mv-1 mh-0 input--big xs-expando xs-expando-m"
+                                type="text"
+                                size="30"
+                                placeholder="Playlist Name"
+                                autocomplete="off">
+                            <button class="mv-1 mh-0 xs-expando xs-expando-m">
+                                {{>submit-button-inner text="Create and Add"}}
+                            </button>
+                        </form>
+                        <h5 class="mt-1 mb-1">Add to Existing Playlist</h5>
+                        <table>
+                            <tbody>
+                                {{#each results}}
+                                <tr onclick="addToPlaylist(event, this)"
+                                    class="actionier"
+                                    data-playlist-id="{{_id}}"
+                                    data-track-id="{{../trackId}}"
+                                    data-release-id="{{../releaseId}}">
+                                    <td>{{name}}</td>
+                                    <td class="text right">
+                                        <i class="fa fa-plus actionier-off"></i>
+                                        <span class="actionier-on"><i class="fa fa-spin fa-refresh"></i></span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                                {{#unless results.length}}
+                                <tr>
+                                    <td colspan="2">No Playlists.</td>
+                                </tr>
+                                {{/unless}}
+                            </tbody>
+                        </table>
+                    </div>
+                {{/if}}
+            {{/if}}
+            <button class="button--close faux" onclick="closeModal(event, this)">
                 <i class="fa fa-remove"></i>
             </button>
         </div>
@@ -75,111 +59,103 @@
 </script>
 
 <script type="text/template"
-        page-title="My Playlists"
-        route="^playlists">
+        data-title="My Playlists"
+        data-source="$endpoint/playlist?fields=name,public"
+        data-process="processPlaylistsPage"
+        data-route="^playlists"
+        data-template="playlists-page"
+        >
     <div class="container">
         <h1>My Playlists</h1>
         <div class="panel">
             <div class="options">
-                <button action="createPlaylist">
+                <button onclick="clickCreatePlaylist(event, this)">
                     Create Playlist
                 </button>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody
-                    source="$endpoint/playlist?fields=name,public"
-                    template="playlists">
-                </tbody>
-            </table>
+            {{#if loading}}
+                {{>loading-view}}
+            {{/if}}
+            {{#if error}}
+                {{>error-view}}
+            {{/if}}
+            {{#data}}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each results}}
+                            <tr>
+                                <td><a href="/playlist/{{_id}}">{{name}}</a></td>
+                                <td class="push-right text right">
+                                    <button class="faux button--mobile"
+                                            onclick="renamePlaylist(event, this)"
+                                            playlist-id="{{_id}}">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="faux button--mobile"
+                                            onclick="destroyPlaylist(event, this)"
+                                            playlist-id="{{_id}}">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {{/each}}
+                        {{#unless results.length}}
+                            <tr><td colspan="2">No Playlists.</td></tr>
+                        {{/unless}}
+                    </tbody>
+                </table>
+            {{/data}}
         </div>
     </div>
 </script>
 
 <script type="text/template"
-        template-name="playlists">
-    {{#loading}}
-    {{>loading-table-view}}
-    {{/loading}}
-    {{#error}}
-    <tr><td colspan="2">{{message}}</td></tr>
-    {{/error}}
-    {{#data}}
-    {{#results}}
-    <tr>
-        <td><a href="/playlist/{{_id}}">{{name}}</a></td>
-        <td class="push-right text right">
-            <button class="faux button--mobile"
-                    action="renamePlaylist"
-                    playlist-id="{{_id}}">
-                <i class="fa fa-pencil"></i>
-            </button>
-            <button class="faux button--mobile"
-                    action="destroyPlaylist"
-                    playlist-id="{{_id}}">
-                <i class="fa fa-trash-o"></i>
-            </button>
-        </td>
-    </tr>
-    {{/results}}
-    {{^results}}
-    <tr><td colspan="2">No Playlists.</td></tr>
-    {{/results}}
-    {{/data}}
-</script>
-
-<script type="text/template"
-        route="^playlist\/(.*)"
-        source="$endpoint/playlist/$1?fields=name,public,userId"
-        completed="completedPlaylist"
-        transform="transformPlaylist">
+        data-route="^playlist\/(.*)"
+        data-source="$endpoint/playlist/$1?fields=name,public,userId"
+        data-process="processPlaylistPage"
+        data-template="playlist-page"
+        >
     <div class="container">
-        {{#loading}}
-        {{>loading-view}}
-        {{/loading}}
-        {{#error}}
-        <p>{{message}}</p>
-        {{/error}}
-        {{#data}}
-        <h1 playlist-id="{{_id}}">{{name}}</h1>
+        <h1 playlist-id="{{_id}}">{{playlist.name}}</h1>
         <div class="panel">
             <div class="options pad-vertical push-right">
-                {{#canPublic}}
+                {{#if canPublic}}
                 <label>
                     <input
                         type="checkbox"
-                        action="togglePlaylistPublic"
+                        onclick="togglePlaylistPublic(event, this)"
                         playlist-id="{{_id}}"
-                        {{#public}}checked{{/public}} />
+                        {{#if playlist.public}}checked{{/if}} />
                     Public
                 </label>
-                <button action="reorderPlaylistFromInputs"
+                <button onclick="reorderPlaylistFromInputs(event, this)"
                         trigger="reorderPlaylistFromInputs">
                         <i class="fa fa-fw fa-save" role="save-playlist-order"></i>
                         Save Order</button>
-                {{/canPublic}}
+                {{/if}}
                  <button class="faux button--mobile">
                     <i class="fa fa-fw fa-play"
-                       action="playSongs"
+                       onclick="playSongs(event, this)"
                        role="play-playlist"></i>
                 </button>
-               {{#downloadUrl}}
+               {{#if downloadUrl}}
                 <a class="silent button--mobile"
                    title="Download Playlist"
-                   action="canDownloadOrModal"
+                   onclick="canDownloadOrModal(event, this)"
                    href="{{downloadUrl}}"><i class="fa fa-fw fa-download"></i> Download</a>
-                {{/downloadUrl}}
-                {{#downloadLinks}}
+                {{/if}}
+                {{#each downloadLinks}}
                 <a class="silent button--mobile"
                    title="Download {{hover}}"
-                   action="canDownloadOrModal"
+                   onclick="canDownloadOrModal(event, this)"
                    href="{{url}}"><i class="fa fa-fw fa-download"></i> {{label}}</a>
-                {{/downloadLinks}}
+                {{/each}}
 
             </div>
             <table class="drag-sortable one-line" role="playlist-tracks">
@@ -239,67 +215,61 @@
                 {{/pagePlaceholders}}
             </table>
         </div>
-        {{/data}}
     </div>
 </script>
 
 <script type="text/template"
-        template-name="playlist-tracks"
-        transform="transformPlaylistTracks"
-        completed="completedPlaylistTracks">
-    {{#error}}
-    <tr><td colspan="6">{{message}}</td></tr>
-    {{/error}}
-    {{#data}}
-    {{#results}}
-    <tr role="playlist-track"
-        track-id="{{_id}}"
-        release-id="{{releaseId}}"
-        {{#edit}}
-        draggable="true"
-        ondrop="playlistDrop(event)"
-        ondragover="playlistAllowDrop(event)"
-        ondragleave="playlistDragLeave(event)"
-        ondragstart="playlistDragStart(event, '{{_id}}', '{{releaseId}}')"
-        {{/edit}}>
-        <td class="shrink">
+        data-template="playlist-tracks"
+        data-process="processPlaylistTracks"
+        completed="updateControls">
+        {{#each results}}
+        <tr role="playlist-track"
+            data-track-id="{{_id}}"
+            data-release-id="{{releaseId}}"
             {{#edit}}
-            <input  type="text"
-                    action-enter="reorderPlaylistFromInputs"
-                    onfocus="playlistTrackOrderFocus(event, this)"
-                    onblur="playlistTrackOrderBlur(event, this)"
-                    trigger-target="reorderPlaylistFromInputs"
-                    track-id="{{_id}}"
-                    release-id="{{releaseId}}"
-                    track-title="{{title}}"
-                    name="trackOrder[]"
-                    tabIndex="{{trackNumber}}"
-                    value="{{trackNumber}}" size="2" />
-            {{/edit}}
-            {{#noEdit}}
-            {{trackNumber}}.
-            {{/noEdit}}
-        </td>
-        <td class="shrink nohpad">
-          {{>playSong}}
-        </td>
-        {{>trackCellsOneLine}}
-        <td class="push-right">
-            {{>trackButtons}}
-            {{#edit}}
-            <button class="faux button--mobile"
-                    action="removeFromPlaylist"
-                    playlist-position="{{index}}">
-                <i class="fa fa-trash-o"></i>
-            </button>
-            {{/edit}}
-        </td>
-    </tr>
-    {{/results}}
-    {{^results}}
-    <tr>
-        <td colspan="10">No Results.</td>
-    </tr>
-    {{/results}}
-    {{/data}}
+            draggable="true"
+            ondrop="playlistDrop(event)"
+            ondragover="playlistAllowDrop(event)"
+            ondragleave="playlistDragLeave(event)"
+            ondragstart="playlistDragStart(event, '{{_id}}', '{{releaseId}}')"
+            {{/edit}}>
+            <td class="shrink">
+                {{#edit}}
+                <input  type="text"
+                        onenter="reorderPlaylistFromInputs"
+                        onfocus="playlistTrackOrderFocus(event, this)"
+                        onblur="playlistTrackOrderBlur(event, this)"
+                        trigger-target="reorderPlaylistFromInputs"
+                        data-track-id="{{_id}}"
+                        data-release-id="{{releaseId}}"
+                        track-title="{{title}}"
+                        name="trackOrder[]"
+                        tabIndex="{{trackNumber}}"
+                        value="{{trackNumber}}" size="2" />
+                {{/edit}}
+                {{#noEdit}}
+                {{trackNumber}}.
+                {{/noEdit}}
+            </td>
+            <td class="shrink nohpad">
+              {{>play-song}}
+            </td>
+            {{>track-cells-one-line}}
+            <td class="push-right">
+                {{>track-buttons}}
+                {{#edit}}
+                <button class="faux button--mobile"
+                        onclick="clickRemoveFromPlaylist(event, this)"
+                        data-playlist-position="{{index}}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+                {{/edit}}
+            </td>
+        </tr>
+        {{/each}}
+        {{#unless results.length}}
+            <tr>
+                <td colspan="10">No Results.</td>
+            </tr>
+        {{/unless}}
 </script>

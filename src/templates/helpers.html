@@ -1,17 +1,44 @@
 <script type="text/template"
-        mustache-name="location-autocomplete">
+        data-partial data-template="location-autocomplete">
     <input class="location-auto-complete" type="text" placeholder="City, Country" autocomplete="on" value="{{placeNameFull}}">
     <input type="hidden" name="googleMapsPlaceId" value="{{googleMapsPlaceId}}" />
 </script>
 
 <script type="text/template"
-        mustache-name="copy-clipboard-button"
+        data-partial data-template="copy-clipboard-button"
 >
   <button type="button" class="button copy-clipboard-button" onclick="copyToClipboard(event)"><i class="fa fa-copy"></i></button>
 </script>
 
+<script type="text/template" data-partial data-template="submit-button">
+  <button class="{{#if class}}{{class}}{{else}}button--cta button--full{{/if}}">
+      {{>submit-button-inner}}
+  </button>
+</script>
 <script type="text/template"
-        mustache-name="loading-placeholder">
+        data-template="loading-placeholder"
+        data-partial
+        >
 {{#words}}<span class="loading-placeholder">{{{.}}}</span>
 {{/words}}
+</script>
+
+<script type="text/template" data-partial data-template="submit-button-inner">
+  <span class="actionier-off">
+      {{#if text}}
+        {{text}}
+      {{else}}
+        Submit
+      {{/if}}
+    </span>
+    <span class="actionier-on">
+      <i class="fa fa-gear fa-spin"></i>
+      <span class="ml-1">
+      {{#if working}}
+        {{working}}
+      {{else}}
+        Working...
+      {{/if}}
+    </span>
+  </span>
 </script>

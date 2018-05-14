@@ -1,9 +1,15 @@
 const PLAYLIST_DOWNLOAD_LIMIT = 50 //Maximum tracks you can download at once from a playlist
 const PLAYLIST_PAGE_LIMIT = 100
 
-function createPlaylist (e, el, name, tracks, cb) {
-  if (!name) name = window.prompt(strings.createPlaylist)
-  if (!name) return
+function createPlaylist (aName, tracks, cb) {
+  let name = aName
+
+  if (!name) {
+    name = window.prompt(strings.createPlaylist)
+  }
+  if (!name) {
+    return
+  }
   create('playlist', {
     name: name,
     public: session.settings ? session.settings.playlistPublicByDefault : false,
@@ -11,109 +17,132 @@ function createPlaylist (e, el, name, tracks, cb) {
   }, cb ? cb : simpleUpdate)
 }
 
+function clickCreatePlaylist (e, el) {
+  const name = window.prompt(strings.createPlaylist)
+
+  createPlaylist(name, [])
+}
+
 function createAndAddToPlaylist (e, el) {
-  var data = getTargetDataSet(el, false, true)
-
-  if (!data)
-    return
-
-  var tracks = [{trackId: el.getAttribute('track-id'), releaseId: el.getAttribute('release-id')}]
-
-  createPlaylist(e, el, data.name, tracks, (err, obj, xhr) => {
-    if (err) {
-      toasty(new Error(err))
-      return
+  submitForm(e, {
+    validate: function (data, errs) {
+      if (!data.name) {
+        errs.push('Name is required')
+      }
+      return errs
+    },
+    transformData: function (data) {
+      data.tracks = [{trackId: data.trackId, releaseId: data.releaseId}]
+      return data
+    },
+    action: function (opts) {
+      actionier.on(opts.form)
+      createPlaylist(opts.data.name, opts.data.tracks, (err, obj, xhr) => {
+        actionier.off(opts.form)
+        if (terror(err)) {
+          formErrors(opts.form, err)
+          return
+        }
+        closeModal()
+        toasty(strings.addedToPlaylist)
+      })
     }
-
-    closeModal()
-    toasty(strings.addedToPlaylist)
   })
 }
 
 function renamePlaylist (e, el) {
   var name = window.prompt(strings.renamePlaylist)
 
-  if (!name)
+  if (!name) {
     return
+  }
 
-  update('playlist', el.getAttribute('playlist-id'), { name: name }, simpleUpdate)
+  update('playlist', el.dataset.playlistId, { name: name }, simpleUpdate)
 }
 
 function destroyPlaylist (e, el) {
   if (!window.confirm(strings.destroyPlaylist))
     return
-
-  destroy('playlist', el.getAttribute('playlist-id'), simpleUpdate)
+  destroy('playlist', el.dataset.playlistId, simpleUpdate)
 }
 
-function removeFromPlaylist (e, el) {
-  var pel   = document.querySelector('[playlist-id]')
-  var id    = pel ? pel.getAttribute('playlist-id') : ""
-  var url   = endpoint + '/playlist/' + id + '?fields=name,public,tracks,userId'
-  var index = parseInt(el.getAttribute('playlist-position'))
+function clickRemoveFromPlaylist (e, el) {
+  const index = parseInt(el.dataset.playlistPosition)
+  const id = cache(PAGE_PLAYLIST).playlist._id
 
   if (!id) {
     toasty(new Error(strings.error))
     return
   }
 
-  loadCache(url, (err, obj) => {
-    if (err) {
-      toasty(new Error(err.message))
+  const url   = endpoint + '/playlist/' + id + '?fields=name,public,tracks,userId'
+
+  requestCachedURL(url, (err, obj) => {
+    if (terror(err)) {
       return
     }
+    const tracks = obj.tracks
 
-    var tracks = obj.tracks
+    toasty('Track removed from playlist')
 
     tracks.splice(index, 1)
     update('playlist', id, {tracks: tracks}, (err, obj, xhr) => {
-      if (err) {
-        toasty(new Error(err))
+      if (terror(err)) {
         return
       }
 
       cache(url, obj)
-      loadSubSources(document.querySelector('[role="content"]'), true)
+      loadNodeSources(findNode('[role="content"]'), true)
     })
   })
 }
 
 function openAddToPlaylist (e, el) {
-  openModal('add-to-playlist-modal', {
-    trackId:   el.getAttribute('track-id'),
-    releaseId: el.getAttribute('release-id'),
-  })
-}
+  const template = 'add-to-playlist-modal'
+  const trackId = el.dataset.trackId
+  const releaseId = el.dataset.releaseId
 
-function transformAddToPlaylist (obj, done) {
-  loadCache(endpoint + '/playlist', (err, playlists) => {
+  openModal(template, {
+    loading: true
+  })
+
+  requestCachedURL(endpoint + '/playlist', (err, playlists) => {
     if (err) {
+      renderModal(template, {
+        error: err,
+        loading: false
+      })
       done(err)
+
       return
     }
-
-    done(null, {
-      trackId: obj.trackId,
-      releaseId: obj.releaseId,
-      results: playlists.results
+    renderModal(template, {
+      trackId: trackId,
+      releaseId: releaseId,
+      results: playlists.results,
+      loading: false
     })
   }, true)
 }
 
 function addToPlaylist (e, el) {
-  el = findParentWith(el, '[action=addToPlaylist]')
-  var id = el.getAttribute('playlist-id')
+  const playlistId = el.dataset.playlistId
+  const trackId = el.dataset.trackId
+  const releaseId = el.dataset.releaseId
 
-  if (!id)
+  if (!playlistId) {
     return
+  }
 
-  if (actionier.isOn(el))
+  if (actionier.isOn(el)) {
     return
+  }
 
-  var url = endpoint + '/playlist/' + id
-  var item = {
-    trackId: el.getAttribute('track-id'),
-    releaseId: el.getAttribute('release-id')
+  const url = endpoint + '/playlist/' + playlistId
+
+  const item = {
+    trackId: trackId,
+    releaseId: releaseId
   }
 
   if (!item.releaseId || !item.trackId) {
@@ -122,17 +151,17 @@ function addToPlaylist (e, el) {
   }
 
   actionier.on(el)
-  loadCache(url, (err, obj) => {
+  requestCachedURL(url, (err, obj) => {
     if (err) {
       actionier.off(el)
       toasty(new Error(err.message))
       return
     }
-    var tracks = obj.tracks
+    const tracks = obj.tracks
 
     index = tracks.length
     tracks.splice(index, 0, item)
-    update('playlist', id, {tracks: tracks}, (err, obj, xhr) => {
+    update('playlist', playlistId, {tracks: tracks}, (err, obj, xhr) => {
       actionier.off(el)
       if (err) {
         toasty(new Error(err))
@@ -147,16 +176,29 @@ function addToPlaylist (e, el) {
 }
 
 function togglePlaylistPublic (e, el) {
-  el.disabled = true
-  update('playlist', el.getAttribute('playlist-id'), {
+  if (actionier.isOn(el)) {
+    return
+  }
+  const playlistId = cache(PAGE_PLAYLIST).playlist._id
+
+  actionier.on(el)
+
+  update('playlist', playlistId, {
     public: !!el.checked
   }, (err, obj) => {
-    el.disabled = false
-    if (!err)
+    actionier.off(el)
+    if (terror(err)) {
       return
+    }
 
-    toasty(new Error(err.message))
-    el.checked = !el.checked
+    el.checked = obj.public
+
+    if (obj.public) {
+      toasty('Playlist is now public')
+    }
+    else {
+      toasty('Playlist is now private')
+    }
   })
 }
 
@@ -167,95 +209,87 @@ function isMyPlaylist (playlist) {
   return playlist.userId == session.user._id
 }
 
-function transformPlaylist (obj) {
-  if (isMyPlaylist(obj)) {
-    obj.canPublic = {
-      _id:    obj._id,
-      public: obj.public
-    }
-  }
-  if (isSignedIn()) {
-    var opts = {
-      method: 'download',
-      type: getMyPreferedDownloadOption()
-    }
-
-    if (obj.tracks.length < PLAYLIST_DOWNLOAD_LIMIT) {
-      obj.downloadUrl = endpoint + '/playlist/' + obj._id + '/download?' + objectToQueryString(opts)
-    }
-    else {
-      obj.downloadLinks = []
-      var tracksPerPage = PLAYLIST_DOWNLOAD_LIMIT
-      var numPages = Math.ceil(obj.tracks.length / tracksPerPage)
-
-      for (var page = 1; page <= numPages; page++) {
-        opts.page = page
-        var frm = (page - 1) * tracksPerPage + 1
-        var to = Math.min(obj.tracks.length, frm + tracksPerPage - 1)
-
-        obj.downloadLinks.push({
-          label: ((page == 1) ? 'Download ' : '') + 'Part ' + page,
-          hover: 'Tracks ' + frm + ' to ' + to,
-          url: endpoint + '/playlist/' + obj._id + '/download?' + objectToQueryString(opts)
-        })
-      }
-    }
-  }
-
-  var numLoadingPages = Math.ceil(obj.tracks.length / PLAYLIST_PAGE_LIMIT)
-
-  obj.pagePlaceholders = []
-  for (var i = 1; i <= numLoadingPages; i++) {
-    const trackPlaceholders = []
-
-    for (var j = 0; j < PLAYLIST_PAGE_LIMIT; j++) {
-      trackPlaceholders.push({
-        index: j,
-        number: ((i - 1) * PLAYLIST_PAGE_LIMIT) + j + 1,
-        title: createLoadingPlaceHolder(20, 40),
-        artists: createLoadingPlaceHolder(20, 40),
-        release: createLoadingPlaceHolder(15, 25),
-        genre: createLoadingPlaceHolder(10, 18),
-        page: i
-      })
-    }
-    obj.pagePlaceholders.push({tracks: trackPlaceholders, page: i})
-  }
-
-  return obj
+/**
+ * Processor for showing your list of playlists
+ */
+function processPlaylistsPage (args) {
+  pageProcessor(args)
 }
 
-function transformPlaylistTracks (obj, done) {
-  var id = document.querySelector('[playlist-id]').getAttribute('playlist-id')
-  var url = endpoint + '/playlist/' + id + '?fields=name,public,userId'
-  var playlist = cache(url)
-
-  var trackAtlas = toAtlas(obj.results, '_id')
-
-  obj.results = obj.results.map((item, index, arr) => {
-    var track = mapTrack(item)
-
-    track.index = index + obj.skip
-    track.trackNumber = index + 1 + obj.skip
-    track.playlistId = id
-    track.canRemove = isMyPlaylist(obj) ? { index: track.index } : undefined
-    if (isMyPlaylist(playlist)) {
-      track.edit = {
-        releaseId: track.releaseId,
-        _id: track._id,
-        title: track.title,
-        trackNumber: track.trackNumber,
-        index: track.index
+function processPlaylistPage (args) {
+  processor(args, {
+    success: function (args) {
+      const playlist = args.result
+      const scope = {
+        playlist: playlist
       }
-    } else {
-      track.noEdit = {
-        trackNumber: track.trackNumber
+      const tracksPerPage = 50
+
+      if (isMyPlaylist(playlist)) {
+        scope.canPublic = {
+          _id: playlist._id,
+          public: playlist.public
+        }
       }
+      if (isSignedIn()) {
+        const opts = {
+          method: 'download',
+          type: getMyPreferedDownloadOption()
+        }
+
+        if (playlist.tracks.length < PLAYLIST_DOWNLOAD_LIMIT) {
+          scope.downloadUrl = endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+        }
+        else {
+          scope.downloadLinks = []
+          const numPages = Math.ceil(playlist.tracks.length / tracksPerPage)
+
+          for (var page = 1; page <= numPages; page++) {
+            opts.page = page
+            var frm = (page - 1) * tracksPerPage + 1
+            var to = Math.min(playlist.tracks.length, frm + tracksPerPage - 1)
+
+            scope.downloadLinks.push({
+              label: ((page == 1) ? 'Download ' : '') + 'Part ' + page,
+              hover: 'Tracks ' + frm + ' to ' + to,
+              url: endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+            })
+          }
+        }
+      }
+
+      var numLoadingPages = Math.ceil(playlist.tracks.length / PLAYLIST_PAGE_LIMIT)
+
+      scope.pagePlaceholders = []
+      for (var i = 1; i <= numLoadingPages; i++) {
+        const trackPlaceholders = []
+
+        for (var j = 0; j < PLAYLIST_PAGE_LIMIT; j++) {
+          trackPlaceholders.push({
+            index: j,
+            number: ((i - 1) * PLAYLIST_PAGE_LIMIT) + j + 1,
+            title: createLoadingPlaceHolder(20, 40),
+            artists: createLoadingPlaceHolder(20, 40),
+            release: createLoadingPlaceHolder(15, 25),
+            genre: createLoadingPlaceHolder(10, 18),
+            page: i
+          })
+        }
+        scope.pagePlaceholders.push({tracks: trackPlaceholders, page: i})
+      }
+      cache(PAGE_PLAYLIST, scope)
+      renderContent(args.template, scope)
+      setPageTitle(playlist.name + pageTitleGlue + 'Playlist')
+      setMetaData({
+        'og:type': 'music.playlist',
+        'og:title': playlist.name,
+        'og:url': window.location.toString()
+      })
+      appendSongMetaData(playlist.tracks)
+      pageIsReady()
+      completedPlaylist()
     }
-
-    return track
   })
-  done(null, obj)
 }
 
 function completedPlaylistTracks (source, obj) {
@@ -263,17 +297,8 @@ function completedPlaylistTracks (source, obj) {
 }
 
 function completedPlaylist (source, obj) {
-  if (obj.error) return
-  var pl = obj.data
-
-  setPageTitle(pl.name + pageTitleGlue + 'Playlist')
-  setMetaData({
-    'og:type': 'music.playlist',
-    'og:title': pl.name,
-    'og:url': location.toString()
-  })
-  appendSongMetaData(obj.data.tracks)
-  pageIsReady()
+  const pl = cache(PAGE_PLAYLIST).playlist
+  console.log('pl', pl);
 
   //Make a bunch of divs that are loading tracks to put into
   //the tbody
@@ -290,29 +315,6 @@ function completedPlaylist (source, obj) {
   }
 
   loadTracksDelayed(1)
-
-  const playlistTracks = {
-    pages: pages,
-    pagesLoaded: 0,
-    pageResults: {},
-    resultTables: {}
-  }
-  /*
-  const limit = PLAYLIST_PAGE_LIMIT
-  const skip = i * PLAYLIST_PAGE_LIMIT
-
-  for (var i = 0; i < pages; i++) {
-    const table = document.createElement('table')
-
-    const html =  '<tbody source="$endpoint/catalog/browse/?playlistId={{_id}}&skip={{skip}}&limit={{limit}}" template="playlist-tracks"><tr></tr></tbody>'
-
-    render(table, html, {_id: pl._id, skip: skip, limit: limit})
-
-    playlistTracks.resultTables[i] = table
-  }
-
-  cache('playlistTracks', playlistTracks)
-  */
 }
 
 function getPlaylistTracksTable () {
@@ -327,6 +329,7 @@ function loadPlaylistTracksPage (playlistId, page, done) {
   const skip = (page - 1) * PLAYLIST_PAGE_LIMIT
   const limit = PLAYLIST_PAGE_LIMIT
   const url = endpoint + '/catalog/browse/?playlistId=' + playlistId + '&skip= ' + skip + '&limit=' + limit
+  const playlist = cache(PAGE_PLAYLIST).playlist
 
   requestJSON({
     url: url,
@@ -341,27 +344,50 @@ function loadPlaylistTracksPage (playlistId, page, done) {
     const tracksTableTHead = getPlaylisTracksTHead()
     const placeHolderTBody = document.querySelector('tbody[data-placeholder-page="' + page + '"]')
 
-    transformPlaylistTracks(result, (err, tracks) => {
-      if (err) {
-        done(err)
-        return
+    const tracks = transformPlaylistTracks(playlist, result.results, page)
+
+    const table = document.createDocumentFragment()
+    const tbody = document.createElement('tbody')
+
+    table.appendChild(tbody)
+
+    betterRender('playlist-tracks', tbody, {results: tracks})
+
+    tracksTable.insertBefore(table, placeHolderTBody)
+    tracksTable.removeChild(placeHolderTBody)
+    const firstPlaceHolder = placeHolderTBody.querySelector('tr[data-placeholder-page="' + page + '"]')
+
+    if (done) {
+      done(null, tracks)
+    }
+  })
+}
+
+function transformPlaylistTracks (playlist, tracks, page) {
+  const indexBump = (page - 1) * PLAYLIST_PAGE_LIMIT
+
+  return tracks.map((item, index, arr) => {
+    const track = mapTrack(item)
+
+    track.index = index + indexBump
+    track.trackNumber = index + 1 + indexBump
+    track.playlistId = playlist._id
+    track.canRemove = isMyPlaylist(playlist) ? { index: track.index } : undefined
+    if (isMyPlaylist(playlist)) {
+      track.edit = {
+        releaseId: track.releaseId,
+        _id: track._id,
+        title: track.title,
+        trackNumber: track.trackNumber,
+        index: track.index
       }
-
-      const table = document.createDocumentFragment()
-      const tbody = document.createElement('tbody')
-
-      table.appendChild(tbody)
-
-      render(tbody, getTemplate('playlist-tracks'), {data: tracks})
-
-      tracksTable.insertBefore(table, placeHolderTBody)
-      tracksTable.removeChild(placeHolderTBody)
-      const firstPlaceHolder = placeHolderTBody.querySelector('tr[data-placeholder-page="' + page + '"]')
-
-      if (done) {
-        done(null, tracks)
+    } else {
+      track.noEdit = {
+        trackNumber: track.trackNumber
       }
-    })
+    }
+
+    return track
   })
 }
 
@@ -479,30 +505,29 @@ function reorderPlaylistFromInputs (e) {
 function resetPlaylistInputs() {
   var trackEls = document.querySelectorAll('[role="playlist-track"]')
 
-  for (var i = 0; i < trackEls.length; i++)
+  for (var i = 0; i < trackEls.length; i++) {
     trackEls[i].querySelector('input[name="trackOrder\[\]"]').value = (i + 1)
-
+  }
 }
 
 function savePlaylistOrder() {
-  var id = document.querySelector('[playlist-id]').getAttribute('playlist-id')
-  var trackEls = document.querySelectorAll('[role="playlist-track"]')
-  var trackSaves = []
+  const id = cache(PAGE_PLAYLIST).playlist._id
+  const trackEls = document.querySelectorAll('[role="playlist-track"]')
+  const trackSaves = []
 
-  for (var i = 0; i < trackEls.length; i++) {
+  for (let i = 0; i < trackEls.length; i++) {
     trackSaves.push({
-      trackId: trackEls[i].getAttribute('track-id'),
-      releaseId: trackEls[i].getAttribute('release-id')
+      trackId: trackEls[i].dataset.trackId,
+      releaseId: trackEls[i].dataset.releaseId
     })
   }
-  var url   = endpoint + '/playlist/' + id + '?fields=name,public,tracks,userId'
+  const url   = endpoint + '/playlist/' + id + '?fields=name,public,tracks,userId'
 
   update('playlist', id, {tracks: trackSaves}, (err, obj, xhr) => {
-    if (err)
-      return toasty(new Error(err))
-
+    if (terror(err)) {
+      return
+    }
     cache(url, obj)
-    simpleUpdate()
     toasty(strings.reorderedPlaylist)
   })
 }
@@ -570,15 +595,14 @@ function playlistDragLeave (e) {
   e.target.closest('[role="playlist-track"]').classList.remove('drag-active', 'drag-active-top', 'drag-active-bottom')
 }
 
-function getChildIndex (child){
+function getChildIndex (child) {
   var parent = child.parentNode
   var children = parent.children
-  var i = children.length - 1
 
-  for (; i >= 0; i--){
-    if (child == children[i])
+  for (var i = children.length - 1; i >= 0; i--) {
+    if (child == children[i]) {
       return i
-
+    }
   }
   return i
 }
@@ -587,10 +611,10 @@ function playlistDrop (e) {
   var trackId = e.dataTransfer.getData('trackId')
   var releaseId = e.dataTransfer.getData('releaseId')
   var droppedTr = e.target.closest('[role="playlist-track"]')
-  var draggedTr = document.querySelector('tr[role="playlist-track"][track-id="' + trackId + '"][release-id="' + releaseId + '"]')
-
-  if (draggedTr == null)
+  var draggedTr = findNode('tr[role="playlist-track"][track-id="' + trackId + '"][release-id="' + releaseId + '"]')
+  if(draggedTr == null) {
     return
+  }
 
   draggedTr.classList.remove('drag-dragging')
   var draggedIndex = e.dataTransfer.getData('childIndex')

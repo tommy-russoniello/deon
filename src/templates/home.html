@@ -1,151 +1,157 @@
 <script type="text/template"
-        route="^(\?.*)?$"
-        page-title="Monstercat">
+        data-route="^(\?.*)?$"
+        data-process="processPage"
+        data-template="home-page"
+        >
     <div role="home-featured">
-        <div source="$endpoint/catalog/release?limit=15" template="home-featured"></div>
+        <div
+            data-source="$endpoint/catalog/release?limit=15"
+            data-process="processHomeFeatured">
+        </div>
     </div>
-    <div source="https://shop.monstercat.com/collections/website-featured/products.json" template="home-merch"></div>
-    <div source="$endpoint/catalog/release?filters=type,Podcast&limit=8" template="home-podcast"></div>
+    <div data-source="https://shop.monstercat.com/collections/website-featured/products.json"
+         data-no-cors="true"
+         data-process="processHomeMerch"
+        ></div>
+    <div data-source="$endpoint/catalog/release?filters=type,Podcast&limit=8" data-process="processPodcasts"></div>
     {{>spotify-and-social}}
 </script>
 
 <script type="text/template"
-        completed="completedHome"
-        template-name="home-featured"
-        transform="transformHome">
-    {{#loading}}
-    {{>loading-view-black}}
-    {{/loading}}
+        data-template="home-featured"
+        data-partial>
     {{#error}}
     <p>{{message}}</p>
     {{/error}}
-    {{#data}}
-    <div class="top-banner">
-        {{#featured}}
-        <div class="banner banner--scaled">
-            <div class="banner" style='background-image:url("{{coverBig}}")'>
-                <div class="banner-shade"></div>
-                <div class="gradient"></div>
+    {{#if loading}}
+        {{>loading-view-black}}
+    {{else}}
+        {{#data}}
+        <div class="top-banner">
+            {{#featured}}
+            <div class="banner banner--scaled">
+                <div class="banner" style='background-image:url("{{coverBig}}")'>
+                    <div class="banner-shade"></div>
+                    <div class="gradient"></div>
+                </div>
             </div>
-        </div>
-        <div class="container flex">
-            <div class="col-xs-12 col-sm-12 col-md-4 featured-artwork">
-                <a class="silent" href="/release/{{catalogId}}">
-                    <img class="shadow responsive" src="{{coverBig}}"/>
-                </a>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-8 cl-white featured-details">
-                {{#inEarlyAccess}}
-                <span class="tag">Early Access</span>
-                {{/inEarlyAccess}}
-                {{^inEarlyAccess}}
-                <span class="tag">Featured</span>
-                {{/inEarlyAccess}}
-                <a class="silent no-hover" href="/release/{{catalogId}}">
-                    <h1 class="title uppercase">{{title}}</h1>
-                </a>
-                <h3>By {{artists}}</h3>
-                <p class="date">
-                    {{>albumReleaseDates}}
-                </p>
-                {{#inEarlyAccess}}
-                    {{#hasGoldAccess}}
+            <div class="container flex">
+                <div class="col-xs-12 col-sm-12 col-md-4 featured-artwork">
+                    <a class="silent" href="/release/{{catalogId}}">
+                        <img class="shadow responsive" src="{{coverBig}}"/>
+                    </a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 cl-white featured-details">
+                    {{#inEarlyAccess}}
+                    <span class="tag">Early Access</span>
+                    {{/inEarlyAccess}}
+                    {{^inEarlyAccess}}
+                    <span class="tag">Featured</span>
+                    {{/inEarlyAccess}}
+                    <a class="silent no-hover" href="/release/{{catalogId}}">
+                        <h1 class="title uppercase">{{title}}</h1>
+                    </a>
+                    <h3>By {{artists}}</h3>
+                    <p class="date">
+                        {{>album-release-dates}}
+                    </p>
+                    {{#inEarlyAccess}}
+                        {{#hasGoldAccess}}
+                            {{>home-play-button}}
+                            <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
+                                View
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                            <div class="early-access-message cl-white">
+                                {{goldThankYou}}
+                            </div>
+                        {{/hasGoldAccess}}
+                        {{^hasGoldAccess}}
+                        <a href="/gold" class="button button--cta button--icon">
+                            Get Gold to Listen Early
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                        <p class="early-access-message cl-white">
+                            <a href="/gold">Monstercat Gold</a> members can stream releases 20hrs early.
+                        </p>
+                        {{/hasGoldAccess}}
+                    {{/inEarlyAccess}}
+                    {{^inEarlyAccess}}
                         {{>home-play-button}}
                         <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
                             View
                             <i class="fa fa-chevron-right"></i>
                         </a>
-                        <div class="early-access-message cl-white">
-                            {{goldThankYou}}
-                        </div>
-                    {{/hasGoldAccess}}
-                    {{^hasGoldAccess}}
-                    <a href="/gold" class="button button--cta button--icon">
-                        Get Gold to Listen Early
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                    <p class="early-access-message cl-white">
-                        <a href="/gold">Monstercat Gold</a> members can stream releases 20hrs early.
-                    </p>
-                    {{/hasGoldAccess}}
-                {{/inEarlyAccess}}
-                {{^inEarlyAccess}}
-                    {{>home-play-button}}
-                    <a href="/release/{{catalogId}}" class="button button--cta button--icon button--home-view">
-                        View
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                {{/inEarlyAccess}}
+                    {{/inEarlyAccess}}
+                </div>
+            </div>
+            {{/featured}}
+            <div class="container latest cl-white">
+                <header class="flex top-cta">
+                    <div class="col-xs-6">
+                        <h2 class="line-top">New Releases</h2>
+                    </div>
+                    <div class="col-xs-6 text right">
+                        <a href="/music" class="button button--icon button--transparent">
+                            View all
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </header>
+                <ul class="art-list art-list--full-width">
+                    {{#releases}}
+                        {{>release-list-item}}
+                    {{/releases}}
+                </ul>
             </div>
         </div>
-        {{/featured}}
-        <div class="container latest cl-white">
-            <header class="flex top-cta">
-                <div class="col-xs-6">
-                    <h2 class="line-top">New Releases</h2>
-                </div>
-                <div class="col-xs-6 text right">
-                    <a href="/music" class="button button--icon button--transparent">
-                        View all
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                </div>
-            </header>
-            <ul class="art-list art-list--full-width">
-                {{#releases}}
-                    {{>release-list-item}}
-                {{/releases}}
-            </ul>
+        <div class="hero cl-white">
+            <div class="banner" style="background-image:url(/img/banner.jpg)">
+                <div class="banner-shade"></div>
+                <div class="gradient gradient--inverted"></div>
+            </div>
+            <div class="container">
+                <h1 class="line-bottom">Empowering a creative and passionate community through innovation.</h1>
+            </div>
         </div>
-    </div>
-    <div class="hero cl-white">
-        <div class="banner" style="background-image:url(/img/banner.jpg)">
-            <div class="banner-shade"></div>
-            <div class="gradient gradient--inverted"></div>
-        </div>
-        <div class="container">
-            <h1 class="line-bottom">Empowering a creative and passionate community through innovation.</h1>
-        </div>
-    </div>
-    {{/data}}
+        {{/data}}
+    {{/if}}
 </script>
 
 <script type="text/template"
-        template-name="home-page-tracks"
-        transform="transformHomeTracks"
+        data-template="home-page-tracks"
+        data-process="processHomeTracks"
         >
 {{#data}}
-    {{>playSong}}
+    {{#each results}}
+        {{>play-song}}
+    {{/each}}
 {{/data}}
 </script>
 
 <script type="text/template"
-        template-name="home-play-button"
-        mustache-name="home-play-button"
+        data-template="home-play-button"
+        data-partial
 >
 <input type="hidden" role="release-id" release-id="{{_id}}" />
 <div style="display: none;"
-    source="$endpoint/catalog/browse?types=Single,EP,Album"
-    template="home-page-tracks">
+    data-source="$endpoint/catalog/browse?types=Single,EP,Album"
+    data-process="processHomeTracks"
+    >
 </div>
 <a class="button button--cta button--icon button--icon button--home-play {{#inEarlyAccess}}early-access{{/inEarlyAccess}}"
-        action="playSongs"
+        onclick="playSongs(event)"
         role="play-release"
-        release-id="{{_id}}">
+        data-release-id="{{_id}}">
     <span class="play"><i class="fa fa-play"></i> <span>{{#inEarlyAccess}}Listen Early{{/inEarlyAccess}}{{^inEarlyAccess}}Play{{/inEarlyAccess}}</span></span>
     <span class="pause"><i class="fa fa-pause"></i> <span>Pause</span></span>
 </a>
 </script>
 
 <script type="text/template"
-        template-name="home-podcast"
-        transform="transformPodcast">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <p>{{message}}</p>
-    {{/error}}
+        data-template="home-podcast"
+        data-process="processPodcasts"
+        >
     {{#data}}
     <section class="podcast">
         <div class="container latest">
@@ -154,14 +160,14 @@
                     <h2 class="line-top">Call of the Wild</h2>
                 </div>
                 <div class="col-xs-6 text right">
-                    <a href="https://www.monstercat.com/cotw" class="button button--black button--icon button--transparent">
+                    <a href="/cotw" class="button button--black button--icon button--transparent">
                         View all
                         <i class="fa fa-chevron-right"></i>
                     </a>
                 </div>
             </header>
             <ul class="art-list art-list--full-width">
-                {{#podcasts}}
+                {{#each podcasts}}
                 <li>
                     <a class="silent" href="/release/{{catalogId}}" title="{{title}}">
                         <div class="image-wrapper">
@@ -170,7 +176,7 @@
                         </div>
                     </a>
                 </li>
-                {{/podcasts}}
+                {{/each}}
             </ul>
         </div>
     </section>
@@ -178,36 +184,40 @@
 </script>
 
 <script type="text/template"
-        template-name="home-merch"
-        transform="transformHomeMerch">
-    {{#loading}}
-    {{>loading-view}}
-    {{/loading}}
-    {{#error}}
-    <p>{{message}}</p>
-    {{/error}}
-    {{#data}}
-    <section class="v-padding merch">
-        <div class="container latest">
-            <header class="flex top-cta">
-                <div class="col-xs-6">
-                    <h2 class="line-top">Featured Merch</h2>
+        data-template="home-merch"
+        data-process="processHomeMerch"
+        data-partial
+        >
+    {{#if loading}}
+        {{>loading-view}}
+    {{else}}
+        {{#if error}}
+            <p>{{message}}</p>
+        {{else}}
+            <section class="v-padding merch">
+                <div class="container latest">
+                    <header class="flex top-cta">
+                        <div class="col-xs-6">
+                            <h2 class="line-top">Featured Merch</h2>
+                        </div>
+                        <div class="col-xs-6 text right">
+                            <a href="https://shop.monstercat.com" class="button button--black button--icon button--transparent">
+                                View all
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </header>
+                    {{> merch-list}}
                 </div>
-                <div class="col-xs-6 text right">
-                    <a href="https://shop.monstercat.com" class="button button--black button--icon button--transparent">
-                        View all
-                        <i class="fa fa-chevron-right"></i>
-                    </a>
-                </div>
-            </header>
-            {{> merch-list}}
-        </div>
-    </section>
-    {{/data}}
+            </section>
+        {{/if}}
+    {{/if}}
 </script>
 
 <script type="text/template"
-        mustache-name="merch-list">
+        data-template="merch-list"
+        data-partial
+        >
 <ul class="art-list art-list--full-width">
     {{#products}}<li>
         <a class="silent" href="https://shop.monstercat.com/products/{{handle}}{{utm}}" ab-test="{{activeTest}}" kpi="merch-product" target="_BLANK" title="{{title}}">
@@ -222,7 +232,7 @@
 </script>
 
 <script type="text/template"
-        template-name="blog-stories"
+        data-template="blog-stories"
         transform="transformBlog">
     {{#loading}}
     {{>loading-view}}
@@ -253,7 +263,9 @@
 </script>
 
 <script type="text/template"
-        mustache-name="spotify-and-social">
+        data-template="spotify-and-social"
+        data-partial
+        >
     <div class="flex social">
         <div class="col-xs-12 col-sm-12 col-md-6 text right cl-white spotify-wrapper clearfix">
             <div class="container-left clearfix">

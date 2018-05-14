@@ -14,7 +14,7 @@
         "no-debugger": "error",
         "valid-typeof": "error",
         "consistent-return": "error",
-        "curly": ["error", "multi-or-nest", "consistent"],
+        "curly": ["error", "all"],
         "dot-location": ["error", "property"],
         "dot-notation": "error",
         "newline-after-var": ["error", "always"],
@@ -27,7 +27,7 @@
         "no-labels": "error",
         "no-loop-func": "error",
         "no-magic-numbers": ["error", {
-            "ignore": [1, 0],
+            "ignore": [1, 0, -1, 200, 201, 500, 404, 401],
             "ignoreArrayIndexes": true
         }],
         "no-multi-spaces": ["error", {

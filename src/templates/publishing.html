@@ -1,9 +1,9 @@
 <script type="text/template"
-        route="^publishing"
-        page-title="Publishing - Monstercat"
-        transform="transformPublishingPage"
+        data-route="^publishing"
+        data-title="Publishing - Monstercat"
+        data-process="processPage"
+        data-template="publishing-page"
 >
-{{#data}}
   <div class="top-banner top-banner--publishing cl-white">
     <div class="banner" style="background-image: url('https://assets.monstercat.com/publishing/publishing-banner.jpg?image_width=1024')">
       <div class="banner-gradient"></div>
@@ -101,11 +101,14 @@
       <div class="col-xs-12 col-sm-12 col-md-6 article-banner banner--scaled publishing-roster">
         <div class="publishing-roster-container">
           <div class="roster-row"
-          source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,1&limit=3"
-               template="roster-year"></div>
+               data-source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,1&limit=3"
+               data-process=""
+               data-process="processRosterYear">
+          </div>
           <div class="roster-row"
-          source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,1&limit=3&skip=3"
-               template="roster-year"></div>
+               data-source="$endpoint/catalog/artist?fields=name,websiteDetailsId,vanityUri,profileImageBlobId,profileImageUrl&filters=years,1&limit=3&skip=3"
+               data-process="processRosterYear">
+          </div>
         </div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-6 article-details">
@@ -120,5 +123,4 @@
       </div>
     </article>
   </div>
-{{/data}}
 </script>

@@ -217,67 +217,74 @@ function transformGoldSubscription (obj) {
   return nobj
 }
 
-function transformGoldLanding (obj, done) {
-  obj = obj || {}
-  var featureBlocks = []
-  featureBlocks.push({
-    id: 'download-access',
-    title: 'Download Access',
-    description: 'Download tracks in MP3, FLAC, and WAV format.',
-    image: '/img/gold-landing/1-DownloadAccess-v2.jpg',
-    cta: 'Download Music',
-    download: true
-  }, {
-    id: 'early-streaming',
-    title: 'Early Streaming Access',
-    description: 'Listen to releases on Monstercat.com 20 hours before they are released to everyone else.',
-    cta: 'Listen Early',
-    image: '/img/gold-landing/2-StreamingAccess.jpg',
-  }, {
-    id: 'support-the-artists',
-    title: 'Support the Artists',
-    description: 'Artists are paid out from Gold subscriptions based on how much people listen to their songs.',
-    cta: 'Support the Artists',
-    image: '/img/gold-landing/3-SupportArtists.jpg',
-  }, {
-    id: 'shop-discounts',
-    title: 'Discounts in the Shop',
-    description: 'Every month you have Gold you get a discount code for 10% off in <a href="https://shop.monstercat.com">the shop</a>. Goes up to 15% off after a year and 20% off after two years.',
-    cta: 'Get Discounts',
-    image: 'https://assets.monstercat.com/monstercat.com/merch40.jpg?image_width=1024'
-  }, {
-    id: 'discord',
-    title: 'Gold-only Discord Chat',
-    description: 'Come chat with us and other superfans in our Discord server.',
-    cta: 'Join the Chat',
-    image: '/img/gold-landing/5-Discord.jpg',
-    discord: true
-  }, {
-    id: 'reddit',
-    title: 'Subreddit Flair on /r/Monstercat',
-    description: 'Show your bling off in the Monstercat subreddit.',
-    cta: 'Get Your Flair',
-    image: '/img/gold-landing/6-Reddit.png',
-    reddit: true
+function processGoldPage (args) {
+  console.log('args', args)
+  processor(args, {
+    start: function (args) {
+      console.log('start')
+      const scope = {}
+      let featureBlocks = []
+
+      featureBlocks.push({
+        id: 'download-access',
+        title: 'Download Access',
+        description: 'Download tracks in MP3, FLAC, and WAV format.',
+        image: '/img/gold-landing/1-DownloadAccess-v2.jpg',
+        cta: 'Download Music',
+        download: true
+      }, {
+        id: 'early-streaming',
+        title: 'Early Streaming Access',
+        description: 'Listen to releases on Monstercat.com 20 hours before they are released to everyone else.',
+        cta: 'Listen Early',
+        image: '/img/gold-landing/2-StreamingAccess.jpg',
+      }, {
+        id: 'support-the-artists',
+        title: 'Support the Artists',
+        description: 'Artists are paid out from Gold subscriptions based on how much people listen to their songs.',
+        cta: 'Support the Artists',
+        image: '/img/gold-landing/3-SupportArtists.jpg',
+      }, {
+        id: 'shop-discounts',
+        title: 'Discounts in the Shop',
+        description: 'Every month you have Gold you get a discount code for 10% off in <a href="https://shop.monstercat.com">the shop</a>. Goes up to 15% off after a year and 20% off after two years.',
+        cta: 'Get Discounts',
+        image: 'https://assets.monstercat.com/monstercat.com/merch40.jpg?image_width=1024'
+      }, {
+        id: 'discord',
+        title: 'Gold-only Discord Chat',
+        description: 'Come chat with us and other superfans in our Discord server.',
+        cta: 'Join the Chat',
+        image: '/img/gold-landing/5-Discord.jpg',
+        discord: true
+      }, {
+        id: 'reddit',
+        title: 'Subreddit Flair on /r/Monstercat',
+        description: 'Show your bling off in the Monstercat subreddit.',
+        cta: 'Get Your Flair',
+        image: '/img/gold-landing/6-Reddit.png',
+        reddit: true
+      })
+
+      featureBlocks = featureBlocks.map((i, index) => {
+        i.isOdd = !(index % 2 == 0)
+        return i
+      })
+      scope.featureBlocks = featureBlocks
+      scope.hasGoldAccess = hasGoldAccess()
+      scope.sessionName = getSessionName()
+      scope.getGoldUrl = getGetGoldLink()
+
+      if(scope.hasGoldAccess) {
+        scope.redditUsername = session.user.redditUsername
+      }
+      else {
+        scope.redditUsername = false
+      }
+      console.log('args.template', args.template)
+      console.log('args.node', args.node)
+      console.log('scope', scope)
+      renderContent(args.template, scope)
+    }
   })
-  featureBlocks = featureBlocks.map(function (i, index) {
-    i.isOdd = !(index % 2 == 0)
-    return i
-  })
-  obj.featureBlocks = featureBlocks
-  obj.hasGoldAccess = hasGoldAccess()
-  obj.sessionName = getSessionName()
-  obj.getGoldUrl = getGetGoldLink()
-
-  if(obj.hasGoldAccess) {
-    obj.redditUsername = session.user.redditUsername
-  }
-  else {
-    obj.redditUsername = false
-  }
-  return obj;
 }
-
-function completedGoldLanding () {
-}
-
