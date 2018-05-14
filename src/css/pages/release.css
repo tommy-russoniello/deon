@@ -210,6 +210,10 @@
   font-size: 20px;
 }
 
+.list--tool-tip > li .tool-tip.tool-tip--artist {
+  display: none;
+}
+
 @media screen and (min-width: 992px){
   .details-box img.artwork {
     float: right;
@@ -327,6 +331,7 @@ button > i.active,
     text-align: center;
   }
 }
+
 @media screen and (min-width: 1200px){
   .scroll-container{
     max-width: 325px;
@@ -355,6 +360,16 @@ button > i.active,
 }
 
 @media screen and (min-width: 768px) {
+  ul.list--tool-tip > li .tool-tip.tool-tip--artist {
+    display: block;
+    opacity: 0;
+  }
+
+  .list--tool-tip > li:hover .tool-tip.tool-tip--artist {
+    display: block;
+    opacity: 1;
+  }
+
   .release-purchase-links.show-names {
     display: flex;
     flex-direction: row;

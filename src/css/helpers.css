@@ -731,8 +731,7 @@ ul.errors li {
   transition: 0.25s opacity;
 }
 .list--tool-tip > li:hover .tool-tip {
-  display: block;
-  opacity: 100;
+  opacity: 1;
   z-index: 999;
 }
 

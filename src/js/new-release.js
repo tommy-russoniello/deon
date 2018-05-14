@@ -228,17 +228,14 @@ function transformReleasePage (obj, done) {
           name: 'release-purchase-names',
           modifiers: {
             control: function () {
-              console.log('control')
               scope.releasePurchaseNames = false
             },
             'with-names': function () {
-              console.log('withnaes')
               scope.releasePurchaseNames = true
             }
           },
           onStarted: function () {
             transformReleasePage.scope = scope
-            console.log('hi')
             done(null, scope)
           }
         })
