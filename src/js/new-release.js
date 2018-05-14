@@ -247,6 +247,12 @@ function processReleasePage (args) {
           scope.hasGoldAccess = hasGoldAccess()
           setPageTitle(scope.release.title + ' by ' + scope.release.renderedArtists)
 
+          function renderPage () {
+            cache(PAGE_RELEASE, scope)
+            renderContent('new-release-page', scope)
+            completedReleasePage()
+          }
+
           if (document.body.clientWidth > 767) {
             scope.activeTest = 'releasePurchaseNames'
             splittests.releasePurchaseNames = new SplitTest({
@@ -260,15 +266,13 @@ function processReleasePage (args) {
                 }
               },
               onStarted: function () {
-                cache(PAGE_RELEASE, scope)
-                renderContent('new-release-page', scope)
+                renderPage()
               }
             })
             splittests.releasePurchaseNames.start()
           }
           else {
-            cache(PAGE_RELEASE, scope)
-            renderContent('new-release-page', scope)
+            renderPage()
           }
         })
       })
