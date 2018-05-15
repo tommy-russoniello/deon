@@ -154,6 +154,8 @@ function processPasswordResetPage (args) {
 
 function updatePassword (e, el) {
   submitForm(e, {
+    method: 'POST',
+    url: endhost + '/password/reset',
     validate: function (data, errs) {
       if (!data.password) {
         errs.push(strings.passwordMissing)
