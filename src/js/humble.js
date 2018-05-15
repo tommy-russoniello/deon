@@ -55,6 +55,7 @@ function submitHumbleTwitch (e, el) {
     transformData: function (data) {
       data.promo = humblePromoName
       data.vendor = "Twitch"
+      data.identity = data.username
       return data
     },
     url: endpoint + '/self/whitelist/redeem-via-trial-code',

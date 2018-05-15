@@ -343,7 +343,7 @@ function checkoutSubscriptions (e, el) {
   }
 }
 
-checkoutSubscriptions.paypal = function checkoutSubscriptionsStripe (data, subs) {
+checkoutSubscriptions.paypal = function checkoutSubscriptionsPayPal (data, subs) {
   var returnUrl = location.origin + '/account/services/processing?type='
   var qo = searchStringToObject()
 

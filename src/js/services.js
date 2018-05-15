@@ -90,7 +90,7 @@ function processServicesPage (args, done) {
 
       if (qo.identity && valid) {
         findNode('input[name=identity]').value = qo.identity
-        findNode('form[role="subscribe-new-license"]').submit()
+        findNode('form[role="subscribe-new-license"] button').click()
       }
     }
 
