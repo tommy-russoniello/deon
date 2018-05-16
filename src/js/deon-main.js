@@ -889,9 +889,13 @@ function processHomeFeatured (args) {
       scope = {
         featured: featured,
         releases: results.slice(0, 8),
-        loading: false
+        loading: false,
+        hasGoldAccess: hasGoldAccess()
       }
       return scope
+    },
+    completed: function () {
+      startCountdownTicks()
     }
   })
 }
