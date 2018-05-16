@@ -224,11 +224,11 @@
     <div class="container">
         <h1>Reset Password</h1>
         <div class="panel">
-            {{#missingKey}}
+            {{#if missingKey}}
                 <p>No key provided.</p>
-            {{/missingKey}}
-            {{^missingKey}}
+            {{else}}
             <form onsubmit="updatePassword(event, this)">
+                <input type="hidden" name="code" value="{{key}}" />
                 <table class="form mobile">
                     <tbody>
                         <tr>
@@ -263,7 +263,7 @@
                 </div>
             </form>
         </div>
-        {{/missingKey}}
+        {{/if}}
     </div>
     {{/data}}
 </script>

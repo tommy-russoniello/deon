@@ -148,6 +148,7 @@ function processPasswordResetPage (args) {
       var key = searchStringToObject().key
 
       obj.missingKey = !key
+      obj.key = key
       return obj
     }
   })
