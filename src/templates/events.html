@@ -180,17 +180,17 @@
     </td>
     <td class="push-right">
       <div>
-          {{#url}}
-            <a ab-test="{{activeTest}}" kpi="{{#externalUrl}}event-external{{/externalUrl}}{{^externalUrl}}event-internal{{/externalUrl}}" class="faux silent button--mobile buy-tickets" href="{{url}}" {{#externalUrl}} target="_blank" {{/externalUrl}}>
+          {{#if url}}
+            <a ab-test="{{activeTest}}" kpi="{{#if externalUrl}}event-external{{else}}event-internal{{/if}}" class="faux silent button--mobile buy-tickets" href="{{url}}" {{#if externalUrl}} target="_blank" {{/if}}>
                 <i class="fa fa-shopping-cart"></i>
                 <span>
                   {{ctaLabel}}
-                  {{^ctaLabel}}
+                  {{#unless ctaLabel}}
                     Buy Tickets
-                  {{/ctaLabel}}
+                  {{/unless}}
                 </span>
             </a>
-          {{/url}}
+          {{/if}}
           <a ab-test="{{activeTest}}" kpi="{{#externalUrl}}event-external{{/externalUrl}}{{^externalUrl}}event-ical{{/externalUrl}}" class="faux button--mobile" onclick="addToCalendar(event, this)" title="Download iCal" target="_blank" href="{{icalDownloadLink}}">
               <i class="fa fa-calendar-plus-o"></i>
           </a>
