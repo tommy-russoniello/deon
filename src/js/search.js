@@ -78,7 +78,7 @@ function getSearchType (type) {
 ===============================*/
 function submitSearchMobile (e, el, url) {
   closeNav()
-  search(e, el, url)
+  submitSearch(e, el, url)
 }
 
 function submitSearch (e, el, url) {
