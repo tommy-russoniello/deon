@@ -920,7 +920,7 @@ function transformHome (obj) {
 }
 
 function processHomeTracks (args) {
-  templateProcessor('home-tracks', args, {
+  templateProcessor('home-page-tracks', args, {
     transform: function (args) {
       let result = args.result
 

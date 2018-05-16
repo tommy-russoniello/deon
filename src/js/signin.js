@@ -72,6 +72,7 @@ function signIn (data, done) {
 }
 
 function authenticateTwoFactorToken (e, el) {
+  e.preventDefault()
   requestJSON({
     url: endhost + '/signin/token',
     method: 'POST',
