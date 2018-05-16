@@ -8,6 +8,13 @@ function completedGoldBuyPage () {
   initLocationAutoComplete();
 }
 
+function processGoldBuyPage (args) {
+  renderContent('gold-buy-page', {
+    goldSubscribe: transformGoldSubscribeForm()
+  })
+  completedGoldBuyPage()
+}
+
 /**
  * Gives you the variables needed to render a gold subscribe form
  */
@@ -81,14 +88,12 @@ function submitCheckoutGold (e) {
 
     if(signOnMethod == 'sign-up') {
       data = transformSubmittedAccountData(data);
-      var errors = validateSignUp(data);
+      var errors = validateSignUp(data, []);
       if(data.password != data.password_confirm) {
         errors.push('Passwords don\'t match');
       }
       if(errors.length > 0) {
-        errors.forEach(function (err) {
-          toasty(new Error(err));
-        });
+        formErrors(form, errors)
         enableGoldCheckoutForm();
         return
       }

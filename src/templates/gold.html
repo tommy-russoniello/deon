@@ -147,16 +147,15 @@
 
 <script type="text/template"
         data-route="^gold/buy"
-        transform="transformGoldBuyPage"
-        completed="completedGoldBuyPage"
-        data-title="Buy Monstercat Gold">
-  {{#data}}
-    <div class="container">
-      {{#goldSubscribe}}
-        {{>gold-subscribe-form}}
-      {{/goldSubscribe}}
-    </div>
-  {{/data}}
+        data-process="processGoldBuyPage"
+        data-title="Buy Monstercat Gold"
+        data-template="gold-buy-page"
+        >
+  <div class="container">
+    {{#goldSubscribe}}
+      {{>gold-subscribe-form}}
+    {{/goldSubscribe}}
+  </div>
 </script>
 
 <script type="text/template"
