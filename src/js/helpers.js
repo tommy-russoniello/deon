@@ -398,7 +398,6 @@ function hookValueSelects (selects) {
 
 function bindOnEnter () {
   const els = document.querySelectorAll('[onenter]')
-  console.log('els', els);
 
   for (var i = 0; i < els.length; i++) {
     const node = els[i]
@@ -410,9 +409,7 @@ function bindOnEnter () {
     }
 
     function callback (e) {
-      console.log('e.keyCode', e.keyCode)
       if (e.keyCode == 13) {
-        console.log('DO IT')
         fn(e, this)
       }
     }

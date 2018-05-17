@@ -311,6 +311,9 @@ function completedPlaylist (source, obj) {
           loadTracksDelayed(page + 1)
         }, 250)
       }
+      else {
+        bindOnEnter()
+      }
     })
   }
 
@@ -416,8 +419,8 @@ function reorderPlaylistFromInputs (e) {
 
   for (var i = 0; i < inputs.length; i++) {
     var input = inputs[i]
-    var trackId = input.getAttribute('track-id')
-    var releaseId = input.getAttribute('release-id')
+    var trackId = input.dataset.trackId
+    var releaseId = input.dataset.releaseId
     var to = parseInt(input.value)
     var from = i + 1
 
@@ -470,7 +473,7 @@ function reorderPlaylistFromInputs (e) {
         trackReleaseCounts[id]++
       }
 
-      const els = tracksTable.querySelectorAll('tr[role="playlist-track"][track-id="' + item.trackId + '"][release-id="' + item.releaseId + '"]')
+      const els = tracksTable.querySelectorAll('tr[role="playlist-track"][data-track-id="' + item.trackId + '"][data-release-id="' + item.releaseId + '"]')
 
       return els[trackReleaseCounts[id]]
     })
@@ -611,7 +614,7 @@ function playlistDrop (e) {
   var trackId = e.dataTransfer.getData('trackId')
   var releaseId = e.dataTransfer.getData('releaseId')
   var droppedTr = e.target.closest('[role="playlist-track"]')
-  var draggedTr = findNode('tr[role="playlist-track"][track-id="' + trackId + '"][release-id="' + releaseId + '"]')
+  var draggedTr = findNode('tr[role="playlist-track"][data-track-id="' + trackId + '"][data-release-id="' + releaseId + '"]')
   if(draggedTr == null) {
     return
   }
