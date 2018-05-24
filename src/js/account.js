@@ -230,12 +230,33 @@ function processAccountPage (args) {
       scope.locationLegacy = isLegacyLocation()
       scope.emailOptIns = transformEmailOptins(account.emailOptIns)
       scope.account = account
+
       renderContent(args.template, {data: scope})
     },
     completed: function () {
       scrollToHighlightHash()
       hookValueSelects()
       initLocationAutoComplete()
+    }
+  })
+}
+
+function processAccountEmailPage (args) {
+  templatePageProcessor('account-email-page', args, {
+    hasLoading: true,
+    transform: function (args) {
+      const scope = {}
+      const account = args.result
+      const names = account.realName.split()
+
+      const mailChimpOptions = {
+        MERGE0: account.email,
+      }
+
+      scope.mailchimpSrcStr = objectToQueryString(mailChimpOptions)
+        + '&group[5449][2]=1&group[5449][1]=1'
+
+      return scope
     }
   })
 }

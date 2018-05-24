@@ -52,7 +52,7 @@
     {{/event}}
   </div>
 
-  {{>events-email-optin-container}}
+  {{>email-optin-mailchimp-link}}
 
 
   {{#event}}
@@ -117,7 +117,7 @@
         <button onclick="clickLoadMoreUpcomingEvents(event, this)" role="load-more-upcoming-events" current-page="{{page}}" class="button button--load-events button--cta hide">Load More</button>
       </div>
     </section>
-    {{>events-email-optin-container}}
+    {{>email-optin-mailchimp-link}}
     <section data-source="$endpoint/events/past?featured=1&limit=100" data-process="processPastEvents" class="events-past"></section>
   {{>event-sponsor}}
     <div role="event-google-tracking"></div>
@@ -285,10 +285,26 @@
 </script>
 
 
+<script type="text/template"
+        data-template="email-optin-mailchimp-link"
+        data-partial
+        >
+
+  <div class="container panel events-email">
+      <div class="form form-inline mobile">
+        <label class="email-me mb-1">Get emailed about Monstercat events!</label>
+        <br />
+        <a href="https://monstercat.us14.list-manage.com/subscribe?u=558f2b6bdecccf5cf42ccc7f7&id=1ef227c776&group[5449][2]=1&group[5449][1]=1&MERGE0={{userEmail}}"
+           class="button button--cta">Subscribe</a>
+      </div>
+  </div>
+</script>
+
 <!-- This is if you aren't logged in -->
 <script type="text/template"
         data-partial
         data-template="events-email-optin-container">
+
 <div role="events-email-optin">
   {{#if isSignedIn}}
     <div data-source="$endpoint/self" data-process="processEventsEmailOptin"></div>

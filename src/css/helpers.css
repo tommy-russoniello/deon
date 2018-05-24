@@ -152,6 +152,10 @@
   padding-bottom: 2em;
 }
 
+.p-0 {
+  padding: 0px !important;
+}
+
 .position-relative {
   position: relative;
 }

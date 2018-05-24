@@ -60,6 +60,10 @@ section {
   margin-top: 0;
 }
 
+.panel--no-padding {
+  padding: 0px;
+}
+
 .panel.md-container{
   margin-top: 0;
   margin-bottom: 0;

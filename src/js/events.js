@@ -46,6 +46,7 @@ function processEventPage (args) {
       scope.single = true
       scope.isSignedIn = isSignedIn()
       setPageTitle(scope.event.title)
+      scope.userEmail = scope.isSignedIn ? session.user.email : ''
       return scope
     }
   })
@@ -117,6 +118,7 @@ function processEventsPage (args) {
 
   scope.page = 1
   scope.isSignedIn = isSignedIn()
+  scope.userEmail = scope.isSignedIn ? session.user.email : ''
 
   renderContent(args.template, scope)
 

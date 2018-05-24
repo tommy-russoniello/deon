@@ -1549,6 +1549,12 @@ function templateProcessor (template, args, options) {
   processor(args, options)
 }
 
+function templatePageProcessor (template, args, options) {
+  options.renderNode = findNode('[role=content]')
+  args.template = template
+  return processor(args, options)
+}
+
 /**
  * Wrapper for the processor function that always makes the
  * [role=content] node the node that gets rendered into
