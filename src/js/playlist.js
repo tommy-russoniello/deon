@@ -51,7 +51,7 @@ function createAndAddToPlaylist (e, el) {
 }
 
 function renamePlaylist (e, el) {
-  var name = window.prompt(strings.renamePlaylist)
+  var name = window.prompt(strings.renamePlaylist, el.dataset.playlistName)
 
   if (!name) {
     return

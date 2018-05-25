@@ -84,7 +84,7 @@ function togglePassword (e, el) {
 
 function simpleUpdate (err, obj, xhr) {
   if (err) return window.alert(err.message)
-  loadSubSources(findNode('[role="content"]'), true, true)
+  go(window.location)
 }
 
 function reloadPage () {

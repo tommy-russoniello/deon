@@ -94,12 +94,13 @@
                                 <td class="push-right text right">
                                     <button class="faux button--mobile"
                                             onclick="renamePlaylist(event, this)"
-                                            playlist-id="{{_id}}">
+                                            data-playlist-name="{{name}}"
+                                            data-playlist-id="{{_id}}">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <button class="faux button--mobile"
                                             onclick="destroyPlaylist(event, this)"
-                                            playlist-id="{{_id}}">
+                                            data-playlist-id="{{_id}}">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
                                 </td>
