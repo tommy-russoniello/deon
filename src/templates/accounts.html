@@ -449,12 +449,12 @@
                             <input class="code" size="32" type="text" value="{{code}}" role="clipboard" />{{>copy-clipboard-button}}
                             gets you <span class="discount">{{discountText}}</span>.
                             <br /><small>{{#expires}}
-                            Single use and expires on {{expiresFormatted}}.
+                            Single use and expires on {{../expiresFormatted}}.
                             {{/expires}}
                             {{^expires}}
                                 Single use and does not expire.
                             {{/expires}}
-                            Next code in <span role="countdown" to="{{nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
+                            Next code in <span role="countdown" to="{{../nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
                         </p>
                         {{/currentCode}}
                         <div class="button-group">
