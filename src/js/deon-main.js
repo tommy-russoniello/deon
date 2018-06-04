@@ -1509,17 +1509,18 @@ function processor (args, options) {
 
   //The ajax is done, and either succeeded or failed
   if (args.state == 'finish') {
+    const renderNode = opts.renderNode || args.node
     if (args.error) {
       if (opts.error) {
         opts.error(args)
         return
       }
       else if (opts.hasError) {
-        betterRender(args.template, args.node, {error: args.error})
+        betterRender(args.template, renderNode, {error: args.error})
         return
       }
 
-      betterRender('error', args.node, {message: args.error.message || args.error.toString()})
+      betterRender('error', renderNode, {message: args.error.message || args.error.toString()})
       return
     }
     if (opts.success) {
@@ -1533,7 +1534,6 @@ function processor (args, options) {
       scope.data = opts.transform(args)
     }
 
-    const renderNode = opts.renderNode || args.node
 
     betterRender(args.template, renderNode, scope)
 
@@ -1566,6 +1566,7 @@ function pageProcessor (args, aOptions) {
   const options = aOptions || {}
 
   options.renderNode = findNode('[role=content]')
+
   return processor(args, options)
 }
 
