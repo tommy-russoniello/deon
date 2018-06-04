@@ -69,12 +69,12 @@ function submitPodcastGallery (e, el) {
       }
       return errs
     },
-    action: function () {
+    action: function (args) {
       actionier.on(e.target)
       request({
         url: 'https://submit.monstercat.com',
         method: 'POST',
-        data: new FormData(data)
+        data: new FormData(args.data)
       }, (err, body, xhr) => {
         actionier.off(e.target)
         if (err) {
@@ -82,7 +82,7 @@ function submitPodcastGallery (e, el) {
           recordErrorAndAlert(err, 'Submit Podcast Gallery')
           return
         }
-        toasty('Your photo has been accepted. Thank you!')
+        toasty('Your photo has been submitted. Thank you!')
       })
     }
   })
