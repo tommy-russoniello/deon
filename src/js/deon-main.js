@@ -772,6 +772,17 @@ function mapTrack (track) {
   track.playUrl = getPlayUrl(track.albums, track.releaseId)
   track.downloadLink = getDownloadLink(track.release._id, track._id)
 
+
+  //TODO: Remove this temporary fix by properly clearing the cache at datapoint
+  //for these tracks
+  const skipCacheTracks = [
+    '5ae7adf25bf68f7781f1fe0c',
+    '5ae7ad708d72f67794a8ae58'
+  ]
+  if (skipCacheTracks.indexOf(track._id) != -1) {
+    track.playUrl = 'https://s3.amazonaws.com/data.monstercat.com/blobs' + track.playUrl.replace(datapoint + '/blobs', '')
+  }
+
   return track
 }
 
