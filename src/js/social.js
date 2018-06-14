@@ -93,9 +93,12 @@ function signInFacebook (done) {
 }
 
 function onSocialSignIn (err, status) {
-  if (err) return window.alert(err.message)
-  if (status === 303)
+  if (status === 303) {
     return window.confirm(strings.noAccount) ? go('/sign-up') : ''
+  }
+  if (err) {
+    return toasty.error(err)
+  }
 
   onSignIn()
 }
