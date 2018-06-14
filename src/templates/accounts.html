@@ -921,6 +921,5 @@ Success please join the following channels with the links below:<br/><br/>
         data-partial data-template="required"><span class="required">*</span></script>
 
 <script type="text/template"
-        data-partial data-template="continueTo">
-{{#buying}}{{#vendor}}a <strong>{{vendor}}</strong> license for <strong>{{identity}}</strong>{{/vendor}}{{#gold}}a <strong><a href="/gold">Gold subscription</a></strong>{{/gold}}{{/buying}}
-{{#msg}}{{{msg}}}{{/msg}}</script>
+        data-partial data-template="continueTo">{{#continueTo}}{{#buying}}{{#vendor}}
+            a <strong>{{vendor}}</strong> license for <strong>{{identity}}</strong>{{/vendor}}{{#gold}}a <strong><a href="/gold">Gold subscription</a></strong>{{/gold}}{{/buying}}{{#if msg}}{{{msg}}}{{/if}}{{/continueTo}}</script>

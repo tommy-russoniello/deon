@@ -2,7 +2,6 @@
 =            PROCESSORS            =
 ==================================*/
 function processSignInPage (args) {
-  console.log('args', args)
   if (isSignedIn()) {
     toasty('You are already logged in')
     go('/account')
@@ -62,7 +61,6 @@ function submitSignUp (e, el) {
 
 function signIn (data, done) {
   data.password = data.password.toString()
-  console.log('data', data)
   requestJSON({
     url: endhost + '/signin',
     method: 'POST',
@@ -98,7 +96,7 @@ function resendTwoFactorToken (e, el) {
 function onSignIn(done) {
   if (!done) {
     done = function () {
-      go(getRedirectTo())
+      goRedirectTo()
     }
   }
   getSession(function (err, sess) {
@@ -192,7 +190,7 @@ function signUpAt (data, where) {
     if (terror(err)) {
       return
     }
-    go(getRedirectTo())
+    goRedirectTo()
   })
 }
 
@@ -207,14 +205,22 @@ function validateSignUp (data, errors) {
     errors.push('A valid email is required')
   }
 
-  console.log('errors', errors)
-
   return errors
 }
 
 
 function getRedirectTo () {
   return searchStringToObject().redirect || "/"
+}
+
+function goRedirectTo () {
+  const to = getRedirectTo()
+  if (to.indexOf('http') == 0) {
+    window.location = to
+  }
+  else {
+    go(to)
+  }
 }
 
 function getSignInContinueTo () {
@@ -237,6 +243,12 @@ function getSignInContinueTo () {
   if (redirectTo.indexOf('bestof2017') >= 0) {
     continueTo = {
       msg: 'voting on <a href="/bestof2017">Best of 2017</a>'
+    }
+  }
+
+  if (redirectTo.indexOf('api/shopify') >= 0) {
+    continueTo = {
+      msg: 'to the Monstercat Shop'
     }
   }
 
