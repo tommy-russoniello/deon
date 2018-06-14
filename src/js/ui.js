@@ -88,7 +88,7 @@ function simpleUpdate (err, obj, xhr) {
 }
 
 function reloadPage () {
-  stateChange(location.pathname + location.search)
+  go(location.pathname + location.search)
 }
 
 function toggleNav(){
