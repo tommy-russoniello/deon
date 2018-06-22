@@ -226,6 +226,14 @@ function goRedirectTo () {
 function getSignInContinueTo () {
   var redirectTo = getRedirectTo()
   var continueTo = false
+  var so = searchStringToObject()
+
+  if (so.continueTo) {
+    continueTo = {
+      msg: 'to ' + so.continueTo
+    }
+    return continueTo
+  }
 
   if (redirectTo.substr(0, '/account/services'.length) == '/account/services') {
     var qos = redirectTo.substr(redirectTo.indexOf('?') + 1)

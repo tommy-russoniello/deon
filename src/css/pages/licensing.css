@@ -28,6 +28,20 @@
   }
 }
 
+.licensing-notice a {
+  background: dodgerblue;
+  color: #fff;
+  text-align: center;
+  padding: 1em;
+  color: #fff;
+  display: block;
+  text-decoration: none;
+}
+
+.licensing-notice a:hover {
+  text-decoration: underline;
+}
+
 .slide-up-long {
   -webkit-animation: slideUpLong 1s ease;
   animation: slideUpLong 1s ese;

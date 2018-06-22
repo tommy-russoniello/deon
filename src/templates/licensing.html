@@ -1,11 +1,78 @@
 <script type="text/template"
+        data-route="^twitchpromo$"
+        data-title="Free Trial of Twitch Music Licensing"
+        data-process="processLicensingTwitchTrial"
+        data-template="licensing-twitch-trial"
+        >
+<div class="container" style="width: 600px; margin: 0 auto;">
+  <div class="panel paragraphs">
+    <h1>Free Twitch License Trial</h1>
+    {{#if hasSubmitted}}
+      <p>Your channel <strong>{{hasSubmitted}}</strong> is now whitelisted and able to safely use our music on Twitch!</p>
+
+      <p>Check out our <a href="https://monster.cat/streamingplaylist">streaming-friendly playlist.</a></p>
+
+      <p>You can get unlimited download access and support our artists with <a href="https://www.monstercat.com/gold?utm_campaign=twitchpromo&utm_source=promopage&utm_medium=post-submit-link">Monstercat Gold</a>.</p>
+    {{else}}
+      <p class="mb-4">We're opening up our Twitch Music License to be FREE for the first 3 months to anyone new who signs up before 10AM PDT Mon Jun 25th.</p>
+      {{#if signedIn}}
+        <form onsubmit="submitTwitchPromo(event)" class="actionier">
+          <div class="mb-2">
+            <label><strong>Twitch Username</strong></label>
+            <input class="responsive" type="text" name="twitchUsername">
+          </div>
+
+          <div class="mb-2">
+            <label><strong>Marketing Permissions</strong></label>
+            <p><small>By checking the box below, you agree to receive emails and communications from Monstercat.</small></p>
+            <div class="checkbox email-optin-checkbox mt-1 mb-1 ml-1">
+              <label>
+                  <input type="checkbox" name="agree_email" value="1" />
+                  Email
+              </label>
+            </div>
+            <p><small>You can withdraw your consent any time by clicking the unsubscribe link in the footer fo any email you receive from us, or by contactin us at info@monstercat.com.</small></p>
+          </div>
+          <div>
+            <button type="submit"
+                    class="button--cta button--full action-toggle">
+              <span class="actionier-on">Loading <i class="fa fa-gear fa-spin"></i></span>
+              <span class="actionier-off">Submit</span>
+            </button>
+          </div>
+        </form>
+      {{else}}
+        <a class="button button--cta" style="display: block; text-align: center;" href="/sign-up?redirect={{redirect}}&continueTo=Twitch%20Free%20Trial">Step 1. Create an Account</a>
+      {{/if}}
+    {{/if}}
+  </div>
+
+  {{#if hasSubmitted}}
+    {{#unless hasGold}}
+      <div class="mt-2 position-relative">
+        {{>gold-panel}}
+      </div>
+    {{/unless}}
+  {{/if}}
+</div>
+</script>
+
+<script type="text/template"
+        data-partial
+        data-template="licensing-twitch-trial-notice"
+>
+<div class="licensing-notice">
+  <a href="/twitchpromo"><strong>Free Twitch Licensing Trial!</strong> Limited time offer. 90 days free.</a>
+</div>
+</script>
+
+<script type="text/template"
         data-route="^licensing\/content-creators\/?\??(.*)?$"
         data-title="Licensing Music for YouTube, Twitch, and Mixer"
         data-process="processLicensingContentCreators"
         data-template="licensing-content-creators-page"
-        transform="transformLicensingContentCreators"
-        completed="completedContentCreatorLicensing"
         >
+  {{>licensing-twitch-trial-notice}}
   <div class="licensing">
     <div class="banner" id="licensing">
       <div class="banner-shade"></div>
@@ -88,6 +155,7 @@
         data-process="processLicensingPage"
         data-template="licensing-page"
         >
+  {{>licensing-twitch-trial-notice}}
   <div class="licensing v-stretch">
     <div class="banner" id="licensing">
       <div class="banner-shade"></div>

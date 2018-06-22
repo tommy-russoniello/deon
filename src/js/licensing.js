@@ -9,6 +9,66 @@ function getOtherLicensingPlatforms () {
   return ['Facebook', 'Instagram', 'Vimeo']
 }
 
+function processLicensingTwitchTrial () {
+  const scope = {
+    signedIn: isSignedIn(),
+    hasGold: hasGoldAccess(),
+    redirect: encodeURIComponent('/twitchpromo')
+  }
+
+  if (isSignedIn()) {
+    scope.hasSubmitted = getCookie('twitch-promo-submitted')
+  }
+  else {
+    scope.hasSubmitted = false
+  }
+
+  renderContent('licensing-twitch-trial', scope)
+
+  const twitchEl = findNode('input[name=twitchUsername]')
+
+  if (twitchEl) {
+    twitchEl.addEventListener('blur', function () {
+      var val = serviceUrlToChannelId(this.value)
+      this.value = val
+    })
+  }
+}
+
+function submitTwitchPromo (e) {
+  submitForm(e, {
+    validate: function (data, errs) {
+      if (!data.twitchUsername) {
+        errs.push('Twitch username is required')
+      }
+      return errs
+    },
+    transformData: function (data) {
+      data.twitchUsername = serviceUrlToChannelId(data.twitchUsername)
+      data.userId = session.user._id
+      data.type = 'twitchpromo'
+      return data
+    },
+    action: function (args) {
+      actionier.on(e.target)
+      requestWithFormData({
+        url: 'https://submit.monstercat.com',
+        method: 'POST',
+        data: args.data
+      }, (err, body, xhr) => {
+        actionier.off(e.target)
+        if (err) {
+          formErrors(e.target, err)
+          return
+        }
+        toasty('Your Twitch channel has been submitted! Thank you.')
+        setCookie('twitch-promo-submitted', args.data.twitchUsername, 5)
+        go('/twitchpromo')
+      })
+    }
+  })
+}
+
 function processLicensingOtherPlatformsPage (args) {
   const obj = {}
 
