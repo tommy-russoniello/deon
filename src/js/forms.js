@@ -1,14 +1,4 @@
 function FormDataDeclare (form) {
-  //The good browsers already have this
-  var fd = new FormData(form)
-
-  //Non-form nodes will use our custom code below
-  //to build a fake FormData-like object
-  if (fd.entries && form.nodeName == 'FORM') {
-    return fd
-  }
-
-  //Safari needs some help
   this.data = {}
 
   if (form) {
@@ -39,7 +29,7 @@ FormDataDeclare.prototype.entries = function* () {
  *
  * @returns {Object}
  */
-function formDataToObject(formData) {
+function formDataToObject (formData) {
   var source = {}
 
   for (var pair of formData.entries()) {
@@ -76,7 +66,7 @@ function formDataToObject(formData) {
  *
  * @returns {Object}
  */
-function objectToFormData(obj) {
+function objectToFormData (obj) {
   function recur(formData, propName, currVal) {
     if (Array.isArray(currVal) || Object.prototype.toString.call(currVal) === '[object Object]') {
       Object.keys(currVal).forEach((v) => {
