@@ -11,7 +11,15 @@ function FormDataDeclare (form) {
       if (el.getAttribute('type') == 'checkbox') {
         val = el.checked
       }
-      this.data[name] = val
+
+      if (el.getAttribute('type') == 'radio') {
+        if (el.checked) {
+          this.data[name] = val
+        }
+      }
+      else {
+        this.data[name] = val
+      }
     })
   }
 }
