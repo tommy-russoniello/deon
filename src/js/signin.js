@@ -195,6 +195,7 @@ function signUpAt (data, where) {
 }
 
 function validateSignUp (data, errors) {
+  errors = errors || []
   errors = errors.concat(validateAccountData(data))
 
   if (!data.password && !data.password_confirmation) {
