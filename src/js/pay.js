@@ -442,7 +442,6 @@ function cancelLicenseSubscription (e, el) {
 function resumeLicenseSubscription (e, el) {
   e.preventDefault()
   var data = getDataSet(el)
-  console.log('data', data);
 
   openModal('resume-whitelist', data)
   bindPayPalGermanyWarning()
@@ -971,19 +970,19 @@ function servicesChangeSignOnMethod (e, newMethod) {
   }
 }
 
-function transformCanceledPayment (obj) {
-  obj = obj || {}
+function processCanceledPayment (args) {
+  const scope = {}
   var qo = searchStringToObject()
 
   if (qo.type == 'gold') {
-    obj.returnUrl = '/gold/buy'
-    obj.returnLabel = 'Gold'
+    scope.returnUrl = '/gold/buy'
+    scope.returnLabel = 'Gold'
   }
   else {
-    obj.returnUrl = '/account/services'
-    obj.returnLabel = 'services'
+    scope.returnUrl = '/account/services'
+    scope.returnLabel = 'services'
   }
-  return obj
+  renderContent(args.template, scope)
 }
 
 function processSubscribedPage (obj) {

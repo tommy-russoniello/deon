@@ -344,9 +344,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 
 <script type="text/template"
         data-route="^account\/services\/subscribed"
-        data-process="processServicesPage"
-        transform="transformSubscribed"
-        completed="redirectServices"
+        data-process="processServicesRedirectPage"
         >
     <div class="container">
         <h1>Subscribed!</h1>
@@ -356,7 +354,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 
 <script type="text/template"
         data-route="^account\/services\/unsubscribed\/?"
-        completed="redirectServices">
+        data-process="processServicesRedirectPage">
     <div class="container">
         <h1>Unsubscribed</h1>
         <p>You have been successfully unsubscribed. You will be redirected to your services in 5 seconds.</p>
@@ -364,7 +362,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 </script>
 
 <script type="text/template"
-        transform="transformCanceledPayment"
+        data-process="processCanceledPayment"
         data-route="^account\/services\/canceled-payment\/?$">
     <div class="container">
         <h1>Payment Canceled</h1>
