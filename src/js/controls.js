@@ -283,7 +283,6 @@ function playSongDblC (e, el) {
 
 function loadAndPlayTracks (index) {
   var tracks = buildTracks()
-  console.log('tracks', tracks);
 
   if (areTracksLoaded(tracks)) {
     player.toggle(index)
