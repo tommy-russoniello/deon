@@ -232,8 +232,6 @@ function processAccountPage (args) {
       scope.account = account
 
       renderContent(args.template, {data: scope})
-    },
-    completed: function () {
       scrollToHighlightHash()
       hookValueSelects()
       initLocationAutoComplete()
