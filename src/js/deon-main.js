@@ -1001,6 +1001,7 @@ function processRosterPage (args) {
       }
 
       renderContent(args.template, scope)
+      completedRoster()
     }
   })
 }
