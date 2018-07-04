@@ -302,15 +302,16 @@ function processSignUpPage (args) {
   initLocationAutoComplete()
 }
 
-function mapConfirmSignup () {
-  var obj = searchStringToObject()
-
-  if (!Object.keys(obj).length) { return }
-  obj.countries = getAccountCountries()
-  if (obj.email == 'undefined') {
-    obj.email = ''
-  }
-  return obj
+function processConfirmSignUp (args) {
+  templatePageProcessor('confirm-sign-up', args, {
+    hasLoading: true,
+    transform: function (args) {
+      return queryStringToObject(window.location.search)
+    },
+    completed: function () {
+      initLocationAutoComplete();
+    }
+  })
 }
 
 function trackSignUpEvents () {

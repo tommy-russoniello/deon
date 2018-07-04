@@ -8,17 +8,8 @@ function initSocials() {
   })
 }
 
-function fbAsyncInit () {
-  if (typeof FB == 'undefined') return
-  FB.init({
-    appId: '282352068773785',
-    cookie: true,
-    version: 'v2.5'
-  })
-}
-
 function sendAccessToken(where, done) {
-  function handle(res) {
+  function after(res) {
     if (res.status != 'connected' || !res.authResponse)
       return done(Error('User did not authorize.'))
 
@@ -35,7 +26,12 @@ function sendAccessToken(where, done) {
     })
   }
 
-  FB.login(handle)
+  FB.getLoginStatus(function (res) {
+    if (res.status == "connected") {
+      return after(res)
+    }
+    FB.login(after)
+  })
 }
 
 function sendIdToken(token, where, done) {
@@ -54,15 +50,16 @@ function sendIdToken(token, where, done) {
 
 function enableGoogleSignin (e, el) {
   if (!gapi.auth2) return
-
-  var auth = gapi.auth2.getAuthInstance()
-  auth.signIn()
-  .then(function (user) {
-    sendIdToken(user.getAuthResponse().id_token, '/self/google/enable', function (err) {
-      if (err) return window.alert(err.message)
-      window.location.reload()
+  gapi
+    .auth2
+    .getAuthInstance()
+    .signIn()
+    .then(function (user) {
+      sendIdToken(user.getAuthResponse().id_token, '/self/google/enable', function (err) {
+        if (err) return window.alert(err.message)
+        window.location.reload()
+      })
     })
-  })
 }
 
 /**
@@ -112,40 +109,47 @@ function enableFacebookSignin (e, el) {
 }
 
 function signUpSocial (e, el) {
-  var data = getTargetDataSet(el)
-  var where = data.submitWhere
-  signUpAt(e, el, where)
+  submitForm(e, {
+    transformData: transformSubmittedAccountData,
+    validate: validateSignUp,
+    action: function (args) {
+      signUpAt(args.data, args.data.submitWhere)
+    }
+  })
 }
 
 function signUpGoogle (opts, found) {
   opts = opts || {};
   if (!gapi.auth2) return
-  var auth = gapi.auth2.getAuthInstance()
-  auth.signIn()
-  .then(function (user) {
-    signInGoogle(function (err, status){
-      if(status == 200) {
-        if(typeof(found) == 'function') {
-          return found(null, user);
+
+  gapi
+    .auth2
+    .getAuthInstance()
+    .signIn()
+    .then(function (user) {
+      sendIdToken(user.getAuthResponse().id_token, '/google/signin', (err, status) => {
+        if(status == 200) {
+          if(typeof(found) == 'function') {
+            return found(null, user);
+          }
+          //They are trying to sign up for a new account using Google, but we already have an account attachedto that Google account
+          toasty('Account found, reloading page');
+          return location.reload();
         }
-        //They are trying to sign up for a new account using Google, but we already have an account attachedto that Google account
-        toasty('Account found, reloading page');
-        return location.reload();
-      }
-      else if(status == 303) {
-        var obj = {
-          name: user.getBasicProfile().getName(),
-          email: user.getBasicProfile().getEmail(),
-          token: user.getAuthResponse().id_token,
-          submitWhere: '/google/signup'
+        else if(status == 303) {
+          var obj = {
+            name: user.getBasicProfile().getName(),
+            email: user.getBasicProfile().getEmail(),
+            token: user.getAuthResponse().id_token,
+            submitWhere: '/google/signup'
+          }
+          if(opts.redirect) {
+            obj.redirect = opts.redirect
+          }
+          return go('/confirm-sign-up?' + objectToQueryString(obj))
         }
-        if(opts.redirect) {
-          obj.redirect = opts.redirect
-        }
-        return go('/confirm-sign-up?' + objectToQueryString(obj))
-      }
+      })
     })
-  })
 }
 
 function clickSignUpFacebook (e, el) {
