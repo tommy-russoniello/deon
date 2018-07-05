@@ -172,6 +172,7 @@ function updatePassword (e, el) {
 
 function signUp (data, where, done) {
   data.password = data.password.toString()
+  data.email = data.email.trim()
   requestJSON({
     url: endpoint + where,
     method: 'POST',
