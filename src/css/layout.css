@@ -214,6 +214,7 @@ h1 + .panel.md-container,
 .mcat-mast .mcat-nav ul li a:focus,
 .mcat-mast .mcat-nav ul li a:hover {
   color: #000;
+  text-shadow: none;
 }
 .mcat-mast .mcat-nav ul li a::after {
   content: "";
