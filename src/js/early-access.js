@@ -92,10 +92,12 @@ function updateCountdownEls () {
     var date = new Date(el.getAttribute('to'))
     var time = dateToRemainingTime(date)
     if(time <= 0 && el.getAttribute('completed-called') != 'true') {
-      var fn = getMethod(el, 'completed')
-      if(fn) {
-        fn.apply(fn, [el, date, time])
-        el.setAttribute('completed-called', 'true')
+      if (el.hasAttribute('completed')) {
+        var fn = getMethod(el, 'completed')
+        if(fn) {
+          fn.apply(fn, [el, date, time])
+          el.setAttribute('completed-called', 'true')
+        }
       }
     }
     var opts = {};

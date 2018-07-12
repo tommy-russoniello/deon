@@ -1,0 +1,41 @@
+ul.poll li{
+	list-style: none;
+	margin-bottom: 5px;
+}
+
+.mixcontest ul{
+	margin-bottom: 1.5rem;
+}
+
+.panel ul, .panel ol{
+	padding-left: 0px;
+	text-align: left
+}
+.vote{
+	min-height: 200px;
+}
+
+.vote p,  .countdown{
+	text-align: center
+}
+
+.push-right a{
+	color: #383838;
+}
+
+.mixcontest2018-cotw{
+	margin-top:1rem;
+}
+
+
+.mc2018-cta{
+  padding: 4rem 0;
+  position: relative;
+}
+
+.mc2018-comingsoon {
+  background: #222 url('/../img/mc2018-banner.png');
+  background-size: cover;
+  padding: 4rem 2rem;
+  margin-top: 2rem;
+}

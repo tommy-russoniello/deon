@@ -146,7 +146,26 @@
 </a>
 </script>
 
-<script type="text/template"
+
+<script type="text/html"
+        data-partial
+        data-template='podcast-list'
+        >
+        <ul class="art-list art-list--full-width">
+               {{#each podcasts}}
+               <li>
+                   <a class="silent" href="/release/{{catalogId}}" title="{{title}}">
+                       <div class="image-wrapper">
+                           <img src="/img/artwork.jpg" class="preload" />
+                           <img src="{{cover}}"/>
+                       </div>
+                   </a>
+               </li>
+               {{/each}}
+           </ul>
+</script>
+
+<script type="text/html"
         data-template="home-podcast"
         data-process="processPodcasts"
         >
@@ -164,18 +183,8 @@
                     </a>
                 </div>
             </header>
-            <ul class="art-list art-list--full-width">
-                {{#each podcasts}}
-                <li>
-                    <a class="silent" href="/release/{{catalogId}}" title="{{title}}">
-                        <div class="image-wrapper">
-                            <img src="/img/artwork.jpg" class="preload" />
-                            <img src="{{cover}}"/>
-                        </div>
-                    </a>
-                </li>
-                {{/each}}
-            </ul>
+            {{>podcast-list}}
+        
         </div>
     </section>
     {{/data}}
