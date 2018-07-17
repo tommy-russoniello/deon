@@ -223,10 +223,8 @@ function transformGoldSubscription (obj) {
 }
 
 function processGoldPage (args) {
-  console.log('args', args)
   processor(args, {
     start: function (args) {
-      console.log('start')
       const scope = {}
       let featureBlocks = []
 
@@ -286,9 +284,6 @@ function processGoldPage (args) {
       else {
         scope.redditUsername = false
       }
-      console.log('args.template', args.template)
-      console.log('args.node', args.node)
-      console.log('scope', scope)
       renderContent(args.template, scope)
     }
   })
