@@ -7,7 +7,8 @@ const currentMixReleaseId = '5b4e885de282ce62e851cb86'
 function processMixContest2018Page (args) {
   renderContent('mixcontest2018', mixContestScope)
   requestJSON({
-    url: endpoint + '/poll/' + currentPollID + '/breakdown'
+    url: endpoint + '/poll/' + currentPollID + '/breakdown',
+    withCredentials: true
   }, (err, result) => {
     if (err) {
       alert("error!")
