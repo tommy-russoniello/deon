@@ -152,16 +152,16 @@ text-align: center
 }
 
 .checkbox-icon input[type="checkbox"]:checked ~ .unchecked{
-    display: none;
-  }
+  display: none;
+}
 
 .checkbox-icon input[type="checkbox"]:unchecked ~ .checked{
   display: none;
 }
  
 .checkbox-icon input[type="checkbox"]:unchecked ~ .unchecked{
-    display: inline-block;
-  }
+  display: inline-block;
+}
 
 
 #splice img{
@@ -188,7 +188,28 @@ text-align: center
   }
 }
 
-.fa-check-square-o:before {
-    content: "\f046";
-    color: dodgerblue;
+.checkbox-icon .fa-check-square-o:before {
+  color: dodgerblue;
+}
+
+.mc2018-cta-banner{
+  font-size:24px;
+  color:#fff;
+  background: 
+    linear-gradient(
+        rgba(0, 0, 0, 0.7), 
+        rgba(0, 0, 0, 0.7)
+      ),
+    url('/../img/mc2018-banner.png');
+  background-size:cover;
+  background-position: center;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+a.mc2018-link:hover{
+  text-decoration: underline;
+  color:#fff;
+  -webkit-transition: color 0.4s ease, all 0.4s ease;
+  transition: color 0.4s ease, all 0.4s ease;
 }
