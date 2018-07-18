@@ -124,8 +124,7 @@ function submitMixContestVotes2018(e) {
 
     toasty("Success, your vote has been submitted.")
 
-    mixContestScope.hasVoted = true
-    renderContent('mixcontest2018', mixContestScope)
+    go('/mixcontest2018')
   })
 }
 
