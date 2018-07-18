@@ -54,9 +54,13 @@ ul.poll, ol.poll{
   font-weight: bolder;
   display:inline;
 }
-.voting-area button{
+
+.voting-area button, .voting-area .button{
+  margin-bottom:1.5rem;
   width: 100%;
+  text-align: center;
 }
+
 .voting-area .countdown, .mc2018 .countdown{
   font-weight:bolder;
   color: #e4b807;
@@ -74,9 +78,6 @@ text-align: center
   max-width: 550px;
 }
 
-.voting-area button{
-  margin-bottom:1.5rem;
-}
 
 .mixcontest2018-cotw .push-right a{
   color: #383838;
