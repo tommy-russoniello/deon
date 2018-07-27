@@ -1,4 +1,4 @@
-const currentPollID = '5b58c0851d435cea868ad098'
+const currentPollID = '5b5b8c13560828726a39d6e8'
 
 let mixPoll = {}
 const mixContestScope = {}
