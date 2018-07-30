@@ -13,7 +13,7 @@ function transformVotesBreakdown (obj){
 }
 
 function processMixContestPoll (args){
-  tempalteProcessor('mix-contest', args, {
+  templateProcessor('mix-contest', args, {
     success: function (args) {
         console.log('args', args);
       const obj = {}
