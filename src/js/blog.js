@@ -109,6 +109,7 @@ function processBlogPostPage (args) {
       markdownUrl: markdownUrl,
       markdownCors: cors
     })
+    scrollToHighlightHash()
   })
   return
 }
