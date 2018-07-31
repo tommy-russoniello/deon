@@ -128,8 +128,19 @@ document.addEventListener("DOMContentLoaded", (e) => {
       setPageTitle(e.detail.title)
     }
     window.scrollTo(0, 0)
-    if (location.pathname == "/") {
+    const rsslink = findNode('link[id="podcast-rss"]')
+
+    if (rsslink) {
+      document.head.removeChild(rsslink)
+    }
+    switch (location.pathname) {
+    case "/":
       getStats()
+      break
+    case "/cotw":
+    case "/podcast":
+      setRSSLink()
+      break
     }
     if (typeof (stopCountdownTicks) == 'function') {
       stopCountdownTicks()
@@ -142,6 +153,16 @@ document.addEventListener("DOMContentLoaded", (e) => {
           el.value = ''
         })
       }
+    }
+    function setRSSLink() {
+      const link = document.createElement('link')
+
+      link.type = "application/rss+xml"
+      link.rel = "alternate"
+      link.title = "Call of the Wild Radio Show"
+      link.href = "https://www.monstercat.com/podcast/feed.xml"
+      link.id = "podcast-rss"
+      document.head.appendChild(link)
     }
   })
 })
