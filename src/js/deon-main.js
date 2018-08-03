@@ -597,7 +597,7 @@ function getGetGoldLink () {
 }
 
 function mapTrackArtists (track) {
-  var artistDetails = (track.artistDetails || []).filter((obj) => {
+  var artists = (track.artists || []).filter((obj) => {
     return !!obj
   }).map((details) => {
     details.uri = details.vanityUri || details.websiteDetailsId || details._id
@@ -606,16 +606,6 @@ function mapTrackArtists (track) {
     details.artistPageLink = '/artist/' + details.uri
     details.aboutMD = marked(details.about || "")
     return details
-  })
-
-  var detailsAtlas = toAtlas(artistDetails, '_id')
-
-  var artists = track.artistUsers.map((artistUser) => {
-    if (artistUser.websiteDetailsId && detailsAtlas[artistUser.websiteDetailsId]) {
-      return detailsAtlas[artistUser.websiteDetailsId]
-    }
-
-    return artistUser
   })
 
   return artists
@@ -779,8 +769,7 @@ function mapTrack (track) {
     return {}
   }
   track.releaseId = track.release._id
-  track.genresList = track.genres.filter(function (i) { return i !== track.genre }).join(", ")
-  track.genreBonus = track.genres.length > 1 ? ('+' + (track.genres.length - 1)) : ''
+  track.genre = track.genreSecondary
   track.genreLink = encodeURIComponent(track.genre)
   track.releaseId = track.release._id
   track.canPlaylist = isSignedIn() && !track.inEarlyAccess && track.streamable ? { _id: track._id } : null
@@ -1321,7 +1310,7 @@ function completedReleaseTracks (source, obj) {
   }
   appendSongMetaData(obj.data.results)
   var artistLinks = obj.data.results.reduce((links, track) => {
-    track.artistDetails.forEach((ad) => {
+    track.artists.forEach((ad) => {
       if (links.indexOf(ad.artistPageUrl) == -1) {
         links.push(ad.artistPageUrl)
       }

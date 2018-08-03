@@ -86,7 +86,7 @@ var RELEASE_LINK_MAP = {
  * Returns a no-dupe list of all artists website details on the given tracks
  *
  * @param tracks List of tracks returned by /api/catalo/browse
- * with the artistDetails property
+ * with the artists property
  * @returns {Array[Object]}
  */
 function getAllTracksWebsiteArtists (tracks) {
@@ -94,7 +94,7 @@ function getAllTracksWebsiteArtists (tracks) {
   var artistIds = []
 
   tracks.forEach((track) => {
-    track.artistDetails.forEach((artist) => {
+    track.artists.forEach((artist) => {
       if (artistIds.indexOf(artist._id) == -1) {
         artists.push(transformWebsiteDetails(artist))
         artistIds.push(artist._id)
@@ -103,27 +103,6 @@ function getAllTracksWebsiteArtists (tracks) {
   })
 
   return artists
-}
-
-/**
- * Returns a no-dupe list of all artists user details on the given tracks
- *
- * @param tracks List of tracks returned by /api/catalo/browse with the artistUsers property
- * @returns {Array[Object]}
- */
-function getAllTracksArtistsUsers (tracks) {
-  var users = []
-  var userIds = []
-
-  tracks.forEach((track) => {
-    track.artistUsers.forEach((user) => {
-      if (userIds.indexOf(user._id) == -1) {
-        users.push(user)
-        userIds.push(user._id)
-      }
-    })
-  })
-  return users
 }
 
 /**
@@ -237,7 +216,6 @@ function processReleasePage (args) {
           }]
 
           scope.releaseArtists = getAllTracksWebsiteArtists(tracks)
-          scope.releaseArtistUsers = getAllTracksArtistsUsers(tracks)
           scope.releaseArtistsLimited = scope.releaseArtists.length <= 6 ? scope.releaseArtists.slice() : []
           scope.moreReleasesFetchUrl = endpoint +
             '/catalog/release/' + scope.release._id + '/related'
@@ -323,7 +301,7 @@ function processRelatedReleases (args) {
       const scope = {
         results: releases,
         activeTest: pageScope.activeTest,
-        showArtistsList: pageScope.releaseArtistUsers.length <= maxFromArtists,
+        showArtistsList: pageScope.releaseArtists.length <= maxFromArtists,
         artistsList: pageScope.releaseArtists
       }
 
