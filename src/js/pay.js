@@ -544,6 +544,9 @@ function vendorChanged () {
     if (buyoutPrice) {
       buyoutPrice.textContent = '$' + (vendorPrices[vendor].total / 100).toFixed(2)
     }
+
+    var amount = findNode('input[name=amount]')
+    amount.value = vendorPrices[vendor].total
   }
 }
 
