@@ -239,3 +239,32 @@
       </div>
     </div>
 </script>
+
+<script type="text/template"
+        data-partial
+        data-template="cotw-gold-vote"
+        data-route="^cotw-gold"
+        data-process="processCotwGoldPage"
+        >
+<div class="container" style="max-width: 700px; min-height: 920px;">
+  {{#if hasGold}}
+    <div class="panel panel--no-padding">
+      <div class="p-2 mb-2">
+        <h1>Call of the Wild x Gold</h1>
+        Hey Gold family! We're excited to announce an upcoming <a href="/gold" style="color: goldenrod;">Gold</a>-themed <a href="/cotw">COTW</a> episode, airing Wed Aug 22 @ 1 PM PDT. We'll be using your responses below to curate the tracks used in the episode.
+      </div>
+      <iframe src="{{iframeSrc}}" width="700" height="920" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+    </div>
+  {{else}}
+    <div class="panel">
+      <h2>Call of the Wild x Gold</h2>
+      <p>You'll have to <a href="/gold/buy">get Gold</a> to submit your tracks for this CotW episode.
+    </div>
+  {{/if}}
+  {{#unless hasGold}}
+    <div class="mt-2 position-relative">
+      {{>gold-panel}}
+    </div>
+  {{/unless}}
+</script>
+

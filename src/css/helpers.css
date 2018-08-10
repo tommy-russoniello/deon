@@ -153,7 +153,16 @@
 }
 
 .p-0 {
-  padding: 0px !important;
+  padding: 0em !important;
+}
+.p-1 {
+  padding: 0.5em !important;
+}
+.p-2 {
+  padding: 1.5em !important;
+}
+.p-3 {
+  padding: 2em !important;
 }
 
 .position-relative {
