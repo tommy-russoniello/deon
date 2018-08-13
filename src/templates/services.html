@@ -40,6 +40,7 @@
                         <li>Unlimited download and streaming access to the Monstercat catalog (800+ full songs)</li>
                         <li>Direct support via e-mail and on site.</li>
                     </ul>
+                    <!--
                     <div class="services-form">
                         <form onsubmit="submitSubscribeGold(event, this)">
                             <input type="text" name="trialCode" placeholder="{{#humble}}Humble Bundle Code{{/humble}}{{^humble}}Special Code (optional){{/humble}}" />
@@ -49,6 +50,7 @@
                             </button>
                         </form>
                     </div>
+                    -->
                     {{/unless}}
                 {{/gold}}
             </div>
@@ -59,7 +61,7 @@
                    Upon subscribing for 20 months, all your previously uploaded videos within
                    your subscribed time period are safe from content ID claims even if you unsubscribe.</p>
                 <br/>
-                <p>To prepay for 20 months go <a href="/account/services/buyout">here</a>.</p>
+                <!--<p>To prepay for 20 months go <a href="/account/services/buyout">here</a>.</p>-->
                 {{#if user.isSignedIn}}
                 <br/>
                 <table>
@@ -82,6 +84,7 @@
                 </table>
                 {{/if}}
                 <div class="services-form">
+                    <!--
                     <form onsubmit="submitSubscribeNewLicense(event, this)" role="subscribe-new-license">
                         {{>vendor-selector}}
                         <input type="text" name="identity" placeholder="Channel_ID" size="30" />
@@ -98,6 +101,8 @@
                         </button>
                         {{>channel-id-help-text}}
                     </form>
+                    -->
+                    {{>xsolla-migration-message}}
                 </div>
                 {{#if user.isSignedIn}}
                     <br/>
@@ -191,12 +196,14 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
     {{else}}
         <label>You have Gold Membership.</label>
         <p>Your Gold Membership will expire on {{endDate}}</p>
+        <!--
         <div class="services-form">
             <form onsubmit="submitSubscribeGold(event, this)">
                 <input type="text" name="trialCode" placeholder="Special Code"/>
                 <button class="button--gold">Re-Subscribe</button>
             </form>
         </div>
+        -->
     {{/unless}}
 </script>
 
@@ -391,6 +398,8 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
 
 <script type="text/template" data-template="resume-whitelist">
     <div class="modal panel">
+        {{>xsolla-migration-message}}
+        <!--
         <div class="pointer-events">
             <form onsubmit="resumeLicenseConfirm(event, this)">
                 <input type="hidden" name="id" value="{{id}}">
@@ -414,7 +423,17 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                 <button onclick="closeModal(event, this)" type="button">Cancel</button>
             </form>
         </div>
+        -->
     </div>
+</script>
+
+<script type="text/template" 
+        data-template="xsolla-migration-message"
+        data-partial>
+<div class="xsolla-migration-message p-2" style="background: #EFEFEF;">
+<p>New purchases are disabled while we transition to a new payment processor. Sorry for the inconvenience.</p>
+<p>We expect to be done by the end of the week!</p>
+</div>
 </script>
 
 <script type="text/template"
@@ -427,6 +446,9 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
         {{#data}}
             <h1>Purchase Whitelist</h1>
             <div class="services panel">
+                {{>xsolla-migration-message}}
+                
+                <!--
                 <p>Pre-pay your whitelist license for 20 months. All videos created with the
                     cleared Monstercat catalog during this time period will never
                     receive content-ID claims.</p>
@@ -461,6 +483,7 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                         <button class="button--full">Purchase Whitelisting</button>
                     </div>
                 </form>
+                -->
             </div>
 
         {{/data}}
@@ -477,6 +500,8 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
     <div class="container">
         <h1>Prepay for 20 Months of Whitelist</h1>
         <div class="panel">
+            {{>xsolla-migration-message}}
+            <!--
             <p>Pre-pay the rest of your whitelist license. All videos created with the
                 cleared Monstercat catalog during this time period will never receive content-ID claims.</p>
             {{#data}}
@@ -515,8 +540,9 @@ Already have an account? <a class="switch-sign-on" onclick="servicesChangeSignOn
                 <div class="button-group">
                     {{>submit-button text="Buy License" class="button--full"}}
                 </div>
-            </div>
+            </form>
             {{/data}}
+            -->
         </div>
     </div>
 </script>

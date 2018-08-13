@@ -14,6 +14,7 @@
         <li><a href="https://www.reddit.com/r/monstercat" target="_blank">/r/Monstercat</a> subreddit flair</li>
         <li>Gold-only Discord chat</li>
       </ul>
+      <!--
       {{#unless hasGold}}
         <div class="coupon-area">
           <h4>Coupon Code</h4>
@@ -23,8 +24,11 @@
           </form>
         </div>
       {{/unless}}
+      -->
   </div>
   <div class="col-xs-12 col-md-7 panel">
+    {{>xsolla-migration-message}}
+    <!--
     <form onsubmit="submitCheckoutGold(event)">
       <h1>{{^isSignedIn}}<span sign-on="sign-in" class="hide">Sign In</span><span sign-on="sign-up">Sign Up</span> &amp; {{/isSignedIn}}Checkout</h1>
       {{^isSignedIn}}
@@ -129,6 +133,7 @@
         </div>
       {{/hasGold}}
     </form>
+    -->
   </div>
 </div>
 </script>
