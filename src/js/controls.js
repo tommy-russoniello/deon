@@ -336,21 +336,8 @@ function onNewSong (e) {
 }
 
 function prepareTrackTitle(item){
-  var artistNames = item.artist
-
-  if (!artistNames) { return item.title }
-
-  var trackTitle = ""
-
-  artistNames = artistNames.split(", ").filter(function(n){ return n != "" })
-
-  if (artistNames.length > 2){
-    trackTitle = "Various Artists"
-  } else {
-    trackTitle = artistNames.join(" & ")
-  }
-  trackTitle += " - " + item.title
-  return trackTitle
+  if (!item.artistTitle) { return item.title }
+  return item.artistTitle + " - " + item.title
 }
 
 function scrollTrackTitle(elementContainer){

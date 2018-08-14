@@ -605,10 +605,17 @@ function mapTrackArtists (track) {
     details.artistPageUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '') + '/artist/' + details.uri
     details.artistPageLink = '/artist/' + details.uri
     details.aboutMD = marked(details.about || "")
+    details.role = (findTrackRelationship(track, details.name)||{}).role
     return details
   })
 
   return artists
+}
+
+function findTrackRelationship(track, name) {
+  return (track.artistRelationships || []).find((rel) => {
+    return (rel||{}).name == name
+  })
 }
 
 function getSocials (linkObjs) {
@@ -782,6 +789,10 @@ function mapTrack (track) {
   track.playUrl = getPlayUrl(track.albums, track.releaseId)
   track.downloadLink = getDownloadLink(track.release._id, track._id)
 
+  track.artistsTitle = track.artists
+                         .filter(artist => artist.role == 'Primary')
+                         .map(artist => artist.name)
+                         .join(' & ') || track.artistsTitle
   return track
 }
 
