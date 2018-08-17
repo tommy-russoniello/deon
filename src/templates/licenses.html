@@ -41,9 +41,9 @@
   <div class="license-card p-2 mb-2" data-whitelist-id="{{_id}}"  data-id="{{_id}}"  role="whitelist-panel">
     <p>Platform</p>
     <span style="float: right">
-      <span class="faux button--mobile">
+<!--       <span class="faux button--mobile">
         <a href="{{viewLicenseUrl}}"><i class="fa fa-file-text-o"></i></a>
-      </span>
+      </span> -->
       <button class="faux button--mobile actionier" onclick="onClickDeleteWhitelist(event, this)" data-id="{{_id}}">
         <i class="fa fa-trash-o"></i>
       </button>
@@ -73,12 +73,12 @@
     <td class="{{#if blacklisted}}text-line-through{{/if}}">{{identity}}</td>
     <td>{{>license-status}}</td>
     <td class="push-right text right">
-      <span class="faux button--mobile">
+<!--       <span class="faux button--mobile">
         <div class="tooltip">
           <a href="{{viewLicenseUrl}}"><i class="fa fa-file-text-o"></i></a>
           <span class="tooltiptext">View License</span>
         </div>
-      </span>
+      </span> -->
       <button class="faux button--mobile actionier" onclick="onClickDeleteWhitelist(event, this)" data-id="{{_id}}">
         <span class="actionier-off">
           <i class="fa fa-trash-o"></i>
