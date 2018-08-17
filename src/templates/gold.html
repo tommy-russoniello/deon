@@ -1,142 +1,145 @@
 <script type="text/template"
-        data-partial
-        data-template="gold-subscribe-form"
-        data-template="gold-subscribe-form"
+        data-route="^payment-received"
+        data-process="processPaymentReceivedPage"
+        data-title="Payment Received"
+        data-template="payment-received-page"
         >
-<div class="flex gold-subscribe">
-  <div class="col-xs-12 col-md-5 col-md-last col-lg-last panel panel--dark">
-      <h2>What You Get</h2>
-      <ul class="what-you-get">
-        <li>Directly support the artists</li>
-        <li>Download songs in your preferred format</li>
-        <li>Early streaming access to new releases</li>
-        <li>Discounts on <a href="https://shop.monstercat.com">Monstercat merch</a></li>
-        <li><a href="https://www.reddit.com/r/monstercat" target="_blank">/r/Monstercat</a> subreddit flair</li>
-        <li>Gold-only Discord chat</li>
-      </ul>
-      <!--
-      {{#unless hasGold}}
-        <div class="coupon-area">
-          <h4>Coupon Code</h4>
-          <form onsubmit="submitGoldApplyCoupon(event)" class="form-inline">
-            <input type="text" class="inline" name="trialCode" placeholder="Enter coupon code" />
-            <button type="submit" role="apply-coupon" class="button button-sm button--white button-apply-coupon">Apply</button>
-          </form>
-        </div>
-      {{/unless}}
-      -->
-  </div>
-  <div class="col-xs-12 col-md-7 panel">
-    {{>xsolla-migration-message}}
-    <!--
-    <form onsubmit="submitCheckoutGold(event)">
-      <h1>{{^isSignedIn}}<span sign-on="sign-in" class="hide">Sign In</span><span sign-on="sign-up">Sign Up</span> &amp; {{/isSignedIn}}Checkout</h1>
-      {{^isSignedIn}}
-      <div role="sign-on-form">
-        <input type="hidden" name="sign-on-method" value="sign-up" />
-        <div role="sign-on-errors"></div>
-        <div class="switch-sign-on">
-          <p class="col-md-offsxet-4" sign-on="sign-up">Have an account? <a onclick="clickGoldSetSignOn(event, 'sign-in');">Login here</a>.</p>
-          <p class="col-md-offsxet-4 hide" sign-on="sign-in" role="sign-in">New here? <a onclick="clickGoldSetSignOn(event, 'sign-up');">Create an account</a>.</p>
-        </div>
-        <div class="form-group row">
-          <div class="col-xs-12 col-md-4">
-            <label>Email</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            <input type="text" name="email" placeholder="email@domain.com" />
+        <div class="container">
+          <div class="panel">
+            <h1>Payment Received</h1>
+            <p>Thank you for your payment. Redirecting to <a href="{{url}}">{{label}}</a> in 5s...</p>
           </div>
         </div>
-        <div class="form-group row">
-          <div class="col-xs-12 col-md-4">
-            <label>Password</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            <input type="password" placeholder="" name="password" />
-          </div>
-        </div>
-        <div class="form-group row" sign-on="sign-up">
-          <div class="col-xs-12 col-md-4">
-            <label>Confirm</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            <input type="password" placeholder="" name="password_confirm" />
-          </div>
-        </div>
-        <div class="form-group row" sign-on="sign-up">
-          <div class="col-xs-12 col-md-4">
-            <label>Location</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            {{>location-autocomplete}}
-          </div>
-        </div>
-        <div class="form-group row" sign-on="sign-up">
-          <div class="col-xs-12 col-md-4">
-            <label>Birthday</label>
-          </div>
-          <div class="col-xs-12 col-md-8">
-            {{>birthday-fields}}
-          </div>
-        </div>
-        <div class="form-group row" sign-on="sign-up">
-          <div class="col-xs-12 col-md-4">
-            <label>Email me about</label>
-          </div>
-          <div class="col-xs-12 col-md-8 checkboxes email-optins">
-            {{>account-email-optin-news}}
-            {{>account-email-optin-events}}
-            {{>account-email-optin-merch}}
-          </div>
-        </div>
+</script>
+
+<script type="text/html"
+        data-route="^account\/services\/?(\?.*)?$"
+        data-process="processSubscriptionsPage"
+        data-title="Subscriptions"
+        data-template="subscriptions-page"
+        >
+<div class="top-banner top-banner--no-margin top-banner--account-gold">
+  <div class="banner">
+      <div class="banner" style="background-image:url('/img/gold.jpg');">
+        <div class="banner-shade"></div>
+        <div class="gradient"></div>
       </div>
-      {{/isSignedIn}}
-      {{#hasGold}}
-        <p>You already have Gold.</p>
-        <br />
-        <a href="/account/services" class="button button--cta">View You Subscriptions</a>
-      {{/hasGold}}
-      {{^hasGold}}
-        <div class="form-group row">
-          <div class="col-xs-12 col-md-4">
-            <label>Payment Method</label>
-          </div>
-          <div class="col-xs-12 col-md-8 payment-method">
-            <label class="radio">
-                <input type="radio" name="method" value="stripe" checked>
-                <span><i class="fa fa-fw fa-cc-stripe"></i></span>
-            </label>
-            <label class="radio">
-                <input type="radio" name="method" value="paypal">
-                <span><i class="fa fa-fw fa-cc-paypal"></i></span>
-            </label>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-xs-12 col-md-4">
-            <label>Monstercat Gold</label>
-          </div>
-          <div class="col-xs-12 col-md-8 price-area">
-            <div role="trial-free-days"></div>
-            <div class="monthly-cost">
-              <span class="amount">$5</span><span class="frequency">/month</span>
-              <span class="currency">USD</span>
-              <span class="after">after</span>
-            </div>
-            <div class="no-auto-renew">with no auto-renew</div>
-          </div>
-        </div>
-        <div class="col-xs-12 col-md-offset-4">
-          <button class="button--gold button--checkout button" role="checkout">
-              Complete Checkout
-          </button>
-        </div>
-      {{/hasGold}}
-    </form>
-    -->
+  </div>
+  <div class="container flex">
+    <div class="col-xs-12 col-sm-12 col-md-12 cl-white">
+    <a href="/account/gold" class="button button--cta pull-right ml-1 mt-4">Gold Features</a>
+      {{>account-return-link class="mt-4"}}
+      <img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold">
+      <h1 class="title uppercase mcatgold">Manage Subscriptions</h1>
+      {{#if hasFreeGold}}
+        <p>Hey {{sessionName}}, you have a free Gold subscription.</p>
+      {{else}}
+        {{#unless hasSubscriptions}}
+        <p>You have no subscriptions. Subscribe to Monstercat Gold below.</p>
+        {{/unless}}
+      {{/if}}
+    </div>
   </div>
 </div>
+{{#if hasFreeGold}}
+{{else}}
+  <div class="container services">
+    {{#if legacy}}
+      <div class="panel">
+        <h2>Legacy Subscription</h2>
+        <p class="mb-2">You have a <strong>legacy PayPal subscription</strong>. To manage your subscription you'll need to cancel it then resubscribe using our new payment processor.</p>
+        {{>legacy-subscriptions}}
+      </div>
+    {{else}}
+        <div class="panel flex panel-xsolla">
+        {{#unless hasSubscriptions}}
+          <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper style="width:100%">
+            {{>gold-subscribe-features}}
+          </div>
+        {{/unless}}
+        <div class="col-md-6" style="width:100%">
+          {{>xsolla-iframe}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+{{/if}}
 </script>
+
+<script type="text/template"
+        data-partial
+        data-template="xsolla-iframe">
+<div class="xsolla-iframe-container">
+  <div class="iframe-loader">
+    {{>loading-view}}
+  </div>
+  <iframe src="{{xsollaIframeSrc}}" frameborder="0" class="xsolla-iframe"></iframe>
+</div>
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="gold-subscribe-form"
+        >
+{{#if legacy}}
+  <div class="panel">
+    <h2>Legacy Subscription</h2>
+    <p class="mb-2">You have a <strong>legacy PayPal subscription</strong>. To get Gold you'll need to <strong>cancel then resubscribe</strong>.</p>
+    {{>legacy-subscriptions}}
+  </div>
+{{else}}
+  <div class="panel flex panel-xsolla">
+      <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper" style="width:100%">
+        {{>gold-subscribe-features}}
+      </div>
+    <div class="col-md-6" style="width:100%">
+      {{>xsolla-iframe}}
+    </div>
+  </div>
+{{/if}}
+</script>
+
+<script type="text/template"
+        data-template="legacy-subscriptions"
+        data-partial
+        >
+{{#each subscriptions}}
+  <button type="button" onclick="clickCancelLegacySubscription(event)" data-id="{{_id}}" class="button button--full actionier">
+    <span class="actionier-off">Cancel Legacy Subscription</span>
+    <span class="actionier-on">Working...</span>
+  </button>
+{{/each}}
+</script>
+
+<script type="text/template"
+        data-template="gold-subscribe-header"
+        data-partial
+>
+  {{#if hasSubscriptions}}
+    <h2 class="mb-0">Your Current Gold Benefits</h2>
+  {{else}}
+  <h2 class="mb-0">Gold Subscription $5/mo</h2>
+  {{/if}}
+  <p>Download songs, get early access, shop discounts, and more. <a href="/gold">Learn more about Gold</a>.</p>
+</script>
+
+<script type="text/template"
+        data-template="gold-subscribe-features"
+        data-partial
+>
+<div class="p-4">
+  <h2 class="mt-1 mb-1">Gold Subscription $5/mo</h2>
+  <ul class="gold-sub-perks">
+    <li>Download Monstercat songs in your preferred format</li>
+    <li>Early streaming access to new release</li>
+    <li>Use our music claim-free in your creative conten</li>
+    <li>Directly support the artist</li>
+    <li>Discounts and early access to Monstercat merc</li>
+    <li>Exclusive community features on Discord and reddit</li>
+  </ul>
+</div>
+</script>
+
 
 <script type="text/template"
         data-route="^gold/buy/success"
@@ -157,35 +160,34 @@
         data-template="gold-buy-page"
         >
   <div class="container">
-    {{#goldSubscribe}}
-      {{>gold-subscribe-form}}
-    {{/goldSubscribe}}
+    {{>gold-subscribe-form}}
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^gold"
         data-process="processGoldPage"
         data-title="Monstercat Gold"
         data-template="page-gold"
         >
     <div class="top-banner top-banner-gold">
-      <div class="banner" style="background-image:url('/img/gold.jpg')"></div>
+      <div class="banner banner-image"></div>
       <div class="container flex">
         <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-6">
-          <h1 id="top">Monstercat Gold</h1>
+          <img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold">
           <ul class="gold-perks">
             <li><a href="#download-access" onclick="anchorScrollTo(event, this)">Download Monstercat songs in your preferred format</a></li>
             <li><a href="#early-streaming" onclick="anchorScrollTo(event, this)">Early streaming access to new releases</a></li>
+            <li><a href="#content-creator-licenses" onclick="anchorScrollTo(event, this)">Use our music claim-free in your creative content</a></li>
             <li><a href="#support-the-artists" onclick="anchorScrollTo(event, this)">Directly support the artists</a></li>
-            <li><a href="#shop-discounts" onclick="anchorScrollTo(event, this)">Discounts on Monstercat merch</a></li>
-            <li><a href="#discord" onclick="anchorScrollTo(event, this)">and more!</a></li>
+            <li><a href="#shop-discounts" onclick="anchorScrollTo(event, this)">Discounts and early access to Monstercat merch</a></li>
+            <li><a href="#discord" onclick="anchorScrollTo(event, this)">Exclusive community features on Discord and reddit</a></li>
           </ul>
           <br />
           {{#if hasGoldAccess}}
           <p>You already have Gold, {{sessionName}}. You're cool.</p>
           {{else}}
-          <a class="button button--gold" href="{{getGoldUrl}}" click-action="Click Get Gold" click-label="Gold Landing Header" click-category="Gold">
+          <a class="button button--mcatgold-light" href="{{getGoldUrl}}" click-action="Click Get Gold" click-label="Gold Landing Header" click-category="Gold">
             Get Gold - $5/mo
           </a>
           {{/if}}
@@ -204,20 +206,11 @@
                 {{#if discord}}
                   {{>join-gold-discord hasGoldAccess=../hasGoldAccess}}
                 {{/if}}
-                {{#if download}}
-                <p class="description">You can change your preferred download format in <a href="/account#preferred-download">your settings</a>.</p>
-                {{/if}}
-                {{#if reddit}}
-                  {{#if ../hasGoldAccess}}
-                    {{#if redditUsername}}
-                    <p class="description">Your reddit account: <strong>{{redditUsername}}</strong>. <a href="/account/gold#reddit">Change it</a>.</p>
-                    {{else}}
-                    <p class="description">You haven't set up your reddit username yet, <a href="/account/gold#reddit">set it here</a>.</p>
-                    {{/if}}
-                  {{/if}}
+                {{#if shopDiscounts}}
+                <p class="description">You'll also receive early access to new drops of merch to make sure you don't miss out!.</p>
                 {{/if}}
                 {{#unless ../hasGoldAccess}}
-                  <a class="button button--gold-light" href="{{../getGoldUrl}}" test-kpi="{{id}}" click-label="{{title}}" click-action="Click Get Gold" click-category="Gold" target="_BLANK">
+                  <a class="button button--mcatgold-light" href="{{../getGoldUrl}}" test-kpi="{{id}}" click-label="{{title}}" click-action="Click Get Gold" click-category="Gold" target="_BLANK">
                     {{cta}} - $5/mo
                   </a>
                 {{/unless}}
@@ -238,7 +231,7 @@
           <p>You're cool.</p>
           {{else}}
           <h2>Be Gold.</h2>
-          <a class="button button--gold" href="{{getGoldUrl}}" click-action="Click Get Gold" click-label="Gold Landing Footer" click-category="Gold">Get Gold - $5/mo</a>
+          <a class="button button--mcatgold" href="{{getGoldUrl}}" click-action="Click Get Gold" click-label="Gold Landing Footer" click-category="Gold">Get Gold - $5/mo</a>
           {{/if}}
         </div>
       </div>

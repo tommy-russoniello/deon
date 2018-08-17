@@ -1,3 +1,12 @@
+var thankyous = [
+  "Very cool!",
+  "Thank you!",
+  "Thanks for the support :)",
+  "We appreciate it :)",
+  "That's awesome!",
+  "Noice."
+]
+
 function transformSubmittedAccountData (data) {
   var str = data.birthday_year + '-' + data.birthday_month + '-' + data.birthday_day
   if (!data.birthday_year || data.birthday_year <= 1900) {
@@ -266,6 +275,7 @@ function processSocialSettings (args) {
         facebookEnabled: !!args.result.facebookId,
         googleEnabled: !!args.result.googleId
       }
+
       return scope
     }
   })
@@ -276,16 +286,26 @@ function processAccountGoldPage (args) {
   var thankyous = [
     "Very cool!",
     "Thank you!",
-    "Thanks for the support :)",
-    "We appreciate it :)",
+    "Thanks for the support",
+    "We appreciate it",
     "That's awesome!",
     "Noice."
+  ]
+
+  var emotes = [
+    "fa-hand-spock-o",
+    "fa-smile-o",
+    "fa-heart-o",
+    "fa-hand-peace-o",
+    "fa-paw",
+    "fa-thumbs-o-up"
   ]
   let scope = {
     hasGoldAccess: hasGoldAccess(),
     hasFreeGold: hasFreeGold(),
     displayName: getSessionName(),
     thankYou: thankyous[randomChooser(thankyous.length)-1],
+    emoji: emotes[randomChooser(emotes.length)-1],
     isSignedIn: isSignedIn()
   }
 
@@ -293,41 +313,60 @@ function processAccountGoldPage (args) {
     renderContent(args.template, {loading: false, data: scope})
     return
   }
-  setTimeout(function () {
-    requestJSON({
-      url: endpoint + '/self',
-      withCredentials: true
-    }, (err, selfResult) => {
+  requestJSON({
+    url: endpoint + '/self',
+    withCredentials: true
+  }, (err, selfResult) => {
+    if (err) {
+      renderContent(args.template, {err: err})
+      return
+    }
+
+    scope.self = selfResult
+    if (!scope.hasGoldAccess) {
+      renderContent(args.template, {
+        loading: false,
+        data: scope
+      })
+      return
+    }
+
+    requestSelfShopCodes((err, result) => {
       if (err) {
         renderContent(args.template, {err: err})
         return
       }
 
-      scope.self = selfResult
+      if (result.gold.usedMonths <= 1){
+        scope.belowOne = true
+      }
+      scope = Object.assign(scope, result)
+      renderContent(args.template, {
+        loading: false,
+        data: scope
+      })
+      console.log('result', result)
+      scrollToHighlightHash()
+      startCountdownTicks()
 
-      if (!scope.hasGoldAccess) {
-        renderContent(args.template, {
-          loading: false,
-          data: scope
-        })
-        return
+      if (searchStringToObject().status) {
+        toasty('Payment received. ' + thankyous[randomChooser(thankyous.length) - 1])
+      }
+    })
+  })
+}
+
+function processLicensesTable(args) {
+  processor(args, {
+    completed: (args) => {
+      const licenses = args.result.results.map(transformLicense)
+      const scope = {
+        licenses: licenses,
       }
 
-      requestSelfShopCodes((err, result) => {
-        if (err) {
-          renderContent(args.tempalte, {err: err})
-          return
-        }
-        scope = Object.assign(scope, result)
-        renderContent(args.template, {
-          loading: false,
-          data: scope
-        })
-        scrollToHighlightHash()
-        startCountdownTicks()
-      })
-    })
-  }, 1000)
+      betterRender('licenses-tbody', args.node, scope)
+    }
+  })
 }
 
 function processAccountSettings (args) {

@@ -186,7 +186,7 @@ window.fbAsyncInit = function() {
             <li><a class="silent" href="/press">Press</a></li>
             <li><a class="silent" href="/publishing">Publishing</a></li>
             <li><a class="silent" href="/licensing">Licensing</a></li>
-            <li><a class="silent" href="/gold">Gold</a></li>
+            <li><a class="silent" href="/gold" data-redirect-url="auto">Gold</a></li>
             <li><a class="silent" href="/dev">Dev</a></li>
             <li><a class="silent" href="/dev/bounties">Bounties</a></li>
         </ul>
@@ -313,7 +313,7 @@ window.fbAsyncInit = function() {
 <script type="text/template" data-template="error" data-partial>
     <div class="container">
         <div class="errors-container">
-            {{message}}
+            {{err.message}}
         </div>
     </div>
 </script>
@@ -343,7 +343,8 @@ window.fbAsyncInit = function() {
     {{#user}}
     <a class="silent nav-item" onclick="closeNav()" href="/playlists"><i class="fa fa-bars"></i>Playlists</a>
     <a class="silent nav-item" onclick="closeNav()" href="/account"><i class="fa fa-gear"></i>Account</a>
-    <a class="silent nav-item" onclick="closeNav()" href="/account/services"><i class="fa fa-credit-card"></i>Services</a>
+    <a class="silent nav-item" onclick="closeNav()" href="/account/gold"><i class="fa fa-paw"></i>Gold</a>
+    <a class="silent nav-item" onclick="closeNav()" href="/account/licenses"><i class="fa fa-check-circle-o"></i>Licenses</a>
     {{/user}}
     {{^user}}
     <a class="silent nav-item" onclick="closeNav()" href="/signin?redirect={{currentUrl}}"><i class="fa fa-sign-in"></i>Sign In</a>
@@ -372,7 +373,7 @@ window.fbAsyncInit = function() {
     <h1>Help</h1>
     <div class="panel md-container">
       <h2>Notices & Important Information</h2>
-      <ul>
+      <ul class="ml-3">
         <li><a href="/faqs/migration-notice">Connect Migration Notice</a></li>
         <li><a href="/twitch-policy">Twitch Policy</a></li>
         <li><a href="/privacy-policy">Privacy Policy</a></li>
@@ -384,7 +385,7 @@ window.fbAsyncInit = function() {
         check the links below that may point you in the right direction.
       </p>
       <h3>Topics</h3>
-      <ul>
+      <ul class="ml-3">
         <li><a href="/faqs/general">General Site</a></li>
         <li><a href="/faqs/whitelisting">Content Creators &amp; Whitelisting</a></li>
       </ul>
@@ -392,7 +393,7 @@ window.fbAsyncInit = function() {
         If you still have a question please contact us at <a
           href="mailto:connect@monstercat.com">connect@monstercat.com</a>.
       </p>      <h2>Other Links</h2>
-      <ul>
+      <ul class="ml-3">
         <li><a href="/dev">Monstercat Developer Community</a></li>
       </ul>
     </div>

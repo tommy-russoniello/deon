@@ -1,4 +1,3 @@
-
 function getUserServicesScope (done) {
   var user = isSignedIn() ? session.user : {}
   var hasGold = !!user.goldService;

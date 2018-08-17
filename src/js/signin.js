@@ -12,7 +12,6 @@ function processSignInPage (args) {
 
   scope.redirectTo = encodeURIComponent(url)
   scope.continueTo = getSignInContinueTo()
-  trackSignUpEvents()
   renderContent(args.template, scope)
 }
 
@@ -237,19 +236,6 @@ function getSignInContinueTo () {
     return continueTo
   }
 
-  if (redirectTo.substr(0, '/account/services'.length) == '/account/services') {
-    var qos = redirectTo.substr(redirectTo.indexOf('?') + 1)
-    var qo = queryStringToObject(qos)
-
-    continueTo = {
-      buying: qo
-    }
-    if (qo.ref == 'gold') {
-      continueTo.buying.gold = true
-    }
-    continueTo.msg = false
-  }
-
   if (redirectTo.indexOf('bestof2017') >= 0) {
     continueTo = {
       msg: 'voting on <a href="/bestof2017">Best of 2017</a>'
@@ -299,7 +285,6 @@ function processSignUpPage (args) {
   renderContent(args.template, scope)
 
   google.maps.event.addDomListener(window, 'load', initLocationAutoComplete)
-  trackSignUpEvents()
   initLocationAutoComplete()
 }
 
@@ -315,10 +300,3 @@ function processConfirmSignUp (args) {
   })
 }
 
-function trackSignUpEvents () {
-  var redirectTo = getRedirectTo()
-
-  if (redirectTo == '/account/services?ref=gold') {
-    recordSubscriptionEvent('Redirect to Sign Up', 'Gold Redirect to Signup')
-  }
-}

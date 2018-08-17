@@ -1,0 +1,312 @@
+.license-buttons{
+	text-align: right
+}
+
+/* FORM */
+
+select.license-select{	
+	height:37px;
+	width:95%;
+	margin:0.3rem 0;
+}
+
+.license-field{
+	width:95%;
+	height:37px;
+	margin:0.3rem 0;
+}
+
+.license-form{
+	position:absolute;
+	opacity: 1;
+	top: -500px;
+}
+
+.license-form-display{
+  position: static;
+  opacity: 1;
+  transition: opacity 0.5s linear;
+  padding:1rem;
+  background: #f5f5f5;
+  height:auto;
+}
+
+.icon-toggle .fa-plus,
+.fa-minus{
+	display:none;
+}
+
+.icon-toggle .fa-minus{
+	display:inline-block;
+
+}
+
+
+/* White Fields */
+
+select.license-select,
+input.license-field{
+	background: #fff
+}
+
+.license-x{
+	width:10px;
+}
+
+.x-btn{
+	font-size:0px;
+	width: 0;
+	padding: 5px 10px;
+	background: #e23333;
+	text-align: center;
+	transition: 0.3s linear;
+	opacity: 0;
+}
+
+tr:hover .x-btn{
+	font-size:16px;
+	width:40px;
+	opacity:1.0;
+}
+
+
+th.license-x, td.license-x{
+	padding-left:0px;
+	padding-right:0px
+}
+
+.license-form button.button--cta{
+	margin: 0.3rem 0;
+    width: 95%;
+    padding:0.5rem;
+}
+
+/* ADD CHANNEL */
+@media screen and (max-width: 765px){
+	.add-channel{
+		display:none;
+	}
+
+	.license-field,
+	select.license-select,
+	.license-form button.button--cta{
+		width:100%;
+	}
+
+}
+	.license-cards{
+    	display:none;
+    }
+
+  @media
+    only screen 
+    and (max-width: 760px), (min-device-width: 768px) 
+    and (max-device-width: 1024px)  {
+
+    .license-table{
+    	display:none;
+    }
+    .license-cards{
+    	display:block;
+    }	
+    .license-table a.button--mobile, button.button--mobile {
+    font-size: 16px;
+    padding: 0px;
+	}
+  }
+
+ /* Card */
+
+.license-card{
+	border:1px solid #f5f5f5;
+}
+
+.license-card p{
+	font-size: 0.7rem; 
+	text-transform: uppercase;
+}
+
+.license-card h4{
+	display:inline;
+	font-weight: 500
+}
+.license-card:nth-child(even){
+	background: #f5f5f5
+}
+
+.license-card:nth-child(even) .divider{
+	border-color: #fff;
+}
+
+.divider{
+	border-bottom: 1px solid #f5f5f5;
+	margin:0.5rem 0rem;
+}
+
+
+/* Gold Section */
+.container--gold .panel--dark{
+	background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(/img/banner.jpg);
+	background-position: center;
+}
+
+
+.container--gold .button--mcatgold{
+	text-decoration: none;
+    width: 100%;
+    text-align: center;
+}
+
+.pricing.pricing--gold {
+    color: #f1d383;
+}
+
+.container--gold .fa-file-text-o:before{
+	font-size: 0.9em;
+}
+
+/* Form Icons */
+
+.license-legend tr:nth-child(odd) > td{
+	background: white;
+}
+
+.license-legend td{
+	padding: 0.3em 0.5em 0.3em 0.1em;
+}
+
+i.icon--blue{
+	color: dodgerblue;
+}
+
+.license-table td.push-right > *{
+	margin: 0rem 0.15rem;
+}
+
+/* Tool Tip */
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+	font-size: 1rem;
+	letter-spacing: 0px;
+	font-weight: normal;
+	text-transform: none;
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 130%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* Legend Button */
+.feedback {
+	display: none;
+	background: dodgerblue;
+	color: #fff;
+	padding: 10px 20px;
+	border-color: dodgerblue;
+	text-decoration: none;
+}
+.feedback:hover{
+	background: #000;
+	border-color: #000;
+}
+
+#legendBtn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+@media
+only screen 
+and (max-width: 760px), (min-device-width: 768px) 
+and (max-device-width: 1024px)  {
+	.feedback{
+		display:block;
+	}
+}
+
+@media screen and (max-width: 992px){
+	.license-table a.button--mobile, button.button--mobile {
+	    font-size: inherit !important;
+	}
+}
+
+.thin-border{
+	border: 1px solid #eee;
+	padding: 1rem;
+	margin: 1.5rem 0;
+}
+
+.thin-border tr td{
+	background: transparent;
+}
+
+.date-ranges,
+.hide-dates,
+.carddate-ranges{
+	display: none
+}
+
+.show-dates,
+.hide-dates{
+	font-size: 0.8rem
+}
+.state-status .show-dates{
+	display:none;
+}
+
+.state-status .hide-dates{
+	display: inline
+}
+
+.display-dates.date-ranges{
+	display: table-row;
+}
+
+.date-ranges span,
+.carddate-ranges span{
+	display:inline-block;
+	font-size:0.8rem;
+	background: dodgerblue;
+	padding: 0.2rem 0.5rem;
+	border-radius:5px;
+	color: #fff;
+	margin-bottom:0.2rem;
+}
+
+.display-dates.carddate-ranges{
+	display: block;
+	margin:0.5rem 0rem 0.5rem 2rem
+}
+
+.date-status{
+	cursor:pointer;
+}

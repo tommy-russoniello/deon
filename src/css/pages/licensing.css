@@ -239,11 +239,11 @@
   padding: 3em 0 4em;
   font-size: 16px;
   position: relative;
-  min-height: 50vh
+  min-height: 30vh
 }
 
 .licensing.v-stretch {
-  min-height: 85vh;
+ /* min-height: 85vh;*/
 }
 
 #licensing.first {
@@ -356,7 +356,6 @@ h2#faq {
 }
 
 .panel .button--youtube:hover {
-  background: #ffffff;
   color: #bb0000;
 }
 
@@ -375,7 +374,6 @@ h2#faq {
 }
 
 .panel .button--twitch:hover {
-  background: #fff;
   color: #6441A5;
 }
 
@@ -427,10 +425,6 @@ h2#faq {
   float: left;
 }
 
-.licensing-other-platforms a {
-  color: #fff;
-}
-
 blockquote {
   border-left: 0.25em solid #b7b7b7;
   padding: 0.25em 0 0.25em 1em;
@@ -443,62 +437,208 @@ blockquote code {
   background: #e2e2e2;
 }
 
-/** MODAL **/
-
-.modal--licensing .section.youtube {
-  margin-bottom: 0em;
+/* Licensing Sections */
+.license-type{
+  min-height: 75vh;
 }
 
-.modal--licensing .content-creators .button--cta {
-  min-width: 200px;
+.license-type h1{
+  max-width: 400px
+}
+.license-type .sub-wrapper,
+.license-type .creator-wrapper, 
+.license-type .commercial-wrapper{
+  padding: 4rem 0rem 4rem 2rem;
 }
 
-.modal--licensing .button--cta {
-  text-align: center;
+.sub-wrapper{
+  position: relative;
+  background: 
+  linear-gradient(
+    rgba(255, 255, 255, 1), 
+    rgba(255, 255, 255, 0.6)
+  ),
+  url(/img/banner-2.jpg);
+  background-size: cover;
+  background-position: center;
+  border-right:1px solid #f3f3f3;
 }
-.faq h4 {
-  margin-top: 2em;
+
+.creator-wrapper{
+  position: relative;
+  background: 
+  linear-gradient(
+    rgba(255, 255, 255, 0.6), 
+    rgba(255, 255, 255, 0.6)
+  ),
+  url(/img/banner-2.jpg);
+  background-size: cover;
+  background-position: center;
+}
+.commercial-wrapper{
+  position: relative;
+  background: 
+  linear-gradient(
+    rgba(0, 0, 0, 0.6), 
+    rgba(0, 0, 0, 0.6)
+  ),
+  url(/img/sync-banner.jpg);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Accordion */
+
+.accordion {
+    letter-spacing: unset; 
+    text-transform: unset; 
+    font-size: 1rem; 
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+}
+
+.accordion-active, .accordion:hover {
+    background-color: transparent;
+    color: dodgerblue;
+}
+
+.accordion:after{
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion-active:after {
+    content: "\2212";
+}
+
+.accordionpanel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background: #f9f9f9
+}
+
+.accordionpanel p{
+  padding: 1rem 0rem;
+  max-width: 750px
+}
+
+/*  Footer */
+
+.panel--dark-gold{
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(/img/banner.jpg);
+  background-position: center;
+  color: #fff;
+}
+
+.panel--dark-gold h2 a{
+  color: #f1d383;
+}
+
+@media only screen and (min-width: 1280px){
+  .button-group--footer{
+    float:right;
+  }
+}
+
+  /* Licensing Services*/
+
+  ul.licensing-services a {
+  text-decoration: none;
+  color: #000;
+}
+
+ul.licensing-services ~ p{
   font-weight: bold;
-  font-size: 1.2em;
-}
-.faq h4:first-of-type {
-  margin-top: 0em;
 }
 
-.modal--licensing .flex-buttons {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+.gold-banner > .flex{
+  padding: 5rem 0;
 }
-.modal--licensing .flex-buttons .button {
+
+ul.licensing-services li {
+  list-style: none;
+  position: relative;
+  transition: all 0.3s ease;
+  line-height: 1.7;
+  left: 0;
+  color: #000;
+}
+
+ul.licensing-services li a{
+  display: block;
+}
+
+ul.licensing-services  li::before {
+  content: "\f054";
+  font-family: "FontAwesome";
+  font-size: 0.65rem;
+  display: block;
+  padding-top: .3rem;
+  position: absolute;
+  left: -.85rem;
+}
+
+ul.licensing-services li:hover{
+  left: .25rem;
+  color: dodgerblue;
+}
+
+ul.licensing-services a:hover{
+  color: dodgerblue;
+}
+span.service{
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.vendors{
   text-align: center;
-  flex: 1 0 0;
-  height: 90px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
-.modal--licensing .section.crediting{
-  margin-top: 2rem;
-}
-textarea.copycredits{
-  border: 0;
-  margin: 0;
-  min-height: initial;
-  height: 90px;
-  padding: 1rem;
-}
-@media screen and (min-width: 768px){
-  .licensing .licensing-cta-content-creators .button {
-    width: 32%;
-    display: block;
-    float: left;
-  }
 
-  .licensing .licensing-cta-content-creators .button:nth-of-type(2n) {
-    margin-right: 1.5%;
-    margin-left: 1.5%;
-  }
-
+.vendors img{
+  display:inline;
+  max-width:200px;
 }
+
+
+@media only screen and (max-width: 480px){
+  .vendors img{
+  max-width:100px;
+  }
+}
+
+#licenses-preview .push-right,
+#licenses-preview .show-dates{
+  display:none;
+}
+
+tr[role=no-licenses],
+.card-msg{
+  display:none;
+}
+
+.empty td{
+  background: #f5f5f5;
+}
+
+.empty.card-msg{
+  display:block;
+}
+
+tr[role=no-licenses].empty{
+  display:table-row;
+}
+

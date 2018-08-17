@@ -1180,6 +1180,10 @@ footer .footer-items li:first-child button::before{
   }
 }
 
+.flex.flex-panels .panel {
+  
+}
+
 /* FrontApp Form */
 
 #front-form {

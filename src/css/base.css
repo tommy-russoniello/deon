@@ -173,10 +173,6 @@ a:hover{
   color: dodgerblue;
 }
 
-a:focus,
-button:focus{
-  text-shadow: 0 0 20px dodgerblue;
-}
 a.no-hover,
 a.no-hover:active,
 a.no-hover:hover,
@@ -219,6 +215,14 @@ table select {
   background: rgba(0,0,0,0.7); 
   color: #fff;
 }
+.fa.fa-gold:before {
+  content: "G";
+  font-family: 'Montserrat'
+}
+
+.fa.fa-gold {
+}
+
 /* youtube-play */
 .fa-social-y:before{ 
   content: "\f16a";

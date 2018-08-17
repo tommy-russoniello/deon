@@ -49,7 +49,11 @@ function transformShopCodesPage (obj, done) {
     return done(null, obj);
   }
   requestSelfShopCodes(function (err, result) {
-    console.log('err,result',err,result);
+    if (err) {
+      done(err)
+      return
+    }
+
     Object.keys(result).forEach(function (key) {
       obj[key] = result[key];
     });

@@ -364,7 +364,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^account\/gold\/?"
         data-title="My Gold Features"
         data-process="processAccountGoldPage"
@@ -374,9 +374,9 @@
         {{#if loading}}
             {{>loading-view}}
         {{/if}}
-        {{#err}}
+        {{#if err}}
             {{>error}}
-        {{/err}}
+        {{/if}}
         {{#data}}
             <div class="top-banner top-banner--no-margin top-banner--account-gold">
                 <div class="banner">
@@ -386,20 +386,25 @@
                     </div>
                 </div>
                 <div class="container flex">
-                    <div class="col-xs-12 col-sm-12 col-md-12 cl-white featured-details">
+                    <div class="col-xs-12 col-sm-12 col-md-12 cl-white">
                         {{#if isSignedIn}}
-                            <a href="/account/services" class="button button--cta pull-right ml-1 mt-4">Subscriptions</a>
+                            <a href="/account/services" class="button button--cta pull-right ml-1 mt-4">Manage Subscription</a>
                             {{>account-return-link class="mt-4"}}
+                            <img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold">
                             <h1 class="title uppercase">My Gold Features</h1>
                             {{#if hasGoldAccess}}
                                 <p>Hey {{displayName}},
                                     {{#if hasFreeGold}}
-                                        you have a free Gold subscription.
+                                        you have a free Gold subscription. <i class="fa {{emoji}}"></i>
                                     {{else}}
-                                        you've been Gold for {{gold.months}} month<span class="s" num="{{gold.months}}"></span>. {{thankYou}}
+                                        {{#if belowOne}}
+                                            you have a Gold membership. {{thankYou}} <i class="fa {{emoji}}"></i>
+                                        {{else}}
+                                            you've been Gold for {{gold.usedMonths}} month<span class="s" num="{{gold.usedMonths}}"></span>. {{thankYou}}  <i class="fa {{emoji}}"></i>
+                                        {{/if}}
                                     {{/if}}</p>
                             {{else}}
-                                <p>Hey {{displayName}}, to use these features you'll need to <a href="/gold/buy">get Gold</a>.</p>
+                                <p>Hey {{displayName}}, to use these features you'll need to <a href="/gold/buy" data-redirect-url="auto">get Gold</a>.</p>
                             {{/if}}
                         {{else}}
                             <h1>Gold Features</h1>
@@ -408,7 +413,7 @@
                         {{/if}}
 
                         {{^hasGoldAccess}}
-                            <br /><a href="/gold/buy" class="button button--gold button--icon">Get Gold  <i class="fa fa-chevron-right"></i></a>
+                            <br /><a href="/gold/buy" data-redirect-url="auto" class="button button--mcatgold button--icon">Get Gold  <i class="fa fa-chevron-right"></i></a>
                             {{^isSignedIn}}
                                 <span class="or">or</span>
                                 <a href="/sign-in?redirect=%2Faccount%2Fgold" class="button button--cta-outline">Sign In</a>
@@ -418,83 +423,104 @@
                     </div>
                 </div>
             </div>
-            {{#if hasGoldAccess}}
             <div class="container">
-                <div class="flex flex-pt">
-                    <div class="panel panel--daxrk rewards col-md-6 col-sm-12 col-xs-12">
+                <div class="flex flex-pt sign-split">
+                    <div class="panel rewards col-md-6 col-sm-12 col-xs-12">
                         <h2>Shop Discounts</h2>
                         <p>Each month you have Gold you get a new shop discount code. Stay subscribed for bigger discounts.</p>
                         <table class="mt-2 col-md-8 col-xs-12 table-striped">
-                            <tr>
-                                <th>Subscribe For</th>
-                                <th>Discount</th>
-                            </tr>
-                            <tr>
-                                <td>1+ months</td>
-                                <td>10% off</td>
-                            </tr>
-                            <tr>
-                                <td>1+ years</td>
-                                <td>15% off</td>
-                            </tr>
-                            <tr>
-                                <td>2+ years</td>
-                                <td>20% off</td>
-                            </tr>
+                          <tr>
+                            <th>Subscribe For</th>
+                            <th>Discount</th>
+                          </tr>
+                          <tr>
+                            <td>1+ months</td>
+                            <td>10% off</td>
+                          </tr>
+                          <tr>
+                            <td>1+ years</td>
+                            <td>15% off</td>
+                          </tr>
+                          <tr>
+                            <td>2+ years</td>
+                            <td>20% off</td>
+                          </tr>
                         </table>
+                        {{#if hasGoldAccess}}
+                          {{#currentCode}}
+                            <h3 class="mt-2 mb-1">Current Code <span class="discount">({{discountText}})</span></h3>
+                              <p class="code-description">  
+                                  <input class="code" size="32" type="text" value="{{code}}" role="clipboard" />{{>copy-clipboard-button}}
+                                  <a href="https://shop.monstercat.com/?utm_source=gold&utm_campaign=shop_discount" class="button button--cta button--shop" target="_blank">
+                                  Go to Shop
+                                  <i class="fa fa-external-link"></i>
+                              </a>
+                                  <br /><small>{{#expires}}
+                                  Single use and expires on {{../expiresFormatted}}.
+                                  {{/expires}}
+                                  {{^expires}}
+                                      Single use and does not expire.
+                                  {{/expires}}
+                                  Next code in <span role="countdown" to="{{../nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
+                              </p>
+                          {{/currentCode}}
+                          {{else}}
+                            <p class="mb-2">Hop on the Gold train to snag your code.</p>
+                            {{>get-gold-cta}}
+                        {{/if}}
                     </div>
-                    <div class="col-xs-12 col-md-6 panel" id="shop-codes">
-                        <h2>Current Code</h2>
-                        {{#currentCode}}
-                        <p class="code-description">
-                            <input class="code" size="32" type="text" value="{{code}}" role="clipboard" />{{>copy-clipboard-button}}
-                            gets you <span class="discount">{{discountText}}</span>.
-                            <br /><small>{{#expires}}
-                            Single use and expires on {{../expiresFormatted}}.
-                            {{/expires}}
-                            {{^expires}}
-                                Single use and does not expire.
-                            {{/expires}}
-                            Next code in <span role="countdown" to="{{../nextCodeDate}}" day-label=" day/ days" show-days="1" show-hours="0" show-minutes="0" show-seconds="0"></span>.</small>
-                        </p>
-                        {{/currentCode}}
-                        <div class="button-group">
-                            <a href="https://shop.monstercat.com/?utm_source=gold&utm_campaign=shop_discount" class="button button--cta button--icon" target="_blank">
-                                Go to Shop
-                                <i class="fa fa-external-link"></i>
-                            </a>
-                        </div>
+                    <div class="col-xs-12 col-md-6 panel paragraphs">
+                        <h2>Content Creator Licenses</h2>
+                        <p>Your Gold subscription lets you add licenses to use our music for your YouTube, Twitch, and Mixer channels.</p>
+                        <h3 class="mt-2 mb-2">Your Licenses</h3>
+
+                        <table data-source="$endpoint/self/whitelist" data-process="processLicensesTable" id="licenses-preview" class="mb-4">
+                        </table>
+                        {{#if hasGoldAccess}}
+                        <a href="/account/licenses" class="button button--cta">Manage Licenses</a> <a href="/licensing/content-creators" class="button button--black">Learn More</a>
+                        {{else}}                        
+                            {{>get-gold-cta}}
+                        {{/if}}
                     </div>
 
                 </div>
-                <div class="flex sign-split">
-                    <div class="col-xs-12 col-md-6 panel" id="reddit">
+                <div class="flex sign-split mt-0">
+                    <div class="col-xs-12 col-md-6 panel paragraphs" id="reddit">
                         <h2>/r/Monstercat Flair</h2>
-                            {{#self}}
                             <p>Put in your reddit username to get an exclusive <strong>Monstercat Gold</strong> flair on the <a href="https://www.reddit.com/r/monstercat">Monstercat Subreddit</a>.</p>
-                            <form onsubmit="submitSaveRedditUsername(event, this)">
-                                <table class="form mobile" data-set="reddit-flair" trigger-target="saveRedditUsername">
-                                    <tbody>
-                                        <tr>
-                                            <th>reddit username</th>
-                                            <td><input type="text" name="redditUsername" placeholder="Username" value="{{redditUsername}}" /></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="button-group">
-                                    {{>submit-button text="Save" class=" "}}
-                                </div>
-                            </form>
-                            {{/self}}
+
+                            {{#if hasGoldAccess}}
+                                {{#self}}
+                                <form onsubmit="submitSaveRedditUsername(event, this)">
+                                    <table class="form mobile" data-set="reddit-flair" trigger-target="saveRedditUsername">
+                                        <tbody>
+                                            <tr>
+                                                <th>reddit username</th>
+                                                <td><input type="text" name="redditUsername" placeholder="Username" value="{{redditUsername}}" /></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="button-group">
+                                        {{>submit-button text="Save" class=" "}}
+                                    </div>
+                                </form>
+                                {{/self}}
+                            {{else}}
+                                {{>get-gold-cta}}
+                            {{/if}}
                     </div>
-                    <div class="col-xs-12 col-md-6 panel">
+                    <div class="col-xs-12 col-md-6 panel  paragraphs">
                         <h2>Gold-only Discord Chat</h2>
-                        <p>Join us on our <a href="https://discord.gg/j8N75GN">Discord server</a> in the exclusive Gold members only chat. Please join the server before using the form below.</p>
-                        {{>join-gold-discord}}
+                        <p>Join us on our <a href="https://discord.gg/monstercat">Discord server</a> in the exclusive Gold members only chat. Please join the server before using the form below.</p>
+
+                        {{#if hasGoldAccess}}
+                            {{>join-gold-discord}}
+                        {{else}}
+                            {{>get-gold-cta}}
+                        {{/if}}
                     </div>
                 </div>
             </div>
-            {{/if}}
         {{/data}}
     </div>
 </script>
@@ -508,15 +534,14 @@
         data-template="account-page"
         >
     <div class="container">
-        <a href="/account/services" class="button button--cta pull-right ml-1">Subscriptions</a>
         {{#data}}
             {{#if hasGoldAccess}}
-                <a href="/account/gold" class="button button--gold-dark pull-right button--icon">
+                <a href="/account/gold" class="button button--mcatgold-dark pull-right button--icon">
                     My Gold Features
                     <i class="fa fa-chevron-right"></i>
                 </a>
             {{else}}
-                <a href="/gold/buy" class="button button--gold-dark pull-right">Upgrade to Gold</a>
+                <a href="/gold/buy" data-redirect-url="auto" class="button button--mcatgold-dark pull-right">Upgrade to Gold</a>
             {{/if}}
         {{/data}}
         <h1>My Account</h1>
@@ -741,6 +766,14 @@
     {{/data}}
 </script>
 
+
+<script type="text/template"
+        data-partial
+        data-template="get-gold-cta"
+>
+<a href="/gold/buy" data-redirect-url="auto" class="button button--cta button--mcatgold-dark">Get Gold</a>
+</script>
+
 <script type="text/template"
         data-partial
         data-template="password-field"
@@ -890,7 +923,7 @@
             </tbody>
         </table>
         <div class="button-group">
-            {{>submit-button text="Join Discord" class="action-toggle"}}
+            {{>submit-button text="Join Gold Channel" class="action-toggle"}}
         </div>
       <div role="response"></div>
     </div>

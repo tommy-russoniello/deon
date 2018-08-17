@@ -1,8 +1,11 @@
 var licensingABTest
 
 function processLicensingPage (args) {
-  renderContent(args.template)
-  pickBackground()
+  const scope = {}
+
+  scope.signedIn = isSignedIn()
+  scope.hasGold = hasGoldAccess()
+  renderContent(args.template, scope)
 }
 
 function getOtherLicensingPlatforms () {
@@ -15,7 +18,6 @@ function processLicensingTwitchTrial () {
     hasGold: hasGoldAccess(),
     redirect: encodeURIComponent('/twitchpromo')
   }
-
   if (isSignedIn()) {
     scope.hasSubmitted = getCookie('twitch-promo-submitted')
   }
@@ -79,27 +81,36 @@ function processLicensingOtherPlatformsPage (args) {
 
 function processLicensingContentCreators (args) {
   const scope = {}
+  scope.hasGoldAccess =hasGoldAccess(),
+  renderContent(args.template, scope)
+  completedContentCreatorLicensing()
+}
 
-  //Create the split test
-  licensingABTest = new SplitTest({
-    name: 'content-creator-description',
-    dontCheckStarter: true,
-    modifiers: {
-      'control': function () {
-        scope.splitTestControl = true
-        scope.splitTestHeaders = false
-      },
-      'headers': function () {
-        scope.splitTestControl = false
-        scope.splitTestHeaders = true
+function processWhitelistFaq (args) {
+  console.log(args)
+  processor(args, {
+    completed: function(args, result){
+      console.log(args.result)
+      var html = args.result
+      var whitelist = findNode("#whitelistfaq")
+      whitelist.innerHTML = html
+      var acc = document.getElementsByClassName("accordion")
+      var i
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+          this.classList.toggle("accordion-active")
+          var panel = this.nextElementSibling
+
+          if (panel.style.maxHeight){
+            panel.style.maxHeight = null
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px"
+          }
+        })
       }
     },
-    onStarted: function () {
-      renderContent(args.template, scope)
-      completedContentCreatorLicensing()
-    }
   })
-  licensingABTest.start()
 }
 
 function pickBackground(){

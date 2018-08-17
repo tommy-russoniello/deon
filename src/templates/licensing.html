@@ -20,7 +20,7 @@
 </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^licensing\/content-creators\/?\??(.*)?$"
         data-title="Licensing Music for YouTube, Twitch, and Mixer"
         data-process="processLicensingContentCreators"
@@ -36,99 +36,89 @@
           <h1>Music for Content Creators</h1>
           <div class="licensing-box licensing-box--margin">
             {{>licensingContentCreatorSellingPoints}}
-            <div class="licensing-cta licensing-cta-content-creators button-group">
-              {{>licensing-content-creator-ctas}}
-              <div class="licensing-other-platforms"><a href="/licensing/other-platforms">Using another platform?</a></div>
+          {{#if hasGoldAccess}}
+          {{else}}
+            <div class="button-group">
+              <a class="button button--mcatgold button--full" href="/gold/buy" click-action="Click Get Gold" click-category="Gold" target="_BLANK">
+                <span class="title">Get Gold - $5/MO</span>
+                <span class="subtitle"> TO ADD LICENSES</span>
+              </a>
             </div>
+          {{/if}}
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="container">
-    <div class="panel md-container licensing-content-creator-info">
-      <div class="flex">
-        <div class="licensing-box col-xs-12 col-sm-12 col-md-6">
-          <h2>How It Works</h2>
-          {{#if splitTestControl}}
-            <h3>Thanks for your interest in using Monstercat's music!</h3>
-            <p>You can definitely use our music in your videos/streams.</p>
-
-            <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. <strong>Don't worry!</strong> These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
-
-            <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
-
-            <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
-          {{/if}}
-          {{#if splitTestHeaders}}
-            <h3>Thanks for your interest in using Monstercat's music!</h3>
-            <p>You can definitely use our music in your videos/streams.</p>
-
-            <h3>Keep 100% of the Monetization</h3>
-            <p>If you plan on monetizing your videos and would like to keep 100% of the revenue and not get claims, you can purchase a Content Creator License from us. We currently have licenses available for YouTube, Twitch and Mixer.</p>
-
-            <h3>No License = Copyright Claims</h3>
-            <p>If you use our music without purchasing a license from us, you'll receive a copyright claim. Don't worry! These aren't the same as strikes and aren't bad for your channel. They just mean that any advertising revenue from the video will go to us and the artists involved with the song.</p>
-
-            <p>If you do not have a license, then we ask that you do not appeal our claims. We will have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p>
-
-            <h3>Support the Artists</h3>
-            <p>A portion of your Whitelist License subscription goes directly to the artists. We believe in generating new revenue streams for artists and this is a great way to fairly support content creators and musicians alike!</p>
-          {{/if}}
+    <div class="panel flex">
+      <div class="col-md-6">
+        <h2>How It Works</h2>
+        <h3>Thanks for your interest in using Monstercat's music!</h3>
+        <p class="mt-2">If you use our music without subscribing to Gold, you'll receive a claim. These are not copyright strikes and aren't bad for your channel. Advertising revenue from the video will go to us and the artists involved with the song.</p>
+        <p class="mt-2">If you plan on monetizing your content and would like to keep 100% of the revenue claim-free, you can subscribe to Monstercat Gold. We currently support music usage on YouTube, Twitch and Mixer.</p><p class="mt-2">If you do not have a Gold subscription, then we ask that you do not appeal our claims. We may have to issue a strike if a reinstated claim is disputed or if you otherwise violate the below policies.</p> 
+      </div>
+      <div class="col-md-6 vendors">
+        <div class="mb-3 mt-3">
+          <img src="/img/vendors/YouTube-full.png" alt="YouTube">
+          <img src="/img/vendors/twitch-full.png" alt="Twitch">
+          <img src="/img/vendors/mixer-full.png" alt="Mixer">
         </div>
-        <div class="button-group button-group--center">
-          {{>licensing-content-creator-ctas}}
+        <div class="col-sm-12 mt-0">
+        {{#if hasGoldAccess}}
+          <a class="button button-full button--mcatgold-light" href="/account/licenses">Add Content Creator Licenses</a>
+        {{else}}
+          <a class="button button-full button--mcatgold-light" href="/gold/buy" click-action="Click Get Gold" click-category="Gold" target="_BLANK">Get Gold - $5/MO</a>
+        {{/if}}
+        <a class="button button-full button--black" href="/licensing/other-platforms">Using another platform?</a>
         </div>
       </div>
     </div>
-    <div class="panel">
-      <div class="flex">
-        <div class="licensing-box col-xs-12 faq col-lg-6">
-          <h2 id="faq">Frequently Asked Questions</h2>
-          <div
-              data-process="processMarkdownBare"
-              data-no-cors
-              data-source="https://raw.githubusercontent.com/monstercat/docs/master/site/Whitelisting.md">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="panel">
-      <h3>Buy a License</h3>
-      <div class="button-group button-group--center">
-        {{>licensing-content-creator-ctas}}
-      </div>
+    {{>licensingContentCreatorFAQs}}
+  </div>
+  <div class="panel panel--dark-gold gold-footer-cta">
+    <div class="button-group-center">
+      <a href="/gold#top"><img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold"></a><br>
+      {{#if hasGoldAccess}}
+      <a class="button button--mcatgold button--full" href="/account/licenses">Add Content Creator Licenses</a>
+      {{else}}
+      <a class="button button--mcatgold button--full" href="/gold/buy" click-action="Click Get Gold" click-category="Gold" target="_BLANK">Get Gold - $5/MO</a>
+      {{/if}}
     </div>
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^licensing\/?$"
         data-title="Licensing"
         data-process="processLicensingPage"
         data-template="licensing-page"
         >
-  <div class="licensing v-stretch">
-    <div class="banner" id="licensing">
-      <div class="banner-shade"></div>
-    </div>
-    <div class="container">
-      <div class="flex">
-      <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-6">
-        <h1>Monstercat Music Licensing</h1>
-        <div class="licensing-box">
-          <div class="licensing-ctas button-group">
-            <a href="/licensing/content-creators" class="button button--full cl-white">
-              <span class="title">Content Creators</span>
-              <span class="subtitle">YouTube, Twitch, and Mixer</span>
-            </a>
-            <a href="/sync" class="button button--full button--gold">
-              <span class="title">Commercial Use</span>
-              <span class="subtitle">Movies, TV shows, Advertisements</span>
-            </a>
-          </div>
-        </div>
+  <div class="flex license-type">
+    <div class="col-xs-12 col-sm-12 col-md-6 text creator-wrapper clearfix">
+      <div class="container-right clearfix">
+        <header>
+            <h1 class="line-top">Licensing for Content Creators</h1>
+        </header>
+        <p class="description">Licensing for YouTube, Twitch and Mixer.</p>
+        <a class="button button--black button--icon" href="/licensing/content-creators">
+          Learn more
+          <i class="fa fa-chevron-right"></i>
+        </a>
       </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 text cl-white left commercial-wrapper">
+      <div class="container-right">
+        <header>
+          <h1 class="line-top">Licensing for Commercial Use</h1>
+        </header>
+        <p class="description">
+          Licensing for Movies, TV shows, Advertisements.
+        </p>
+        <a class="button button--black button--icon" href="/sync">
+          Learn more
+          <i class="fa fa-chevron-right"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -154,11 +144,11 @@
       data-source="https://raw.githubusercontent.com/monstercat/docs/master/Twitch%20Policy.md">
   </div>
   <div class="container panel">
-    <h3>Buy a Twitch License</h3>
+    <h3>Get a Twitch License</h3>
     <br />
-    <a class="button button-cta button--twitch" href="/account/services?vendor=twitch">
+    <a class="button button-cta button--twitch" href="/account/whitelists?vendor=twitch">
         <span class="title">Get a License</span>
-        <span class="subtitle">$5/mo or $100</span>
+        <span class="subtitle">Free with Gold</span>
     </a>
     <span class="or">or</span>
     <a href="/licensing/content-creators">read more</a>
@@ -191,11 +181,11 @@
       >
   </div>
   <div class="container panel">
-    <h3>Buy a YouTube License</h3>
+    <h3>Get a YouTube License</h3>
     <br />
-    <a class="button button-cta button--youtube" href="/account/services?vendor=youtube">
+    <a class="button button-cta button--youtube" href="/account/whitelists?vendor=youtube">
         <span class="title">Get a License</span>
-        <span class="subtitle">$10/mo or $200</span>
+        <span class="subtitle">Free with Gold</span>
     </a>
     <span class="or">or</span>
     <a href="/licensing/content-creators">read more</a>
@@ -253,18 +243,33 @@
 
 <script type="text/template"
         data-partial data-template="licensing-content-creator-ctas">
-<a class="button button--full button-cta button--youtube button-cta--mobile" role="licensing-cta" href="/account/services?vendor=youtube">
-    <span class="title">YouTube</span>
-    <span class="subtitle">$10/mo or $200</span>
-</a>
-<a class="button button--full button-cta button--twitch button-cta--mobile" role="licensing-cta" href="/account/services?vendor=twitch">
-  <span class="title">Twitch</span>
-  <span class="subtitle">$5/mo or $100</span>
-</a>
-<a class="button button--full button-cta button--beam button-cta--mobile" role="licensing-cta" href="/account/services?vendor=beam">
-  <span class="title">Mixer</span>
-  <span class="subtitle">$5/mo or $100</span>
-</a>
+{{#if hasGoldAccess}}
+  <a class="button button--full button-cta button--youtube button-cta--mobile" role="licensing-cta" href="/account/whitelists?vendor=youtube">
+      <span class="title">YouTube</span>
+      <span class="subtitle">Add a Channel</span>
+  </a>
+  <a class="button button--full button-cta button--twitch button-cta--mobile" role="licensing-cta" href="/account/whitelists?vendor=twitch">
+    <span class="title">Twitch</span>
+    <span class="subtitle">Add a Channel</span>
+  </a>
+  <a class="button button--full button-cta button--beam button-cta--mobile" role="licensing-cta" href="/account/whitelists?vendor=beam">
+    <span class="title">Mixer</span>
+    <span class="subtitle">Add a Channel</span>
+  </a>
+{{else}}
+  <a class="button button--full button-cta button--youtube button-cta--mobile" role="licensing-cta" href="/gold/buy" data-redirect-label="YouTube License" data-redirect-url="/account/whitelists?vendor=youtube">
+      <span class="title">YouTube</span>
+      <span class="subtitle">Free With Gold</span>
+  </a>
+  <a class="button button--full button-cta button--twitch button-cta--mobile" role="licensing-cta" href="/gold/buy" data-redirect-label="Twitch License" data-redirect-url="/account/whitelists?vendor=twitch">
+    <span class="title">Twitch</span>
+    <span class="subtitle">Free With Gold</span>
+  </a>
+  <a class="button button--full button-cta button--beam button-cta--mobile" role="licensing-cta" href="/gold/buy" data-redirect-label="Mixer License" data-redirect-url="/account/whitelists?vendor=beam">
+    <span class="title">Mixer</span>
+    <span class="subtitle">Free With Gold</span>
+  </a>
+{{/if}}
 </script>
 
 <script type="text/template"
@@ -281,11 +286,25 @@
   </ul>
 </script>
 
+<script type="text/html"
+        data-partial data-template="licensingContentCreatorFAQs">
+
+  <div class="panel">
+      <h2 class="line-top mt-2">Frequently Asked Questions</h2>
+      <div id="whitelistfaq"
+      data-source="https://raw.githubusercontent.com/monstercat/docs/master/site/whitelistfaq.html" 
+      data-no-cors
+      data-process="processWhitelistFaq"></div>
+  </div>
+</script>
+
+
 <script type="text/template"
         data-partial data-template="licensingContentCreatorSellingPoints">
   <ul class="selling-points">
+    <li>Available to all our <a href="/gold" class="cl-white">Monstercat Gold</a> subscribers</li>
     <li>Get whitelisted to use our music</li>
-    <li>Pay monthly or prepay for 20 months</li>
+    <li>Pay monthly</li>
     <li>Keep 100% of your content's monetization</li>
   </ul>
 </script>

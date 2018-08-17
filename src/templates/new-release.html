@@ -104,7 +104,7 @@
                                 <li class="mb-1">
                                     <a href="{{downloadLink}}"
                                     target="_blank"
-                                    class="button button--icon button--icon-rg button--gold mb-0"
+                                    class="button button--icon button--icon-rg button--mcatgold mb-0"
                                     onclick="accessDownloadOrModal(event, this)"
                                     title="Download Track"
                                     track-title="{{title}}"
@@ -122,7 +122,8 @@
                                 {{#unless ../hasGoldAccess}}
                                 <li class="mb-1">
                                     <a href="/gold/buy"
-                                    class="button button--icon button--icon-rg button--gold mb-0"
+                                    data-redirect-url="auto" 
+                                    class="button button--icon button--icon-rg button--mcatgold mb-0"
                                     click-action="Click Get Gold"
                                     click-category="Release Links"
                                     ab-test="{{activeTest}}"
@@ -312,6 +313,7 @@
         <ul>
             <li>Download Monstercat songs in your preferred format</li>
             <li>Early streaming access to new releases</li>
+            <li>Use our music claim-free in your creative content</li>
             <li>Directly support the artists</li>
             <li>Discounts on <a href="https://shop.monstercat.com?utm_source=website&utm_medium=gold_feature_list">Monstercat merch</a></li>
             <li>and more!</li>
@@ -319,11 +321,11 @@
     </div>
     {{^hasGold}}
         {{#signedIn}}
-            <a class="button button--gold" href="/gold/buy" ab-test="{{activeTest}}" kpi="gold-buy">Get your Gold membership!</a>
+            <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Get your Gold membership!</a>
         {{/signedIn}}
     {{/hasGold}}
     {{^signedIn}}
-        <a class="button button--gold" href="/gold/buy" ab-test="{{activeTest}}" kpi="gold-buy">Sign up for Gold account!</a>
+        <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Sign up for Gold account!</a>
     {{/signedIn}}
     <span class="or">or</span>
     <a href="/gold" ab-test="{{activeTest}}" kpi="gold-learn">learn more</a>

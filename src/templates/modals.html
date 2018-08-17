@@ -30,6 +30,7 @@
               <ul>
                   <li>Download Monstercat songs in your preferred format</li>
                   <li>Early streaming access to new releases</li>
+                  <li>Use our music claim-free in your creative content</li>
                   <li>Directly support the artists</li>
                   <li>Discounts in the shop</li>
                   <li>and more!</li>
@@ -37,11 +38,11 @@
             </div>
             {{^hasGold}}
                 {{#signedIn}}
-                    <a class="button button--gold" href="/gold/buy" onclick="closeModal(event)">Get your Gold membership!</a>
+                    <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" onclick="closeModal(event)">Get your Gold membership!</a>
                 {{/signedIn}}
             {{/hasGold}}
             {{^signedIn}}
-                <a class="button button--gold" href="/gold/buy" onclick="closeModal(event)">Sign up for Gold account!</a>
+                <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" onclick="closeModal(event)">Sign up for Gold account!</a>
             {{/signedIn}}
             <button class="button--close faux" onclick="closeModal(event)">
               <i class="fa fa-remove"></i>

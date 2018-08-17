@@ -1,0 +1,231 @@
+<script type="text/template"
+        data-partial
+        data-template="licenses-tbody">
+  <tr role="no-licenses" class="{{#unless licenses.length}}empty{{/unless}}">
+    <td colspan="99">
+    No licenses to show.
+    </td>
+  </tr>
+  {{#each licenses}}
+    {{>license-table-row}}
+  {{/each}}
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="license-status"
+        >
+<span {{#if showDates}} onclick="clickShowLicenseDateRanges(event)" class="date-status"{{/if}}>
+  <i class="fa fa-{{icon}} icon--blue mr-1"></i>{{statusMessage}}
+    {{#if showDates}}
+    <span><a class="show-dates">(Show)</a></span>
+    <span><a class="hide-dates">(Hide)</a></span>
+    {{/if}}
+</span>
+</script>
+
+<script type="text/template"
+        data-partial
+        data-template="license-card"
+>
+  {{#if licenses.length}}
+    {{#each licenses}} 
+      {{>license-card-row}}
+    {{/each}}
+  {{else}}
+  <p class="license-card p-2 mb-2 card-msg {{#unless licenses.length}} empty{{/unless}}">No licenses to show.</p>
+  {{/if}}
+</script>
+
+<script type="text/html" data-partial data-template="license-card-row">
+  <div class="license-card p-2 mb-2" data-whitelist-id="{{_id}}"  data-id="{{_id}}"  role="whitelist-panel">
+    <p>Platform</p>
+    <span style="float: right">
+      <span class="faux button--mobile">
+        <a href="{{viewLicenseUrl}}"><i class="fa fa-file-text-o"></i></a>
+      </span>
+      <button class="faux button--mobile actionier" onclick="onClickDeleteWhitelist(event, this)" data-id="{{_id}}">
+        <i class="fa fa-trash-o"></i>
+      </button>
+    </span>
+    <h4 class="{{#if blacklisted}}text-line-through{{/if}}">{{vendor}}</h4>
+    <div class="divider"></div>
+    <p>Channel ID</p>
+    <h4 class="{{#if blacklisted}}text-line-through{{/if}}">{{identity}}</h4>
+    <div class="divider"></div>
+    <p>Status</p>
+    <h4>{{>license-status}}</h4>
+    {{#if showDates}}
+      <div role="carddate-ranges" class="carddate-ranges" data-id="{{_id}}">
+        {{#if showDates}}
+          {{#each readableTimeRanges}}
+            <span>{{.}}</span>
+          {{/each}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</script>
+
+<script type="text/html" data-partial data-template="license-table-row" tagname="tbody">
+  <tr data-whitelist-id="{{_id}}" role="whitelist-panel" data-id="{{_id}}" >
+    <td class="{{#if blacklisted}}text-line-through{{/if}}">{{vendor}}</td>
+    <td class="{{#if blacklisted}}text-line-through{{/if}}">{{identity}}</td>
+    <td>{{>license-status}}</td>
+    <td class="push-right text right">
+      <span class="faux button--mobile">
+        <div class="tooltip">
+          <a href="{{viewLicenseUrl}}"><i class="fa fa-file-text-o"></i></a>
+          <span class="tooltiptext">View License</span>
+        </div>
+      </span>
+      <button class="faux button--mobile actionier" onclick="onClickDeleteWhitelist(event, this)" data-id="{{_id}}">
+        <span class="actionier-off">
+          <i class="fa fa-trash-o"></i>
+        </span>
+        <span class="actionier-on">
+          <i class="fa fa-gear fa-spin"></i>
+      </span>
+      </button>
+    </td>
+  </tr>
+  {{#if showDates}}
+    <tr role="date-ranges" data-id="{{_id}}" class="date-ranges">
+      <td colspan="2"></td>
+      <td colspan="2">
+        {{#if showDates}}
+          {{#each readableTimeRanges}}
+          <span>{{.}}</span>
+          {{/each}}
+        {{/if}}
+      </td>
+    </tr>
+  {{/if}}
+</script>
+
+<script type="text/html"
+        data-route="^account/licenses"
+        data-source="$endpoint/self/whitelist"
+        data-process="processAccountLicensesPage"
+        data-template="account-licenses-page"
+        >
+  <div class="container container--gold">
+    {{#data}}
+    <div class="flex">
+      <div class="panel col-md-4 col-xs-12 panel--dark col-md-last">
+        <img src="/img/gold-logo-250.png" width="150px" class="mb-1" alt="Monstercat Gold">
+        {{#if hasGoldAccess}}
+        <h2 class="pricing pricing--gold">Gold is Active </h2>
+        <p class="mt-2 mb-2">Any videos uploaded while you have an active Gold subscription will not receive a claim from us.</p>
+
+        <p class="mb-2">For more info visit our <a href="/licensing/content-creators"> Content Creators FAQ</a>.</p>
+        {{else}}
+        <h2 class="pricing pricing--gold">Not Subscribed</h2> 
+        <p class="mb-2">Your Gold subscription is not active. However, videos uploaded when you had a subscription will not receive claims.
+          <a href="" class="pricing pricing--gold">Get gold</a></span> to protect any new videos.</p>
+
+        <p class="mb-2">For more info visit our <a href="/licensing/content-creators"> Content Creators FAQ</a>.</p>
+        {{/if}}
+        <p><strong>Membership Benefits:</strong></p>
+        <ul class="mb-3 mt-2 ml-2">
+          <li>Get whitelisted to use our music</li>
+          <li>Add up to 6 channels</li>
+          <li>Keep 100% of your content's monetization</li>
+        </ul>
+        {{#if hasGoldAccess}}
+        <a href="services" >Cancel Subscription</a>
+        {{else}}
+        <a class="button button--mcatgold" href="/gold/buy" click-action="Click Get Gold" click-category="Gold" target="_BLANK">
+          Get Gold - $5/MO
+        </a>
+        {{/if}}
+      </div>
+      <div class="panel col-md-8 col-xs-12">
+        <div class="flex">
+          <div class="col-sm-6 col-xs-8">
+            <h2>Your Licenses</h2>
+          </div>
+          <div class="col-sm-6 col-xs-4" style="text-align: right">
+            {{#if hasGoldAccess}}
+            <button id="license-add-btn">
+              <span class="add-channel">Add Channel</span> <i class="fa fa-plus"></i> <i class="fa fa-minus"></i> 
+            </button>
+            {{else}}
+           <a class="button button--mcatgold-light" href="/gold/buy" click-action="Click Get Gold" click-category="Gold" target="_BLANK">
+              <span class="add-channel">Get Gold to Add Licenses</span> <i class="fa fa-plus"></i>
+            </a>
+            {{/if}}
+          </div>
+        </div>
+        <div class="license-form mt-2">
+          <form onsubmit="submitAddLicense(event, this)" role="form-submit">
+            <div class="flex">
+              <div class="col-sm-3 col-xs-12">
+                <select name="vendor" class="license-select">
+                    <option value="" disabled selected>Platform</option>
+                    <option value="YouTube">YouTube</option>
+                    <option value="Twitch">Twitch</option>
+                    <option value="Beam">Mixer</option>
+                </select>
+              </div>
+              <div class="col-sm-3 col-xs-12">
+                <select name="category" class="license-select">
+                    <option value="" disabled selected>Category</option>
+                    <option value="music">Music Channel</option>
+                    <option value="commercial">Business/Commercial</option>
+                    <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="col-md-4 col-sm-4 col-xs-12">
+                <input type="text" name="identity" placeholder="Channel ID" class="license-field">      
+              </div>
+              <div class="col-md-2 col-sm-2 col-xs-12 actionier">
+                {{>submit-button}}
+              </div>
+            </div>
+          </form>
+        </div>
+        <table class="license-table mt-3 mb-3">
+          <thead>
+              <tr>
+                <th style="width:100px">Platform</th>
+                <th>Channel ID</th>
+                <th>Status</th>
+              </tr>
+          </thead>
+          <tbody>
+           {{>licenses-tbody}}
+          </tbody>
+          
+        </table>
+        <div class="license-cards mt-2">
+          {{>license-card}}
+        </div>
+        <div class="thin-border" id="legend">
+          <table class="license-legend">
+            <tr>
+              <td><i class="fa fa-check icon--blue mr-1"></i></td>
+              <td>Any videos uploaded while Gold is active will not receive a claim from us.</td>
+            </tr>
+            <tr>
+              <td><i class="fa fa-thumbs-o-up icon--blue mr-1"></i></td>
+              <td>Free whitelist, even without Gold</td>
+            </tr>
+            <tr>
+              <td><i class="fa fa-calendar-check-o icon--blue mr-1"></i> </td>
+              <td>Videos uploaded on or before the date will not receive claims.</td>
+            </tr>
+            <tr>
+              <td><i class="fa fa-exclamation-triangle icon--blue mr-1"></i> </td>
+              <td> Channel ineligible for whitelist. <a href="/licensing/content-creators">Check FAQ</a>.</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    {{/data}}
+    </div>
+  </div>
+<div id="legendBtn">
+  <a class="feedback button" href="#legend" onclick="anchorScrollTo(event, this)">Legend </a>
+</div>
+</script>

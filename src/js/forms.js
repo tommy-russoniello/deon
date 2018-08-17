@@ -223,6 +223,7 @@ function submitForm (e, opts = {}) {
   var form = e.target
 
   if (actionier.isOn(form)) {
+    console.log('no')
     return
   }
 

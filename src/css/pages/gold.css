@@ -2,6 +2,13 @@
     background: gold;
     color: black;
 }
+
+.banner-image{
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8) 50% ), url(/img/gold.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
 .top-banner-gold .button--gold:active,
 .top-banner-gold .button--gold:hover{
     background: black;
@@ -35,6 +42,29 @@ ul.gold-perks li a{
 }
 
 ul.gold-perks li::before {
+  content: "\f054";
+  font-family: "FontAwesome";
+  font-size: 0.65rem;
+  display: block;
+  padding-top: .3rem;
+  position: absolute;
+  left: -.85rem;
+}
+
+ul.gold-sub-perks li {
+  list-style: none;
+  position: relative;
+  transition: all 0.3s ease;
+  line-height: 1.7;
+  left: 0;
+  color: #000;
+}
+
+ul.gold-sub-perks li a{
+  display: block;
+}
+
+ul.gold-sub-perks li::before {
   content: "\f054";
   font-family: "FontAwesome";
   font-size: 0.65rem;
@@ -99,5 +129,11 @@ section.gold-feature-section#reddit {
   }
   .top-banner-gold .banner {
     opacity: 1;
+  }
+}
+
+@media screen and (max-width: 1300px){
+  #content-creator-licenses .side-banner{
+    background-size: repeat
   }
 }

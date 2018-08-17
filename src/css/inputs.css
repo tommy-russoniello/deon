@@ -8,11 +8,11 @@ th.shrink, td.shrink {
   padding-right: 0 !important;
 }
 
-tr:nth-child(odd) > td {
+tr:nth-child(even) > td {
   background: #f5f5f5;
 }
 
-table.table-striped tr:nth-child(odd) > th {
+table.table-striped tr:nth-child(even) > th {
   background: #f5f5f5;
 }
 
@@ -21,7 +21,7 @@ table.form td, table.form th {
   padding: 0.5em 0;
 }
 
-table.form tr:nth-child(odd) > td {
+table.form tr:nth-child(even) > td {
   background: transparent;
 }
 
@@ -217,6 +217,38 @@ button:hover,
   border-color: goldenrod;
   background: #fff;
 }
+
+.button--mcatgold{
+  color: white;
+  border-color: #f1d383;
+}
+.button--mcatgold:active,
+.button--mcatgold:hover{
+  color: black;
+  background: #f1d383;
+}
+.button--mcatgold-light {
+  color: goldenrod;
+  background: none;
+  border-color: goldenrod;
+}
+.button--mcatgold-light:hover {
+  color: black;
+  background: #f1d383;
+  border-color: #f1d383;
+}
+.button--mcatgold-dark {
+  color: black;
+  background: #f1d383;
+  border-color: #f1d383;
+}
+.button--mcatgold-dark:active,
+.button--mcatgold-dark:hover {
+  color: goldenrod;
+  border-color: goldenrod;
+  background: #fff;
+}
+
 .button--black{
   color: #000;
   border-color: #ddd;
@@ -540,7 +572,8 @@ label[for] {
     text-align: center;
   }
   a.button--mobile,
-  button.button--mobile {
+  button.button--mobile,
+   {
     padding: .5rem;
     font-size: 1.65rem;
   }
