@@ -77,12 +77,16 @@ function uniqueArray (arr) {
   return arr.filter(onlyUnique)
 }
 
-function toAtlas (arr, key) {
-  var atlas = {}
-  arr.forEach(function (item) {
-    atlas[item[key]] = item
+function objectArrayToDic(arr, key) {
+  var obj = {}
+  arr.forEach(function (x) {
+    obj[x[key]] = x
   })
-  return atlas
+  return obj
+}
+
+function toAtlas (arr, key) {
+  return objectArrayToDic(arr, key)
 }
 
 function getAccountCountries (current) {
@@ -392,9 +396,8 @@ function copyToClipboard (e) {
   }
 }
 
-function hookValueSelects (selects) {
-  selects = selects || document.querySelectorAll('select[value]')
-  selects.forEach(function (el) {
+function hookValueSelects (arr, parent) {
+  (arr || findNodes('select[value]', parent)).forEach(function (el) {
     var selected = el.querySelector('option[value="' + el.getAttribute('value') + '"]')
     if(selected) {
       selected.setAttribute('selected', true)
@@ -577,6 +580,7 @@ function renderContent (template, scope) {
   const node = findNode('[role=content]')
 
   betterRender(template, node, scope)
+  return node
 }
 
 function betterRender (template, node, scope) {

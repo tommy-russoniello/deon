@@ -23,9 +23,7 @@
         {{#loading}}
             {{>loading-view}}
         {{/loading}}
-        {{#error}}
-            {{>error}}
-        {{/error}}
+        {{>error}}
         {{#data}}
             {{>search-artists-list}}
             {{#unless total}}
@@ -61,9 +59,7 @@
         {{#loading}}
             {{>loading-view}}
         {{/loading}}
-        {{#error}}
-            {{>error}}
-        {{/error}}
+        {{> error}}
         {{#data}}
             {{>search-tracks-table}}
             {{#unless total}}
@@ -99,9 +95,7 @@
             {{#loading}}
                 {{>loading-view}}
             {{/loading}}
-            {{#error}}
-                {{>error}}
-            {{/error}}
+            {{> error}}
             {{#data}}
                 {{>search-releases-list}}
                 {{^total}}
