@@ -310,3 +310,8 @@ and (max-device-width: 1024px)  {
 .date-status{
 	cursor:pointer;
 }
+
+.highlight-box{
+	background: #f3f3f3;
+    padding: 0.5em 1em;
+}

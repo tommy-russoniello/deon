@@ -18,52 +18,52 @@
         data-title="Subscriptions"
         data-template="subscriptions-page"
         >
-<div class="top-banner top-banner--no-margin top-banner--account-gold">
-  <div class="banner">
-      <div class="banner" style="background-image:url('/img/gold.jpg');">
-        <div class="banner-shade"></div>
-        <div class="gradient"></div>
+<div class="subscription-wrapper">
+  <div class="top-banner top-banner--no-margin top-banner--account-gold" style="z-index: 9999">
+    <div class="banner">
+        <div class="banner" style="background-image:url('/img/gold.jpg');">
+          <div class="banner-shade"></div>
+          <div class="gradient"></div>
+        </div>
+    </div>
+    <div class="container flex">
+      <div class="col-xs-12 col-sm-12 col-md-12 cl-white">
+      <a href="/account/gold" class="button button--cta pull-right ml-1 mt-4">Gold Features</a>
+        {{>account-return-link class="mt-4"}}
+        <img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold">
+        <h1 class="title uppercase mcatgold">Manage Subscriptions</h1>
+        {{#if hasFreeGold}}
+          <p>Hey {{sessionName}}, you have a free Gold subscription.</p>
+        {{else}}
+          {{#unless hasSubscriptions}}
+          <p>You have no subscriptions. Subscribe to Monstercat Gold below.</p>
+          {{/unless}}
+        {{/if}}
       </div>
-  </div>
-  <div class="container flex">
-    <div class="col-xs-12 col-sm-12 col-md-12 cl-white">
-    <a href="/account/gold" class="button button--cta pull-right ml-1 mt-4">Gold Features</a>
-      {{>account-return-link class="mt-4"}}
-      <img src="/img/gold-logo-250.png" width="200px" class="mb-2" alt="Monstercat Gold">
-      <h1 class="title uppercase mcatgold">Manage Subscriptions</h1>
-      {{#if hasFreeGold}}
-        <p>Hey {{sessionName}}, you have a free Gold subscription.</p>
-      {{else}}
-        {{#unless hasSubscriptions}}
-        <p>You have no subscriptions. Subscribe to Monstercat Gold below.</p>
-        {{/unless}}
-      {{/if}}
     </div>
   </div>
-</div>
-{{#if hasFreeGold}}
-{{else}}
-  <div class="container services">
-    {{#if legacy}}
-      <div class="panel">
-        <h2>Legacy Subscription</h2>
-        <p class="mb-2">You have a <strong>legacy PayPal subscription</strong>. To manage your subscription you'll need to cancel it then resubscribe using our new payment processor.</p>
-        {{>legacy-subscriptions}}
-      </div>
-    {{else}}
-        <div class="panel flex panel-xsolla">
-        {{#unless hasSubscriptions}}
-          <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper style="width:100%">
-            {{>gold-subscribe-features}}
-          </div>
-        {{/unless}}
-        <div class="col-md-6" style="width:100%">
-          {{>xsolla-iframe}}
+  {{#if hasFreeGold}}
+  {{else}}
+    <div class="container services">
+      {{#if legacy}}
+        <div class="panel">
+          <h2>Legacy Subscription</h2>
+          <p class="mb-2">You have a <strong>legacy PayPal subscription</strong>. To manage your subscription you'll need to cancel it then resubscribe using our new payment processor.</p>
+          {{>legacy-subscriptions}}
         </div>
-      </div>
-    {{/if}}
-  </div>
-{{/if}}
+      {{else}}
+          <div class="panel flex panel-xsolla mt-0">
+            <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper style="width:100%">
+              {{>gold-subscribe-features}}
+            </div>
+          <div class="col-md-6" style="width:100%">
+            {{>xsolla-iframe}}
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
 </script>
 
 <script type="text/template"
@@ -112,24 +112,16 @@
 </script>
 
 <script type="text/template"
-        data-template="gold-subscribe-header"
-        data-partial
->
-  {{#if hasSubscriptions}}
-    <h2 class="mb-0">Your Current Gold Benefits</h2>
-  {{else}}
-  <h2 class="mb-0">Gold Subscription $5/mo</h2>
-  {{/if}}
-  <p>Download songs, get early access, shop discounts, and more. <a href="/gold">Learn more about Gold</a>.</p>
-</script>
-
-<script type="text/template"
         data-template="gold-subscribe-features"
         data-partial
 >
 <div class="p-4">
-  <h2 class="mt-1 mb-1">Gold Subscription $5/mo</h2>
-  <ul class="gold-sub-perks">
+  {{#if hasSubscriptions}}
+    <h2 class="mb-0">Your Gold Benefits</h2>
+  {{else}}
+    <h2 class="mb-0">Gold Subscription $5/mo</h2>
+  {{/if}}
+  <ul class="gold-sub-perks mt-2">
     <li>Download Monstercat songs in your preferred format</li>
     <li>Early streaming access to new release</li>
     <li>Use our music claim-free in your creative conten</li>
