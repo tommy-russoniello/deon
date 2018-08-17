@@ -170,7 +170,7 @@ function submitAddLicense (e, el) {
       tbody.appendChild(node)
       card.appendChild(cardNode)
       form.reset()
-      toasty("License succesfully added!")
+      toasty("License succesfully added! Please wait up to 48 hours.")
       if (tbody.children.length >= 1){
         empty.classList.remove("empty")
         emptyCard.classList.remove("empty")

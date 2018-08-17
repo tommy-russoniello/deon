@@ -309,6 +309,10 @@ function processAccountGoldPage (args) {
     isSignedIn: isSignedIn()
   }
 
+  if (!scope.hasGoldAccess){
+    return go('/gold/buy')
+  }
+
   if (!scope.isSignedIn) {
     renderContent(args.template, {loading: false, data: scope})
     return
