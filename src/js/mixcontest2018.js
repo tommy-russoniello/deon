@@ -1,8 +1,8 @@
-const currentPollID = '5b6b16e31a54f308bef98b59'
+const currentPollID = '5b7357fa0252980748ac6afb'
 
 let mixPoll = {}
 const mixContestScope = {}
-const currentMixReleaseId = '5b69d9be0dc8f23f5020c52d'
+const currentMixReleaseId = '5b733f64fdffb72b9e9281af'
 
 function processMixContest2018Page (args) {
   renderContent('mixcontest2018', mixContestScope)
