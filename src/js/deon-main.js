@@ -138,6 +138,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
     stickyPlayer()
     //siteNotices.completeProfileNotice.start();
     //siteNotices.goldShopCodeNotice.start()
+    if (new Date() < new Date("2018-08-24T20:00:00.000Z")) {
+      siteNotices.goldWeek.start()
+    }
   })
   document.querySelector('.credit [role=year]').innerText = new Date().getFullYear()
 

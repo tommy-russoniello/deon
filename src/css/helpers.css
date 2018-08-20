@@ -737,11 +737,17 @@ ul.errors li {
   margin-top: 5px;
 }
 
+#site-notices .gold-week a.notification-link {
+  background: #000;
+  color: #f1d383;
+}
+
 #site-notices a.notification-link {
   display: block;
-  color: #fff;
+  color: white;
   text-decoration: none;
   padding: 1em;
+  text-align: center;
 }
 
 #site-notices a.notification-link:hover .text {

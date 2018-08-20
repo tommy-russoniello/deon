@@ -78,7 +78,7 @@ SiteNotice.prototype.getNoticeEl = function getNoticeEl () {
 SiteNotice.prototype.render = function render (scope) {
   var noticeEl = this.getNoticeEl()
 
-  betterRender(noticeEl, this.template, scope)
+  betterRender(this.template, noticeEl, scope)
   noticeEl.classList.toggle('hide', false)
   var height = noticeEl.getBoundingClientRect().height
 
@@ -120,7 +120,7 @@ function clickCloseLinkNotice (e, name) {
 
 function clickLinkNoticeLink (e, name) {
   if (siteNotices[name].hideOnClick) {
-    siteNotices[name].setHideUntilByDays(siteNotices[name].hideForDays * 2)
+    siteNotices[name].closeByUser()
   }
 }
 
@@ -222,6 +222,21 @@ siteNotices.instinctNotice = new SiteNotice({
   }
 })
 
+
+/*==========================================
+=            GOLD WEEK             =
+==========================================*/
+siteNotices.goldWeek = new SiteNotice({
+  hideForDays: 7,
+  name: 'gold-week',
+  template: 'notice-link',
+  transform: {
+    label: 'A week of giveaways for Monstercat Gold Subscribers! Click here to enter',
+    url: 'https://www.monstercat.com/blog/2018-08-20/gold-week-2018',
+    name: 'goldWeek',
+  },
+  hideOnClick: true
+})
 /*==========================================
 =            GOLD DISCOUNT CODE            =
 ==========================================*/
