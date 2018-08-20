@@ -36,7 +36,11 @@
           <p>Hey {{sessionName}}, you have a free Gold subscription.</p>
         {{else}}
           {{#unless hasSubscriptions}}
-          <p>You have no subscriptions. Subscribe to Monstercat Gold below.</p>
+            {{#if hasGoldAccess}}
+              <p>No Xsolla subscriptions found. If you had a Stripe subscription it might still be migrating.</p>
+            {{else}}
+              <p>You have no subscriptions. Subscribe to Monstercat Gold below.</p>
+            {{/if}}
           {{/unless}}
         {{/if}}
       </div>
@@ -88,6 +92,14 @@
     {{>legacy-subscriptions}}
   </div>
 {{else}}
+  {{#unless hasSubscriptions}}
+    {{#if hasGoldAccess}}
+    <div class="panel">
+      <h2>Existing Subscriber?</h2>
+      <p>If you were <strong>previously subscribed through Stripe</strong> your subscription might still be being migrated to our new payment processor.</p>
+    </div>
+    {{/if}}
+  {{/unless}}
   <div class="panel flex panel-xsolla">
       <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper" style="width:100%">
         {{>gold-subscribe-features}}
@@ -257,4 +269,3 @@
     </div>
   {{/unless}}
 </script>
-
