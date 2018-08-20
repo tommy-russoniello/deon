@@ -106,23 +106,7 @@ function submitJoinDiscord (e, el) {
 
       return errs
     },
-    success: function (result) {
-      var invites = result.invites
-      const scope = {}
-
-      if (!err && invites) {
-        if (invites.gold) {
-          scope.goldJoinUrl = "https://discord.gg/" + invites.gold
-        }
-        if (invites.licensee) {
-          scope.licenseeJoinUrl = "https://discord.gg/" + invites.licensee
-        }
-      }
-
-      betterRender('discord-response', responseEl, {
-        data: scope
-      })
-    }
+    successMsg: 'Gold channel joined!'
   })
 }
 
