@@ -254,6 +254,8 @@ function processAccountEmailPage (args) {
     transform: function (args) {
       const scope = {}
       const account = args.result
+
+      account.realName = account.realName || ""
       const names = account.realName.split()
 
       const mailChimpOptions = {
