@@ -7,15 +7,16 @@
     <div class="container">
         <h1>YouTube Release Claim</h1>
         <div class="panel">
-            <p>If you have recieved a claim on your whitelisted YouTube channel you can release it here. Please fill out the form below.</p>
+            <p>If you have recieved a claim on your whitelisted YouTube channel you can release it here.
+            <br />This only works on <strong>non-private</strong> videos. Unlisted will work.</p>
             <br/>
             <form onsubmit="submitRemoveYouTubeClaim(event, this)">
                 <table class="form mobile">
                     <tbody>
                         <tr>
-                            <th>YouTube Video Id</th>
+                            <th>YouTube Video</th>
                             <td>
-                                <input type="text" name="videoId" placeholder="Video Id"/>
+                                <input type="text" name="videoId" placeholder="ID or link"/>
                             </td>
                         </tr>
                     </tbody>

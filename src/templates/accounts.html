@@ -374,7 +374,9 @@
         {{#if loading}}
             {{>loading-view}}
         {{/if}}
-        {{> error}}
+        {{#if err}}
+            {{>error}}
+        {{/if}}
         {{#data}}
             <div class="top-banner top-banner--no-margin top-banner--account-gold">
                 <div class="banner">
