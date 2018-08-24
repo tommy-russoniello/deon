@@ -172,6 +172,19 @@ function getXsollaTokenDefaults () {
   }
 }
 
+function processGoldCompoundPage (args) {
+  if (!hasGoldAccess()) {
+    window.location = 'http://monster.cat/goldcompoundform'
+    return
+  }
+
+  renderContent('page-gold-compound', {
+    email: session.user.email,
+    thankYou: thankyous[randomChooser(thankyous.length)-1],
+    emoji: emotes[randomChooser(emotes.length)-1]
+  })
+}
+
 function processGoldPage (args) {
   processor(args, {
     start: function (args) {
