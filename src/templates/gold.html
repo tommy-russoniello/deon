@@ -77,6 +77,24 @@
   <div class="iframe-loader">
     {{>loading-view}}
   </div>
+  {{#if promo}}
+    <div class="gold-promo p-2 {{promo.code}}">
+      <h4 class="{{#unless promo.isActive}}text-line-through{{/unless}}">
+        {{#if promo.title}}
+          {{{promo.title}}}
+        {{else}}
+          Promotion: <code>{{promo.code}}</code>
+        {{/if}}
+      </h4>
+      {{#unless promo.isActive}}
+        <p>This promotion is not active.</p>
+      {{else}}
+        {{#if promo.description}}
+          <p>{{{promo.description}}}</p>
+        {{/if}}
+      {{/unless}}
+    </div>
+  {{/if}}
   <iframe src="{{xsollaIframeSrc}}" frameborder="0" class="xsolla-iframe"></iframe>
 </div>
 </script>
@@ -103,6 +121,9 @@
   <div class="panel flex panel-xsolla">
       <div class="col-xs-12 col-sm-12 col-md-6 sub-wrapper" style="width:100%">
         {{>gold-subscribe-features}}
+        <div class="pl-4 pb-2">
+          <a href="/gold">Learn more</a> about Gold.
+        </div>
       </div>
     <div class="col-md-6" style="width:100%">
       {{>xsolla-iframe}}
@@ -164,6 +185,12 @@
         data-template="gold-buy-page"
         >
   <div class="container">
+    {{#if hasGold}}
+      <div class="panel">
+        <h2>You Already Have Gold</h2>
+        <p>Thanks {{email}}, we appreciate it <span class="fa {{emoji}}"></span></p>
+      </div>
+    {{/if}}
     {{>gold-subscribe-form}}
   </div>
 </script>

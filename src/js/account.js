@@ -7,6 +7,14 @@ var thankyous = [
   "Noice."
 ]
 
+var emotes = [
+  "fa-hand-spock-o",
+  "fa-smile-o",
+  "fa-heart-o",
+  "fa-hand-peace-o",
+  "fa-paw",
+  "fa-thumbs-o-up"
+]
 function transformSubmittedAccountData (data) {
   var str = data.birthday_year + '-' + data.birthday_month + '-' + data.birthday_day
   if (!data.birthday_year || data.birthday_year <= 1900) {
@@ -278,14 +286,6 @@ function processAccountGoldPage (args) {
     "Noice."
   ]
 
-  var emotes = [
-    "fa-hand-spock-o",
-    "fa-smile-o",
-    "fa-heart-o",
-    "fa-hand-peace-o",
-    "fa-paw",
-    "fa-thumbs-o-up"
-  ]
   let scope = {
     hasGoldAccess: hasGoldAccess(),
     hasFreeGold: hasFreeGold(),

@@ -12,6 +12,7 @@ function processSignInPage (args) {
 
   scope.redirectTo = encodeURIComponent(url)
   scope.continueTo = getSignInContinueTo()
+  scope.signOnQueryString = getSignOnQueryString()
   renderContent(args.template, scope)
 }
 
@@ -209,9 +210,30 @@ function validateSignUp (data, errors) {
   return errors
 }
 
+function getSignOnQueryString () {
+  //?redirect={{redirectTo}}&continueTo={{continueTo}}
+  const str = []
+  const redirectTo = getRedirectTo()
+
+  if (redirectTo) {
+    str.push('redirectTo=' + encodeURIComponent(redirectTo))
+  }
+
+  var so = searchStringToObject()
+  if (so.continueTo) {
+    str.push('continueTo=' + so.continueTo)
+  }
+
+  if (str.length) {
+    return '?' + str.join('&')
+  }
+
+  return false
+}
 
 function getRedirectTo () {
-  return searchStringToObject().redirect || "/"
+  var so = searchStringToObject()
+  return so.redirect || so.redirectTo || "/"
 }
 
 function goRedirectTo () {
@@ -281,6 +303,8 @@ function processSignUpPage (args) {
       promotions: true
     }
   }
+
+  scope.signOnQueryString = getSignOnQueryString()
 
   renderContent(args.template, scope)
 

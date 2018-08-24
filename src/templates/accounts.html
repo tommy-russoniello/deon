@@ -69,7 +69,7 @@
                 </div>
                 <a href="/forgot-password">Forgot your password?</a>
                 <br/>
-                <a href="/sign-up?redirect={{redirectTo}}">Don't have an account? Sign up!</a>
+                <a href="/sign-up{{signOnQueryString}}">Don't have an account? Sign up!</a>
             </form>
             <div class="col-xs-12 col-md-6 panel">
                 <h2>With Social</h2>
@@ -322,7 +322,7 @@
                     </table>
                     <div class="button-group">
                         <button class="button--cta button--full">Sign Up</button>
-                        or <a href="/signin?redirect={{redirectTo}}">sign in</a>
+                        or <a href="/signin{{signOnQueryString}}">sign in</a>
                     </div>
                 </form>
             </div>

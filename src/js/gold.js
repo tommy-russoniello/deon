@@ -67,22 +67,29 @@ function processGoldBuyPage (args) {
   }
 
   if (!isSignedIn()) {
-    go('/sign-up?redirectTo=' + encodeURIComponent('/gold/buy') + '&continueTo=Buy%20Gold')
+    go('/sign-up?redirectTo=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueTo=Buy%20Gold')
     return
   }
 
   scope.xsollaIframeSrc = ''
   scope.isSignedIn = isSignedIn()
   scope.hasGold = hasGoldAccess()
+  scope.email = session.user ? session.user.email : ''
+  scope.emoji = emotes[randomChooser(emotes.length)-1]
 
   renderContent('gold-buy-page', scope)
 
   const redirectTo = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
-  console.log('redirectTo', redirectTo);
   const opts =  {}
 
   if (redirectTo) {
     opts.return_url = window.location.origin + redirectTo
+  }
+
+  const so = searchStringToObject()
+
+  if (so.promo) {
+    opts.code = so.promo
   }
 
   generateXsollaIframeSrc('gold', opts, (err, result) => {
@@ -95,6 +102,7 @@ function processGoldBuyPage (args) {
     //Src is only returned if the user doesn't have legacy subscriptions
     if (result.src) {
       scope.xsollaIframeSrc = result.src
+      scope.promo = result.promo
     }
     else if (result.legacy) {
       scope.legacy = true
@@ -104,6 +112,7 @@ function processGoldBuyPage (args) {
       renderError(new Error('An unknown token error occured'))
       return
     }
+
     renderContent('gold-buy-page', scope)
     setXsollaIframesLoading()
   })
@@ -124,9 +133,8 @@ function generateXsollaIframeSrc (type, opts, done) {
       return
     }
 
-    done(null, {
-      src: getXsollaIframeSrc(result.token)
-    })
+    result.src = getXsollaIframeSrc(result.token)
+    done(null, result)
   })
 }
 

@@ -238,7 +238,10 @@ function hasCompletedProfile () {
   }
   var user = session.user
 
-  return !(!user.birthday || !user.emailOptIns || user.emailOptIns.length < 3 || !user.geoLocation)
+
+  const has = !(!user.birthday || !user.geoLocation)
+
+  return has
 }
 
 function isLegacyUser () {
