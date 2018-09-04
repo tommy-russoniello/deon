@@ -28,7 +28,7 @@ function processAccountLicensesPage (args) {
         findNode('[name=identity]').value = qs.identity
       }
 
-      var empty = findNode("[role='no-licenses")
+      var empty = findNode("[role='no-licenses']")
 
       if (args.result.total == 0){
         empty.classList.add("empty")
