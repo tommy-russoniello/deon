@@ -394,6 +394,10 @@ function processAccountSettings (args) {
       })
 
       scope.settings = result
+      if (session.settings.blockNonLicensableTracks){
+        scope.settings.blockNonLicensableTracks = true
+        scope.settings.hideNonLicensableTracks = true
+      }
 
       return scope
     }

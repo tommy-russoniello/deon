@@ -121,6 +121,37 @@ function transformLicense (license) {
   return license
 }
 
+function confirmBlockNonLicensableTracks(){
+  const confirmMsg = "Would you like to skip non-licenseable tracks? \nYou can also change the settings yourself in Account Settings."
+  if (confirm(confirmMsg)){
+    request({
+      url: endpoint + '/self/settings',
+      method: 'PATCH',
+      data: {
+        hideNonLicensableTracks: true,
+        blockNonLicensableTracks: true
+      },
+      withCredentials: true
+    }, (err) => {
+      if (err) {
+        toasty(err)
+        return
+      }
+
+      loadSession((err) => {
+        if (err) {
+          toasty(err)
+          return
+        }
+        toasty("Non-licenseable tracks will now be skipped.")
+      })
+    })
+  }
+  else {
+    toasty(Error("Non-licenseable tracks will receive claims."))
+  }
+}
+
 function submitAddLicense (e, el) {
   submitForm(e, {
     url: endpoint + '/self/whitelist',
@@ -133,6 +164,7 @@ function submitAddLicense (e, el) {
     validate: (data, errs) => {
       let suspicous = false
       var confirmBox = findNode('.confirm')
+
       if (!data.category) {
         errs.push('Please select what category your channel is in')
       }
@@ -157,7 +189,6 @@ function submitAddLicense (e, el) {
           data: Object.assign({}, data, {type: 'suspicious_license', userId: session.user._id, confirmOwner: !data.confirm})
         }, () => {})
       }
-      console.log('errs',errs)
       return errs
     },
     success: (result) => {
@@ -170,6 +201,10 @@ function submitAddLicense (e, el) {
       var empty = findNode("[role='no-licenses']")
       var emptyCard = findNode('.card-msg')
       var confirmBox = findNode('.confirm')
+
+      if (!session.settings.hideNonLicensableTracks || !session.settings.blockNonLicensableTracks ){
+        confirmBlockNonLicensableTracks()
+      }
 
       node.setAttribute("data-whitelist-id", result._id)
       node.setAttribute("role", "whitelist-panel")
