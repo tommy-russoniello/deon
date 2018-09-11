@@ -1,5 +1,5 @@
 const PLAYLIST_DOWNLOAD_LIMIT = 50 //Maximum tracks you can download at once from a playlist
-const PLAYLIST_PAGE_LIMIT = 100
+const PLAYLIST_PAGE_LIMIT = 50
 
 function createPlaylist (aName, tracks, cb) {
   let name = aName
