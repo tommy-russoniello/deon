@@ -722,6 +722,21 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Streamer Mode
+                        <div class="toggle">
+                            <input type="checkbox"
+                                   name="streamerMode"
+                                   role="streamer-toggle"
+                                   onclick="toggleStreamerMode(event, this)"
+                                   class="check"
+                                   {{#if isStreamerMode}}checked{{/if}}>
+
+                            <span class="switch"></span>
+                            <span class="track"></span>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
                     <th colspan="2">
                         <label>
                             <input type="checkbox"
@@ -765,7 +780,6 @@
     </form>
     {{/data}}
 </script>
-
 
 <script type="text/template"
         data-partial

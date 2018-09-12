@@ -15,6 +15,7 @@ var emotes = [
   "fa-paw",
   "fa-thumbs-o-up"
 ]
+
 function transformSubmittedAccountData (data) {
   var str = data.birthday_year + '-' + data.birthday_month + '-' + data.birthday_day
   if (!data.birthday_year || data.birthday_year <= 1900) {
@@ -76,6 +77,36 @@ function submitSaveAccountSettings (e, el) {
     success: function (result, data) {
       toasty(strings.settingsUpdated)
       session.settings = data
+    }
+  })
+}
+
+function toggleStreamerMode(e, el) {
+  var form = findParentWith(e.target, "form")
+  var hideTracks = findNode('[name="hideNonLicensableTracks"]', form)
+  var blockTracks = findNode('[name="blockNonLicensableTracks"]', form)
+
+  hideTracks.checked = el.checked
+  blockTracks.checked = el.checked
+  request({
+    url: `${endpoint}/self/settings`,
+    data: {
+      hideNonLicensableTracks: hideTracks.checked,
+      blockNonLicensableTracks: blockTracks.checked,
+    },
+    cors: true,
+    method: 'PATCH',
+  }, (err, body, xhr) => {
+    if (err) {
+      toasty(err)
+      return
+    }
+    session.settings = body
+    if (el.checked){
+      toasty("Streamer mode activated. Happy content creating!")
+    }
+    else {
+      toasty(Error("Streamer mode deactivated. Non-licensable tracks used will receive claims."))
     }
   })
 }
@@ -335,7 +366,6 @@ function processAccountGoldPage (args) {
         loading: false,
         data: scope
       })
-      console.log('result', result)
       scrollToHighlightHash()
       startCountdownTicks()
 
@@ -394,6 +424,11 @@ function processAccountSettings (args) {
       })
 
       scope.settings = result
+      const { settings } = scope
+
+      scope.isStreamerMode = settings.blockNonLicensableTracks &&
+        settings.hideNonLicensableTracks
+
       if (session.settings.blockNonLicensableTracks){
         scope.settings.blockNonLicensableTracks = true
         scope.settings.hideNonLicensableTracks = true
