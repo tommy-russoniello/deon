@@ -162,10 +162,37 @@ function setMetaData (meta) {
   }
   meta['og:site_name'] = 'Monstercat'
   appendMetaData(meta)
+  findNode('meta[name="description"]').setAttribute('content', meta.description || "")
 }
 
 function appendMetaData (meta) {
   var head = document.querySelector('head')
+
+  if (!meta.description && meta.title) {
+    meta.description = meta.title.replace(' - Monstercat', '')
+  }
+
+  if (meta.description && !meta['og:description']) {
+    meta['og:description'] = meta.description
+  }
+
+
+  if (!meta['og:title']) {
+    meta['og:title'] = meta.title
+  }
+
+  if (!meta['og:url']) {
+    meta['og:url'] = location.toString()
+  }
+
+  if (!meta['og:image']) {
+    meta['og:image'] = 'https://assets.monstercat.com/monstercat.com/monstercat-logo.jpg'
+  }
+
+  if (!meta['og:type']) {
+    meta['og:type'] = 'website'
+  }
+
   for (var key in meta) {
     removeMetaElement(head, key)
     var vals = typeof(meta[key]) == 'object' ? meta[key] : [meta[key]]

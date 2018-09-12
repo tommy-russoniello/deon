@@ -35,19 +35,32 @@ function getUpcomingEventsQueryObject (options) {
 =            PROCESSORS            =
 ==================================*/
 function processEventPage (args) {
-  console.log('args', args)
+  let event
   pageProcessor(args, {
     transform: function (args) {
+      event = transformEvent(args.result)
       const scope = {
-        event: transformEvent(args.result)
+        event: event
       }
 
       scope.view = false
       scope.single = true
       scope.isSignedIn = isSignedIn()
-      setPageTitle(scope.event.title)
       scope.userEmail = scope.isSignedIn ? session.user.email : ''
       return scope
+    },
+    completed: (args) => {
+      var title = event.name + ' in ' + event.location + ' @ ' + event.venue
+
+      var meta = {
+        'title': title,
+        'description': event.description,
+        'og:image': event.posterImageUri
+      }
+
+      initLocationAutoComplete()
+
+      pageIsReady(meta)
     }
   })
 }
@@ -64,6 +77,9 @@ function processHeaderEvent (args) {
       return {
         event: header
       }
+    },
+    completed: () => {
+      pageStageIsReady('header_event')
     }
   })
 }
@@ -85,6 +101,7 @@ function processUpcomingEvents (args) {
       toggleUpcoming.hideLoadMore = shown >= result.total
       button.classList.toggle('hide', toggleUpcoming.hideLoadMore)
       loadAndAppendFeaturedEvents()
+      pageStageIsReady('upcoming_events')
     }
   })
 }
@@ -109,6 +126,9 @@ function processPastEvents (args) {
         return a.startDate > b.startDate ? -1 : 1
       })
       return scope
+    },
+    completed: () => {
+      pageStageIsReady('past_events')
     }
   })
 }
@@ -120,11 +140,15 @@ function processEventsPage (args) {
   scope.isSignedIn = isSignedIn()
   scope.userEmail = scope.isSignedIn ? session.user.email : ''
 
+  primePageIsReady({
+    title: 'Monstercat Events',
+    description: 'Upcoming offical Monstercat shows and events, and artist concerts.'
+  }, ['header_event', 'upcoming_events', 'past_events'])
+
   renderContent(args.template, scope)
 
   var qo = getUpcomingEventsQueryObject(window.location.search)
 
-  setPageTitle('Events')
   loadUpcomingEvents(window.location.search)
   initLocationAutoComplete()
   var embedDiv = document.querySelector('[role=event-google-tracking]')
@@ -382,23 +406,6 @@ function toggleUpcoming (){
 toggleUpcoming.hideLoadMore = true
 
 function completedEventsEmailOptin () {
-  initLocationAutoComplete()
-}
-
-function completedEventPage (source, obj) {
-  var title = obj.data.name + ' in ' + obj.data.location + ' @ ' + obj.data.venue
-
-  setPageTitle(title)
-  var meta = {
-    'og:title': title,
-    'og:description': '',
-    'og:type': 'website',
-    'og:url': location.toString(),
-    'og:image': obj.data.posterImageUri
-  }
-
-  setMetaData(meta)
-  pageIsReady()
   initLocationAutoComplete()
 }
 

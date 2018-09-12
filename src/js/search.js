@@ -36,7 +36,8 @@ function getSearchTypes () {
       url: '/search/songs',
       searchPrefix: 'songs:',
       searchPrefixAliases: ['song:', 'track:', 'tracks:'],
-      queryField: 'search'
+      queryField: 'search',
+      pageReadyStages: ['searchTracks']
     },
     artists: {
       fuzzyFields: ['name'],
@@ -127,6 +128,9 @@ function searchAll (e, el) {
 =            PROCESSOR            =
 =================================*/
 function processSearchAllPage (args) {
+  if (args.state != 'start') {
+    return
+  }
   var q = searchStringToObject()
 
   q.limit = searchSnippetLimit
@@ -170,6 +174,20 @@ function processSearchAllPage (args) {
   completedSearchAll()
 }
 
+function searchPageIsReady (typeKey) {
+  const so = searchStringToObject()
+  const type = getSearchType(typeKey)
+  let title = type.title + ' for "' + so.term + '"'
+
+  if (so.page) {
+    title += ' - Page ' + so.page
+  }
+
+  pageIsReady({
+    title: title,
+    description: title
+  })
+}
 
 function processSearchPage (args, type) {
   const data = transformSearchPage(args.result, type)
@@ -190,6 +208,9 @@ function processSearchSnippetTracks (args) {
         data.more.message = 'View All Songs Results'
       }
       return data
+    },
+    completed: () => {
+      pageStageIsReady('searchTracks')
     }
   })
 }
@@ -205,6 +226,9 @@ function processSearchSnippetReleases (args) {
         data.more.message = 'View All Album Results'
       }
       return data
+    },
+    completed: () => {
+      pageStageIsReady('searchReleases')
     }
   })
 }
@@ -222,6 +246,9 @@ function processSearchSnippetArtists (args) {
         data.more.message = 'View All Artists Results'
       }
       return data
+    },
+    completed: () => {
+      pageStageIsReady('searchArtists')
     }
   })
 }
@@ -237,6 +264,9 @@ function processSearchArtistsResults (args) {
       scope.results = args.result.results.map(transformWebsiteDetails)
       return scope
     },
+    completed: () => {
+      searchPageIsReady('artists')
+    }
   })
 }
 
@@ -251,6 +281,9 @@ function processSearchTrackResults (args) {
       setPagination(data, type.perPage)
       data.results = transformTracks(result.results)
       return data
+    },
+    completed: (args) => {
+      searchPageIsReady('tracks')
     }
   })
 }
@@ -282,6 +315,9 @@ function processSearchReleaseResults (args) {
       setPagination(data, type.perPage)
       data.results = result.results.map(mapRelease)
       return data
+    },
+    completed: () => {
+      searchPageIsReady('releases')
     }
   })
 }
@@ -313,6 +349,10 @@ function transformSearchPage (object, type) {
   obj.query = objectToQueryString(query)
   obj.searchForm = searchType.searchForm
   obj.searchForm.term = q.term
+
+
+  obj.pageReadyStages = ['searchArtists']
+
   return obj
 }
 
@@ -335,7 +375,7 @@ function transformSearchSnippetArtists (obj) {
   return transformSearchSnippet(transformSearchArtistsResults(obj), 'Artist')
 }
 
-function completedSearchPage (type) {
+function completedSearchPage (type, stages) {
   var searchType = getSearchType(type)
   var q = searchStringToObject()
 
@@ -348,29 +388,34 @@ function completedSearchPage (type) {
   if (q.page > 1) {
     title += ' - Page ' + q.page
   }
-  setPageTitle(title)
+
   var searchInput = getGlobalSearchInput()
 
   if (q.term) {
     searchInput.value = type != 'all' ? searchType.searchPrefix + ' ' + q.term : q.term
   }
   searchInput.focus()
+
+  primePageIsReady({
+    title: title,
+    description: title
+  }, stages)
 }
 
 function completedSearchAll () {
-  completedSearchPage('all')
+  completedSearchPage('all', ['searchArtists', 'searchTracks', 'searchReleases'])
 }
 
 function completedSearchReleases () {
-  completedSearchPage('releases')
+  completedSearchPage('releases', ['searchReleases'])
 }
 
 function completedSearchTracks() {
-  completedSearchPage('tracks')
+  completedSearchPage('tracks', ['searchTracks'])
 }
 
 function completedSearchArtists() {
-  completedSearchPage('artists')
+  completedSearchPage('artists', ['searchArtists'])
 }
 
 document.addEventListener('statechange', function () {

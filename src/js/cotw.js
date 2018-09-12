@@ -1,12 +1,20 @@
 function processCOTWPage (args) {
   renderContent(args.template)
   iframeHeight()
+  pageIsReady({
+    title: 'Call of the Wild - Monstercat\'s Weekly Radio Show',
+    description: 'Monstercat\'s Weekly Radio Show. An unbound exploration of sound with the latest electronic music. Join thousands of people across the globe who are ready to break free from anything ordinary. Featuring unreleased previews, artist takeovers, and an immersive community. Whether partying, studying, or dreaming of the next big thing, these are the songs that define your journey into the wild.'
+  })
 }
 
 
 function processPodcastPhotoGalleryPage (args) {
   renderContent(args.template)
   onPodcastPageOpened()
+  pageIsReady({
+    title: 'Photo Gallery Submission',
+    description: 'Submit photos to be shown on our livestreams.'
+  })
 }
 
 function onPodcastPageOpened () {

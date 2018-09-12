@@ -91,9 +91,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
     })
 
     document.addEventListener("click", interceptClick)
-    //document.addEventListener("dblclick", interceptDoubleClick)
-    //document.addEventListener("keypress", interceptKeyPress)
-    //document.addEventListener("submit", interceptSubmit);
 
     document.addEventListener("click", (e) => {
       var t = e.target
@@ -136,10 +133,19 @@ document.addEventListener("DOMContentLoaded", (e) => {
     })
     changeState(location.pathname + location.search)
     stickyPlayer()
-    //siteNotices.completeProfileNotice.start();
-    //siteNotices.goldShopCodeNotice.start()
-    if (new Date() < new Date("2018-08-24T20:00:00.000Z")) {
-      siteNotices.goldWeek.start()
+
+    if (ENV == 'development') {
+      setTimeout(() => {
+        if (!window.prerenderReady) {
+          console.warn('SEO WARNING: prerenderReady is FALSE after 2s')
+        }
+        else {
+          console.log("%cprerenderReady", "color: green")
+        }
+        if ('Monstercat' == document.title) {
+          console.warn('SEO WARNING: Page title not changed from default')
+        }
+      }, 2000)
     }
   })
   document.querySelector('.credit [role=year]').innerText = new Date().getFullYear()
@@ -224,8 +230,65 @@ function bgmebro() {
   lstore.removeItem('bgon')
 }
 
-function pageIsReady () {
+/**
+ * Primes a page to be set as ready when the provided
+ * async calls are completed
+ */
+function primePageIsReady (meta, stages) {
+  if (typeof stages == 'string') {
+    stages = [stages]
+  }
+  setPageMetaData(meta)
+  primePageIsReady.queued = {
+    meta: meta,
+    stages: stages.reduce((map, key) => {
+      map[key] = false
+      return map
+    }, {})
+  }
+}
+primePageIsReady.queued = {}
+
+function pageStageIsReady (name) {
+  const q = primePageIsReady.queued
+
+  if (!q.stages) {
+    return
+  }
+
+  q.stages[name] = true
+  let ready = true
+  Object.keys(q.stages).forEach((stage) => {
+    if (!q.stages[stage]) {
+      ready = false
+    }
+  })
+
+  if (ready) {
+    pageIsReady(q.meta)
+    primePageIsReady.queued = {}
+  }
+}
+
+function setPageMetaData (meta) {
+  if (meta.title) {
+    if (meta.title.substr('Monstercat'.length * -1) != 'Monstercat') {
+      meta.title = meta.title + ' - Monstercat'
+    }
+
+    document.title = meta.title
+  }
+
+  setMetaData(meta)
+}
+
+function pageIsReady (meta) {
+  setPageMetaData(meta)
   window.prerenderReady = true
+  if (ENV == 'development') {
+    console.log('SEO Page Content')
+    console.log(findNode('[role="content"]').textContent.split(/\s+/).join(' '))
+  }
 }
 
 function isSignedIn () {
@@ -903,12 +966,35 @@ function processArtistPage (args) {
       var scope = {}
       scope = transformWebsiteDetails(args.result)
       return scope
+    },
+    completed: function () {
+      setPageTitle(args.result.name)
+      var meta = {
+        'title': args.result.name,
+        'description': 'Bio and discography for ' + args.result.name,
+        'og:type': 'profile',
+        'og:image': args.result.image
+      }
+
+      primePageIsReady(meta, ['user_releases'])
     }
   })
 }
 
 function processPage (opts) {
   renderContent(opts.node.dataset.template, {})
+  pageIsReady({
+    title: opts.node.dataset.title,
+    description: opts.node.dataset.description || ""
+  })
+}
+
+function processMarkdownBarePage (opts) {
+  renderContent(opts.node.dataset.template, {})
+  primePageIsReady({
+    title: opts.node.dataset.title,
+    description: opts.node.dataset.description || ""
+  }, ['markdown_bare'])
 }
 
 function processMarkdownSimple (args) {
@@ -923,6 +1009,9 @@ function processMarkdownBare (args) {
   templateProcessor('markdown-bare', args, {
     transform: function (args) {
       return marked(args.result)
+    },
+    completed: () => {
+      pageStageIsReady('markdown_bare')
     }
   })
 }
@@ -952,6 +1041,9 @@ function processHomeFeatured (args) {
     },
     completed: function () {
       startCountdownTicks()
+      pageIsReady({
+        title: 'Monstercat'
+      })
     }
   })
 }
@@ -1056,7 +1148,18 @@ function processRosterPage (args) {
         selectedYear: year
       }
 
+      let title = ""
+      if (q.year) {
+        title = q.year + ' '
+      }
+      title += 'Artists'
+
+      primePageIsReady({
+        title: title,
+        'description': 'Monstercat artists.'
+      }, 'roster_year')
       renderContent(args.template, scope)
+
       completedRoster()
     }
   })
@@ -1083,8 +1186,11 @@ function processRosterYear (obj) {
         return 0
       })
       betterRender(args.template, args.node, scope)
-    },
-    completed: completedRoster
+
+      const qo = searchStringToObject()
+
+      pageStageIsReady('roster_year')
+    }
   })
 }
 
@@ -1120,6 +1226,9 @@ function processMusicReleases (args) {
 
       setPagination(data, 24)
       return transformReleases(data)
+    },
+    completed: () => {
+      pageStageIsReady('music_releases')
     }
   })
 }
@@ -1149,6 +1258,7 @@ function processUserReleases (args) {
 
       scope.loading = false
       betterRender(args.template, args.node, scope)
+      pageStageIsReady('user_releases')
     },
     error: function (args) {
       betterRender(args.template, args.node, {
@@ -1177,18 +1287,28 @@ function processMarkdownPage (args) {
       return md
     },
     completed: function (args) {
-      const title = args.node.dataset.title
+      let title = args.node.dataset.title
 
-      if (title) {
-        setPageTitle(title)
-      }
-      else {
+      if (!title) {
         const titleEl = findNode('h1,h2')
 
         if (titleEl) {
-          setPageTitle(titleEl.textContent)
+          //setPageTitle(titleEl.textContent)
+          title = titleEl.textContent
         }
       }
+
+      const descEl = findNode('.md-container p')
+      let description
+
+      if (descEl) {
+        description = descEl.textContent
+      }
+
+      pageIsReady({
+        title: title,
+        description: description
+      })
     }
   })
 }
@@ -1367,7 +1487,6 @@ function completedReleaseTracks (source, obj) {
   appendMetaData({
     'music:musician': artistLinks
   })
-  pageIsReady()
   var embeds = document.querySelectorAll('[collection-id][role=shopify-embed]')
 
   embeds.forEach((node) => {
@@ -1408,26 +1527,10 @@ function completedReleasesPage (source, obj) {
       parts.push('Page ' + qs.page)
     }
   }
-  setPageTitle(parts.join(pageTitleGlue))
-  pageIsReady()
-}
-
-function completedArtist (source, obj) {
-  if (obj.error) { return }
-  setPageTitle(obj.data.name)
-  var meta = {
-    'og:title': obj.data.name,
-    'og:description': 'Bio and discography for ' + obj.data.name,
-    'og:type': 'profile',
-    'og:url': location.toString(),
-    'og:image': obj.data.image
-  }
-
-  setMetaData(meta)
-  pageIsReady()
-  if (obj.data.shopifyCollectionId) {
-    ShopifyBuyInit(obj.data.shopifyCollectionId)
-  }
+  primePageIsReady({
+    title: parts.join(pageTitleGlue),
+    description: 'Latest music releases from Monstercat'
+  }, ['music_releases'])
 }
 
 function completedMusic (source, obj) {
@@ -1459,7 +1562,7 @@ function completedMusic (source, obj) {
   pageIsReady()
 }
 
-function completedRoster (){
+function completedRoster () {
   var rosterSelect = document.querySelector('[role=roster-select]')
 
   rosterSelect.addEventListener('change', function(){

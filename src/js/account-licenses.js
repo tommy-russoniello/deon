@@ -47,6 +47,10 @@ function processAccountLicensesPage (args) {
       if (addLicenseBtn) {
         addLicenseBtn.addEventListener("click", toggleAddLicense)
       }
+
+      pageIsReady({
+        title: 'Licenses'
+      })
     }
   })
 }

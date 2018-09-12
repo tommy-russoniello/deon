@@ -6,6 +6,10 @@ function processLicensingPage (args) {
   scope.signedIn = isSignedIn()
   scope.hasGold = hasGoldAccess()
   renderContent(args.template, scope)
+  pageIsReady({
+    title: 'Music Licensing - Commercial & Content Creators',
+    descrption: 'Monstercat offers licensing for both commercial use and for content creators.'
+  })
 }
 
 function getOtherLicensingPlatforms () {
@@ -77,6 +81,9 @@ function processLicensingOtherPlatformsPage (args) {
   obj.platforms = getOtherLicensingPlatforms()
   obj.email = isSignedIn() ? session.user.email : ''
   renderContent(args.template, obj)
+  pageIsReady({
+    title: 'Licensing Music for Facebook, Instagram, and more'
+  })
 }
 
 function processLicensingContentCreators (args) {
@@ -84,13 +91,14 @@ function processLicensingContentCreators (args) {
   scope.hasGoldAccess =hasGoldAccess(),
   renderContent(args.template, scope)
   completedContentCreatorLicensing()
+  primePageIsReady({
+    description: 'Music licensing for content creators on YouTube, Twitch, and Mixer.'
+  }, ['whitelist_faq'])
 }
 
 function processWhitelistFaq (args) {
-  console.log(args)
   processor(args, {
     completed: function(args, result){
-      console.log(args.result)
       var html = args.result
       var whitelist = findNode("#whitelistfaq")
       whitelist.innerHTML = html
@@ -109,7 +117,9 @@ function processWhitelistFaq (args) {
           }
         })
       }
-    },
+
+      pageStageIsReady('whitelist_faq')
+    }
   })
 }
 

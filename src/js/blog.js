@@ -48,6 +48,28 @@ function processBlogPage (args) {
       }
 
       return obj
+    },
+    completed: (args) => {
+      let title, description
+      const tag = args.result.tag
+
+      if (tag) {
+        title = tag + ' Posts'
+        description = 'Monstercat ' + tag + ' blog and news.'
+      }
+      else {
+        title = 'Blog'
+        description = 'Monstercat blog and news.'
+      }
+
+      if (args.result.page > 1) {
+        title += ' - Page ' + args.result.page
+      }
+
+      pageIsReady({
+        title: title,
+        description: description
+      })
     }
   })
 }
@@ -84,17 +106,6 @@ function processBlogPostPage (args) {
 
     const post = transformPost(preview ? result.meta : result)
 
-    setPageTitle(post.title)
-    var meta = {
-      'og:title': post.title,
-      'og:description': transformExcerptToText(post.excerpt),
-      'og:type': 'article',
-      'og:url': location.toString(),
-      'og:image': post.image
-    }
-
-    setMetaData(meta)
-    pageIsReady()
 
     if (args.matches[1] == 'preview') {
       markdownUrl = endpoint + '/blog/drafts/' + args.matches[2]
@@ -109,6 +120,15 @@ function processBlogPostPage (args) {
       markdownUrl: markdownUrl,
       markdownCors: cors
     })
+
+    var meta = {
+      'title': post.title + ' - Blog',
+      'description': transformExcerptToText(post.excerpt),
+      'og:type': 'article',
+      'og:image': post.image
+    }
+
+    primePageIsReady(meta, 'markdown_post')
     scrollToHighlightHash()
   })
   return
@@ -164,6 +184,8 @@ function completedMarkdownPost () {
     redditJs.src = 'https://www.redditstatic.com/comment-embed.js'
     document.getElementsByTagName('head')[0].appendChild(redditJs)
   }
+
+  pageStageIsReady('markdown_post')
 }
 
 function transformExcerptToText (htmlExcerpt) {

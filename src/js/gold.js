@@ -58,6 +58,9 @@ function processSubscriptionsPage (args) {
     }
     renderContent('subscriptions-page', scope)
     setXsollaIframesLoading()
+    pageIsReady({
+      title: 'Subscriptions'
+    })
   })
 }
 
@@ -115,6 +118,10 @@ function processGoldBuyPage (args) {
 
     renderContent('gold-buy-page', scope)
     setXsollaIframesLoading()
+    pageIsReady({
+      title: 'Buy Gold',
+      description: 'Buy Monstercat Gold subscription for downloads, early streaming, shop discounts, and more.'
+    })
   })
 }
 
@@ -256,6 +263,11 @@ function processGoldPage (args) {
       }
 
       renderContent(args.template, scope)
+      const desc = 'Download access, early streaming, licenses, supporting the artists, shop perks, and more!'
+      pageIsReady({
+        description: desc,
+        title: 'Monstercat Gold - Downloads, streaming, licenses, discounts'
+      })
     }
   })
 }
@@ -267,6 +279,7 @@ function processCotwGoldPage (args) {
   //HEY! No peaking. Honor System Security is in effect.
   scope.iframeSrc = 'https://docs.google.com/forms/d/e/1FAIpQLSfe2zEOYiwTk5_LJZnpw66kYZE6bPFpQs6BxeIJgFYEB7URJw/viewform?embedded=true'
   renderContent('cotw-gold-vote', scope)
+  pageIsReady()
 }
 
 function clickCancelLegacySubscription (e) {

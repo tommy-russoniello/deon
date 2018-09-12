@@ -6,6 +6,40 @@ const browseMusicFilters = [
   'types'
 ]
 
+function getMusicPageTitle (prepend) {
+  const so = searchStringToObject()
+  let title = prepend
+
+  if (so.search) {
+    title = 'Search ' + prepend
+  }
+
+  if (so.genres) {
+    title += ' ' + commaAnd(so.genres.split(','))
+  }
+
+  if (so.types) {
+    title += ' ' + commaAnd(so.types.split(',').map(x => x+'s'))
+  }
+  else {
+    title += ' Music'
+  }
+
+  if (so.search) {
+    title += ' for "' + so.search + '"'
+  }
+
+  if (so.tags) {
+    title += ' tagged ' + commaAnd(so.tags.split(','), ' or ')
+  }
+
+  if (so.pages || so.page) {
+    title += ' - Page ' + (so.pages || so.page)
+  }
+
+  return title
+}
+
 function processBrowseMusicPage (args) {
   let q = searchStringToObject()
 
@@ -181,6 +215,9 @@ function completedMusicBrowseResults (data) {
     el.setAttribute('index', index)
   })
 
+  pageIsReady({
+    title: getMusicPageTitle('Browse')
+  })
 }
 
 function mergeBrowseResults () {

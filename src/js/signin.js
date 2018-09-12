@@ -14,6 +14,10 @@ function processSignInPage (args) {
   scope.continueTo = getSignInContinueTo()
   scope.signOnQueryString = getSignOnQueryString()
   renderContent(args.template, scope)
+  pageIsReady({
+    title: 'Sign In',
+    description: 'Sign in to your Monstercat.com account'
+  })
 }
 
 /*===============================
@@ -148,6 +152,11 @@ function processPasswordResetPage (args) {
       obj.missingKey = !key
       obj.key = key
       return obj
+    },
+    completed: () => {
+      pageIsReady({
+        title: 'Reset Password'
+      })
     }
   })
 }
@@ -310,6 +319,9 @@ function processSignUpPage (args) {
 
   google.maps.event.addDomListener(window, 'load', initLocationAutoComplete)
   initLocationAutoComplete()
+  pageIsReady({
+    title: 'Sign Up'
+  })
 }
 
 function processConfirmSignUp (args) {

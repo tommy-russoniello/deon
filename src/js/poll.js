@@ -15,7 +15,6 @@ function transformVotesBreakdown (obj){
 function processMixContestPoll (args){
   templateProcessor('mix-contest', args, {
     success: function (args) {
-        console.log('args', args);
       const obj = {}
 
       obj.audioLink = 'https://s3.amazonaws.com/data.monstercat.com/blobs/4fdf34f9d1729db933a191cf34ed6dcd37adc7a7'

@@ -64,7 +64,7 @@ function submitSaveAccount (e, el) {
         if (wasLegacy && !isLegacyLocation()) {
           reloadPage()
         }
-        siteNotices.completeProfileNotice.start()
+        //siteNotices.completeProfileNotice.start()
       })
     }
   })
@@ -230,6 +230,11 @@ function disableTwoFactor (e, el) {
 ==================================*/
 
 function processAccountPage (args) {
+  if (!isSignedIn()) {
+    go('/signin')
+    return
+  }
+
   pageProcessor(args, {
     success: function (args) {
       const scope = {}
@@ -372,6 +377,10 @@ function processAccountGoldPage (args) {
       if (searchStringToObject().status) {
         toasty('Payment received. ' + thankyous[randomChooser(thankyous.length) - 1])
       }
+
+      pageIsReady({
+        title: 'Monstercat Gold Features'
+      })
     })
   })
 }

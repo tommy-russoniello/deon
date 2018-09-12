@@ -59,6 +59,9 @@ function processSyncPage (args) {
   renderContent(args.template, {
     data: obj
   })
+  primePageIsReady({
+    title: 'Sync'
+  }, 'sync_tracks')
 }
 
 function processSyncTracks (args) {
@@ -96,6 +99,9 @@ function processSyncTracks (args) {
         return track
       })
       return result
+    },
+    completed: () => {
+      pageStageIsReady('sync_tracks')
     }
   })
 }

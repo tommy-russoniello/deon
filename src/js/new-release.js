@@ -135,6 +135,7 @@ function processReleaseMerch (args) {
       })
       scope.activeTest = cache(PAGE_RELEASE).activeTest
       betterRender(args.template, args.node, scope)
+      pageStageIsReady('merch')
     }
   })
 }
@@ -180,7 +181,8 @@ function getArtistsTwitters (artists) {
 }
 
 function processReleasePage (args) {
-  processor(args, {
+  pageProcessor(args, {
+    start: renderLoading,
     success: function (args) {
       const scope = {
         release: mapRelease(args.result)
@@ -223,12 +225,22 @@ function processReleasePage (args) {
           scope.coverImage = scope.release.cover
           scope.tracks = tracks
           scope.hasGoldAccess = hasGoldAccess()
-          setPageTitle(scope.release.title + ' by ' + scope.release.renderedArtists)
+
+          const pageTitle = scope.release.title + ' by ' + scope.release.renderedArtists
 
           function renderPage () {
             cache(PAGE_RELEASE, scope)
             renderContent('new-release-page', scope)
-            completedReleasePage()
+            primePageIsReady({
+              'og:type': 'music.album',
+              'title': pageTitle,
+              description: pageTitle,
+              'og:release_date': new Date(scope.release.releaseDate).toISOString(),
+              'og:image': scope.release.cover,
+              'og:url': window.location,
+              'og:musician': scope.releaseArtists.map(a => 'https://www.monstercat.com/artist/' + a.vanityUri)
+            }, ['merch', 'moreFromArtists'])
+            startCountdownTicks()
           }
 
           if (!isMobileBrowser()) {
@@ -258,34 +270,6 @@ function processReleasePage (args) {
   })
 }
 
-function completedReleasePage () {
-  startCountdownTicks()
-
-  var followButtons = document.querySelectorAll('[twitter-follow]')
-
-  followButtons.forEach((el) => {
-    twttr.widgets.createFollowButton(
-      el.getAttribute('twitter-follow'),
-      el,
-      { size: 'large' }
-    )
-  })
-
-  //TODO: Store tweet IDs in releases and check them here
-  /*
-  var tweetContainer = document.getElementById('release-official-tweet')
-  if (tweetContainer) {
-    twttr.widgets.createTweet(
-      '963485399766122501',
-      tweetContainer,
-      {
-        theme: 'light'
-      }
-    )
-  }
-  */
-}
-
 function processRelatedReleases (args) {
   templateProcessor('related-releases', args, {
     success: function (args) {
@@ -306,6 +290,7 @@ function processRelatedReleases (args) {
       }
 
       betterRender(args.template, args.node, scope)
+      pageStageIsReady('moreFromArtists')
     }
   })
 }

@@ -94,7 +94,12 @@ function processCatalogResults (args) {
 
       return obj
     },
-    completed: completedCatalogFilters
+    completed: () => {
+      completedCatalogFilters()
+      pageIsReady({
+        title: getMusicPageTitle('')
+      })
+    }
   })
 }
 
