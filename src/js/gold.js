@@ -279,7 +279,9 @@ function processCotwGoldPage (args) {
   //HEY! No peaking. Honor System Security is in effect.
   scope.iframeSrc = 'https://docs.google.com/forms/d/e/1FAIpQLSfe2zEOYiwTk5_LJZnpw66kYZE6bPFpQs6BxeIJgFYEB7URJw/viewform?embedded=true'
   renderContent('cotw-gold-vote', scope)
-  pageIsReady()
+  pageIsReady({
+    title: 'CotW Gold Episode'
+  })
 }
 
 function clickCancelLegacySubscription (e) {

@@ -1533,35 +1533,6 @@ function completedReleasesPage (source, obj) {
   }, ['music_releases'])
 }
 
-function completedMusic (source, obj) {
-  if (obj.error) { return }
-  var parts = []
-  var qs = searchStringToObject()
-  var filter = qs.filters
-
-  if (qs.filters) {
-    //TODO: better pluralization
-    //TODO: better support for filtering by more than just type
-    parts.push(qs.filters.substr('type,'.length) + 's')
-  }
-  else {
-    parts.push('Music')
-  }
-  if (qs.fuzzy) {
-    //TODO: make this better for if/when fuzzy thing changes
-    parts.push('Search: ' + qs.fuzzy.substr('title,'.length))
-  }
-  if (qs.skip) {
-    var page = Math.round(parseInt(qs.skip) / parseInt(qs.limit)) + 1
-
-    if (page > 1) {
-      parts.push('Page ' + page)
-    }
-  }
-  setPageTitle(parts.join(pageTitleGlue))
-  pageIsReady()
-}
-
 function completedRoster () {
   var rosterSelect = document.querySelector('[role=roster-select]')
 

@@ -261,6 +261,7 @@ function processPlaylistPage (args) {
       var numLoadingPages = Math.ceil(playlist.tracks.length / PLAYLIST_PAGE_LIMIT)
 
       scope.pagePlaceholders = []
+      const stages = []
       for (var i = 1; i <= numLoadingPages; i++) {
         const trackPlaceholders = []
 
@@ -276,17 +277,16 @@ function processPlaylistPage (args) {
           })
         }
         scope.pagePlaceholders.push({tracks: trackPlaceholders, page: i})
+        stages.push('playlist_page_' + i)
       }
       cache(PAGE_PLAYLIST, scope)
       renderContent(args.template, scope)
-      setPageTitle(playlist.name + pageTitleGlue + 'Playlist')
-      setMetaData({
+      primePageIsReady({
+        title: playlist.name + pageTitleGlue + 'Playlist',
         'og:type': 'music.playlist',
         'og:title': playlist.name,
-        'og:url': window.location.toString()
-      })
+      }, stages)
       appendSongMetaData(playlist.tracks)
-      pageIsReady()
       completedPlaylist()
     }
   })
@@ -298,7 +298,6 @@ function completedPlaylistTracks (source, obj) {
 
 function completedPlaylist (source, obj) {
   const pl = cache(PAGE_PLAYLIST).playlist
-  console.log('pl', pl);
 
   //Make a bunch of divs that are loading tracks to put into
   //the tbody
@@ -363,6 +362,8 @@ function loadPlaylistTracksPage (playlistId, page, done) {
     if (done) {
       done(null, tracks)
     }
+
+    pageStageIsReady('playlist_page_' + page)
   })
 }
 
