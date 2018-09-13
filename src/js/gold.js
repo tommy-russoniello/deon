@@ -303,3 +303,45 @@ function clickCancelLegacySubscription (e) {
     go('/gold/buy')
   })
 }
+
+function processGoldFeedBack (args) {
+  const scope = {
+    reasons: [
+      "I don't use its features",
+      "I'm no longer interested",
+      "I can't afford it",
+      "I just wanted to try it",
+      "Other"
+    ],
+    isSignedIn: isSignedIn()
+  }
+  renderContent('gold-feedback', scope)
+}
+
+function submitUnsubscribeFeedback (e) {
+  const form = findNode('.paragraphs')
+
+  submitForm(e, {
+    validate: function (data, errs) {
+      if (!data.reason) {
+        errs.push('Please submit a reason')
+      }
+      return errs
+    },
+    action: function (args) {
+      request({
+        url: 'https://submit.monstercat.com',
+        method: 'POST',
+        cors: true,
+        data: new FormData(args.data)
+      }, (err, body, xhr) => {
+        if (err) {
+          err.push(err)
+          return
+        }
+        toasty('Your feedback has been submitted. Thank you!')
+        go('/')
+      })
+    }
+  })
+}

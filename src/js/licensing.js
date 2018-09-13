@@ -86,6 +86,14 @@ function processLicensingOtherPlatformsPage (args) {
   })
 }
 
+function processFeedback (args) {
+  const obj = {
+    platforms: getOtherLicensingPlatforms()
+  }
+  obj.email = isSignedIn() ? session.user.email : ''
+  renderContent(args.template, obj)
+}
+
 function processLicensingContentCreators (args) {
   const scope = {}
   scope.hasGoldAccess =hasGoldAccess(),

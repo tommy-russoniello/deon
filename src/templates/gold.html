@@ -166,6 +166,37 @@
 </script>
 
 
+<script type="text/html"
+        data-route="^gold/feedback"
+        data-template="gold-feedback"
+        data-title="Monstercat Gold Feedback"
+        data-process="processGoldFeedBack">
+<div class="container">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel paragraphs">
+      <h1>We're sorry to see you go!</h1>
+      <p>You've already unsubscribed from Monstercat Gold. Before you leave, we'd love to hear your feedback to see why you're leaving and what we can do to improve!</a></p>
+
+      <form onsubmit="submitUnsubscribeFeedback(event)">
+        <div class="radio-list mt-1">
+          <p><strong>I'm unsubscribing because:</strong></p>
+        {{#each reasons}}
+            <label class="radio">
+              <input value="{{.}}" type="radio" name="reason" />
+              <span></span>
+              {{.}}
+            </label>
+        {{/each}}
+        <label class="mt-2">Additional comments/feedback:</label>
+        <textarea rows="4" style="width:100%; font-size: 1rem" name="comment" ></textarea>
+        <button class="button button-cta mt-4" id="submit-licensing-other-platforms">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</script>
+
 <script type="text/template"
         data-route="^gold/buy/success"
         data-title="Monstercat Gold">
