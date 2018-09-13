@@ -973,7 +973,7 @@ function processArtistPage (args) {
         'title': args.result.name,
         'description': 'Bio and discography for ' + args.result.name,
         'og:type': 'profile',
-        'og:image': args.result.image
+        'og:image': args.result.image + '?image_width=1024'
       }
 
       primePageIsReady(meta, ['user_releases'])
