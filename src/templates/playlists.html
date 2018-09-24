@@ -26,6 +26,12 @@
                             </button>
                         </form>
                         <h5 class="mt-1 mb-1">Add to Existing Playlist</h5>
+                        {{#if showFilter}}
+                        <form class="filter-form">
+                            <span class="fa fa-search"></span>
+                            <input type="text" class="mb-1" role="filter-playlists" placeholder="Filter" />
+                        </form>
+                        {{/if}}
                         <table>
                             <tbody>
                                 {{#each results}}

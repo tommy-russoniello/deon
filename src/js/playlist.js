@@ -106,7 +106,7 @@ function openAddToPlaylist (e, el) {
     loading: true
   })
 
-  requestCachedURL(endpoint + '/playlist', (err, playlists) => {
+  requestCachedURL(endpoint + '/playlist?sortOn=name&sortValue=1', (err, playlists) => {
     if (err) {
       renderModal(template, {
         error: err,
@@ -120,9 +120,35 @@ function openAddToPlaylist (e, el) {
       trackId: trackId,
       releaseId: releaseId,
       results: playlists.results,
+      showFilter: playlists.results.length > 3,
       loading: false
     })
+
+
+
+    function playlistModalFilter (e) {
+      const search = filterNormalize(this.value)
+
+      playlists.results.forEach((pl) => {
+        const name = filterNormalize(pl.name)
+        const tr = findNode('.modal tr[data-playlist-id="' + pl._id + '"]')
+        const found = name.indexOf(search) >= 0
+        tr.style.display = !found ? 'none' : 'table-row'
+      })
+    }
+
+
+    const filter = findNode('[role="filter-playlists"]')
+    if (filter) {
+      filter.addEventListener('keyup', playlistModalFilter)
+      filter.focus()
+    }
   }, true)
+}
+
+function filterNormalize (filter) {
+  filter = filter || ""
+  return filter.toLowerCase().split(/['"\s]/).join('')
 }
 
 function addToPlaylist (e, el) {

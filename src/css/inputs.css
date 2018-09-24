@@ -701,3 +701,19 @@ input.filter-search {
 .form-group ul.checkboxes li {
   margin-bottom: 0.25em;
 }
+
+form.filter-form {
+  padding-left: 10px;
+}
+
+form.filter-form .fa-search {
+  z-index: 10;
+  position: relative;
+  margin-right: -30px;
+}
+
+form.filter-form input[type="text"] {
+  position: relative;
+  padding-left: 40px;
+  padding-top: 0.45rem;
+}
