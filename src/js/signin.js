@@ -97,7 +97,7 @@ function resendTwoFactorToken (e, el) {
   })
 }
 
-function onSignIn(done) {
+function onSignIn (done) {
   if (!done) {
     done = function () {
       goRedirectTo()

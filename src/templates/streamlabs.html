@@ -1,0 +1,31 @@
+<script type="text/template"
+        data-route="^streamlabs\/auth"
+        data-title="SLOBS Auth"
+        data-process="processSLOBSAuthPage"
+        data-template="slobs-auth-page"
+        >
+<div class="slobs-auth-page">
+  <h1>Monstercat</h1>
+  <p class="mb-2">Sign in to SLOBS with Facebook or Google.</p>
+  <p class="mb-2">{{jwt}}</p>
+  {{#if loading}}
+    {{>loading-view}}
+  {{else}}
+    {{#if error}}
+      <div class="errors-container">
+        {{error}}
+      </div>
+    {{else}}
+      {{#unless isSignedIn}}
+        <div class="button-group button-group--margin">
+            <button class="button--social button--half button--fb" onclick="clickSLOBSSignInFacebook(event, this)"><i class="fa fa-social-f"></i> Sign In</button>
+            <button class="button--social button--half button--g" onclick="clickSLOBSSignInGoogle(event, this)"><i class="fa fa-social-g"></i> Sign In</button>
+        </div>
+      </div>
+      {{else}}
+        <p>You are logged in.</p>
+      {{/unless}}
+    {{/if}}
+  {{/if}}
+</div>
+</script>
