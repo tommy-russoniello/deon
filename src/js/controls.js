@@ -140,10 +140,6 @@ function playSong (e, el) {
 }
 
 function toggleVolume (e, el) {
-  if (!el.matches(e.target, 'i,button')) {
-    return
-  }
-
   var volume = player.getVolume()
 
   if (volume > 0) {
