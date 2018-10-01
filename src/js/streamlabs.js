@@ -15,22 +15,15 @@ function processSLOBSAuthPage (args) {
   renderContent(args.template, scope)
   cache(PAGE_SLOBS_AUTH, scope)
 
+  console.log('qo', qo)
+
   if (isSignedIn()) {
     console.log(`i am logged in`)
-    linkSLOBSAccount()
-  }
-  else {
-    if (qo.platform == 'facebook') {
-      clickSLOBSSignInFacebook()
-    }
-
-    if (qo.platform == 'facebook') {
-      clickSLOBSSignInGoogle()
-    }
+    finishSLOBSAuth()
   }
 }
 
-function linkSLOBSAccount () {
+function finishSLOBSAuth () {
   const qo = searchStringToObject()
 
   const scope = cache(PAGE_SLOBS_AUTH)
@@ -45,6 +38,9 @@ function linkSLOBSAccount () {
       renderContent('slobs-auth-page', scope)
       return
     }
+    window.location.replace('slobs-oauth://done')
+    return
+    /*
     requestJSON({
       url: endpoint + '/streamlabs/link?jwt=' + qo.jwt,
       withCredentials: true,
@@ -57,8 +53,8 @@ function linkSLOBSAccount () {
         renderContent('slobs-auth-page', scope)
         return
       }
-      window.location.replace('slobs-oauth://done')
     })
+    */
   })
 }
 
@@ -69,7 +65,7 @@ function onSLOBSSocialSignIn (err, status) {
     renderContent('slobs-auth-page', scope)
   }
   else {
-    linkSLOBSAccount()
+    finishSLOBSAuth()
   }
 }
 
