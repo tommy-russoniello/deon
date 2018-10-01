@@ -39,6 +39,7 @@ function linkSLOBSAccount () {
 
   getSession(function (err, sess) {
     if (err) {
+      alert(err)
       scope.error = err
       scope.loading = false
       renderContent('slobs-auth-page', scope)
@@ -50,6 +51,7 @@ function linkSLOBSAccount () {
       method: 'POST'
     }, (err) => {
       if (err) {
+        alert(err)
         scope.error = err
         scope.loading = false
         renderContent('slobs-auth-page', scope)
