@@ -291,6 +291,7 @@ h1 + .panel.md-container,
   top: 0;
   left: 0;
   transition: background 0.5s ease, all 0.5s ease;
+  overflow-y: auto;
 }
 .mcat-mast .mcat-mobile-nav > ul.open {
   background: rgba(0,0,0,0.9);
