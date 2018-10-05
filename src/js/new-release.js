@@ -212,7 +212,9 @@ function processReleasePage (args) {
           scope.features = [{
             moreFromArtists: true
           }, {
-            gold: true
+            gold: true,
+            hasGold: hasGoldAccess(),
+            signedIn: isSignedIn()
           }, {
             merch: true
           }]
