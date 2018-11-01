@@ -813,37 +813,6 @@ function clickSubmitBestOf2017 (e) {
   });
 }
 
-function getVotedForTweetIntentUrl (tweet) {
-  return 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet);
-}
-
-function getVotedForTweet (artistAtlas, breakdown) {
-  if(breakdown.status.voted) {
-    artists = breakdown.userVotes[0].choicesByValue.map(function (aid) {
-      var artist = artistAtlas[aid];
-      return artist
-    });
-  }
-  else {
-    return false
-  }
-  var tweet = 'My @Monstercat Best of 2017 artists are ' + artists.map(function (artist) {
-    return getArtistTwitterMention(artist)
-  }).join(' ') + '';
-
-  var link = 'https://monstercat.com/bestof2017';
-  if(tweet.length + link.length < 281) {
-    tweet += ' ' + link;
-  }
-
-  var hashtag = ' #McatBestof2017'
-  if(tweet.length + hashtag.length <= 280) {
-    tweet += hashtag;
-  }
-
-  return tweet;
-}
-
 function clickCloseBestOf2017ThankYou () {
   setCookie('hideBestOf2017ThankYou', "true");
   var alert = document.querySelector('[role=thank-you-alert]');

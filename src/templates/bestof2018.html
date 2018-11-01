@@ -1,0 +1,331 @@
+<script type="text/html"
+        data-partial
+        data-template="bestof2018-banner-top"
+        >
+<div class="banner banner--scaled">
+  <div class="banner" style="background-image:url('https://assets.monstercat.com/bestof2017header.jpg')">
+    <div class="banner-shade"></div>
+    <div class="gradient"></div>
+  </div>
+</div>
+</script>
+
+
+
+<script type="text/html"
+        data-title="Best of 2018 Album Art"
+        data-route="^[Bb]est-[Oo]f-2018-art$"
+        data-template="best-of-2018-art"
+        data-process="processBestOf2018ArtPage">
+<div class="bestof2018 bestof2018-page white">
+  {{#if loading}}
+    {{>loading-view}}
+  {{else}}
+    {{#if error}}
+    {{else}}
+    {{#data}}
+     <div class="top-banner">
+     {{>bestof2018-banner-top}}
+      <div class="container flex">
+        <div class="bestof2018-header-results">
+          <h1 class="uppercase bestof2018-logo">Best of <span>2018</span> <span class="title-album-art">Album art</span></h1>
+          <h3 class="mt-2">Select your favorite album art!</h3>
+        </div>
+      </div>
+     </div>
+     <div class="banner-bottom">
+      <div class="banner">
+        <div class="banner-shade"></div>
+        <div class="gradient gradient--inverted"></div>
+      </div>
+      <div class="container">
+        <form class="bestof2018-album-poll" role="bestof2018-album-poll" onsubmit="submitBestOf2018AlbumArt(event)">
+        {{#each choices}}
+          <label>
+            <input type="radio" name="choice" value="{{index}}">
+            <img src="{{albumArt}}">
+          </label>
+        {{/each}}
+          <div class="submit-container">
+            <button class="button button-bestof2018 mt-4">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+     </div>
+    {{/data}}
+    {{/if}}
+  {{/if}}
+  </div>
+</script>
+
+<script type="text/html"
+        data-title="Best of 2018"
+        data-route="^[Bb]est-[Oo]f-2018$"
+        data-template="best-of-2018"
+        data-process="processBestOf2018Page">
+
+<div class="bestof2018 bestof2018-page white">
+  {{#if loading}}
+    {{>loading-view}}
+  {{else}}
+    {{#if error}}
+    {{else}}
+      {{#data}}
+        <div class="top-banner">
+        {{>bestof2018-banner-top}}
+        <div class="container flex">
+          <div class="bestof2018-header">
+            {{^status.open}}
+              <div class="bestof2018-centered">
+                <h1 class="uppercase bestof2018-logo">Best of <span>2018</span></h1>
+                <h2>Voting is now over!</h2>
+                <a class="button button-bestof2018 mt-4 mb-3" href="/best-of-2018/results">View Results</a>
+              </div>
+            {{/status.open}}
+            {{#status.open}}
+              {{#status.hasVoted}}
+              <div class="bestof2018-centered">
+                <h1 class="uppercase bestof2018-logo">Best of <span>2018</span></h1>
+                <h2>Thanks for voting!</h2>
+                <a class="button button-bestof2018 mt-4 mb-3" href="/best-of-2018/results">View Live Results</a>
+              </div>
+              {{/status.hasVoted}}
+              {{^status.hasVoted}}
+                <h1 class="uppercase bestof2018-logo">Best of <span>2018</span></h1>
+                <p>It's that time of year again! Simply select <strong>up to 10</strong> of your top artists for 2018, in no particular order, and your favourite track from each.
+                  <br><br>
+                  <span>Once submitted, your votes will automatically populate the live results leader board. On [DATE]{{data.votingCloseTime}}, the polls will close and the top 30 songs from 2018 will be officially selected!
+                  </span></p>
+              {{/status.hasVoted}}
+            {{/status.open}}
+          </div>
+        </div>
+      </div>
+      {{#status.open}}
+        {{^status.hasVoted}}
+        <div class="banner-bottom">
+          <div class="banner">
+            <div class="banner-shade"></div>
+            <div class="gradient gradient--inverted"></div>
+          </div>
+          <div class="container">
+            {{>bestof2018-voting}}
+          </div>
+        </div>
+        {{/status.hasVoted}}
+      {{/status.open}}
+    {{/data}}
+    {{/if}}
+  {{/if}}
+</div>
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="bestof2018-picks"
+        >
+<ul id="bestof2018-picks">
+  <li class="row flex content-row example-row">
+    <div class="artist-circle m-auto-0 mr-3">
+      <img src="https://assets.monstercat.com/releases/covers/Monstercat%20Uncaged%20-%20Vol.%203%20(Art).jpg?image_width=512">
+    </div>
+    <div class="m-auto-0">
+    <h3 class="artist-name">Select an artist</h3>
+    <p><i class="fa fa-heart mr-1"></i> Select a track</p>
+    </div>
+  </li>
+</ul>
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="bestof2018-voting"
+        >
+<div class="bestof2018-voting">
+  <form role="bestof2018" onsubmit="submitBestOf2018(event)">
+    {{>bestof2018-picks}}
+    {{#if isSignedIn}}
+    <div class="bestof2018-selection">
+      <i class="fa fa-search"></i>
+      <input role="artist-filter" placeholder="Search Artist" value="" onkeyup="filterBestOf2018Artists(event, this)" onkeydown="bestOf2018FilterKeydown(event)">
+    </div>
+    <div class="content-row select-row select-row-results">
+      {{#each artistOptions}}
+      <div class="bestof2018-search-result" data-option-id="{{_id}}" onclick="openAddBestOfArtistModal(event, this)"><span class="artist-name-search">{{title}}</span><button class="faux add-artist-track" data-option-id="{{_id}}" type="button" onclick="openAddBestOfArtistModal(event, this)"><i class="fa fa-plus"></i></button></div>
+      {{/each}}
+      <div class="bestof2018-search-result hide" id="bestof2018-no-results">No results found.</div>
+    </div>
+    <div class="submit-container">
+      <button class="button button-bestof2018 mt-4">
+      Submit Your Votes
+    </button>
+    </div>
+    {{else}}
+    <div class="submit-container">
+      <a class="button button-bestof2018 mt-4" href="/signin">Sign in to Submit Your Votes</a>
+    </div>
+    {{/if}}
+  </form>
+</div>
+</script>
+
+
+<script type="text/html"
+        data-partial
+        data-template="bestof2018-row"
+        >
+<li class="row flex content-row artist-row artist-row-picks {{_id}}" id="">
+  <input type="hidden" name="parentOptionIds[{{ranking}}]" value="{{parentOptionId}}" />
+  <input type="hidden" name="childOptionIds[{{ranking}}]" value="{{childOptionId}}" />
+  <div class="banner" style='background-image: url("{{albumArt}}")'></div>
+  <div class="flex" style="flex: 1 1 auto;">
+    <div class="m-auto-0 artist-ranking">
+      <h3></h3>
+    </div>
+    <div class="artist-circle m-auto-0 ml-3 mr-3">  
+      <a href="" label="Artist Image">
+        <img src="{{artistImg}}">
+      </a>
+    </div>
+    <div class="m-auto-0">
+      <h3 class="artist-name"><span class="bestof2018-mobile">.</span> {{artistName}}</h3>
+      <p class="song-title song-title-edit"><a data-option-id="{{_id}}" onclick="openBestOfArtistModal(event, this, '{{ranking}}')"><i class="fa fa-heart"></i><i class="fa fa-pencil"></i>{{songName}}</a></p>
+    </div>
+  </div>
+  <div class="m-auto-0">
+    <button class="button-remove-artist" onclick="onRemoveArtist(event, this)" type="button"><h4><i class="fa fa-close"></i></h4></button>
+  </div>
+</li>
+</script>
+
+
+<script type="text/html"
+        data-template="add-artist-track"
+        >
+<div class="modal">
+  <div class="panel pointer-events">
+    <h2 class="mv-0">Select Your Favorite Track</h2>
+    <div>
+      <form onsubmit="onSubmitArtistTrack(event, this)">
+        <div class="bestof2018-selection bestof2018-selection-modal mt-3">
+          {{#if position}}
+          <input type="hidden" name="position" value="{{position}}">
+          {{/if}}
+          <input type="hidden" name="parentId" value="{{optionId}}" >
+          <select class="bestof2018-track-select" name="pollTrackId">  
+            <option value="" selected="true" disabled="disabled">Select a track</option>
+           {{#each options}}
+            <option value="{{_id}}">{{title}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <button class="mt-3">Submit</button>
+      </form>
+    </div>
+    <button class="button--close faux" onclick="closeModal(event, this)">
+        <i class="fa fa-remove"></i>
+    </button>
+  </div>
+</div>
+</script>
+
+<script type="text/html"
+        data-template="edit-artist-track"
+        >
+<div class="modal">
+  <div class="panel pointer-events">
+    <h2 class="mv-0">Update Your Favorite Track</h2>
+    <div>
+      <form onsubmit="onUpdateArtistTrack(event, this)">
+        <div class="bestof2018-selection bestof2018-selection-modal mt-3">
+          <input type="hidden" name="parentId" value="{{pollId}}" >
+          {{#if position}}
+          <input type="hidden" name="position" value="{{position}}">
+          {{/if}}
+          <select class="bestof2018-track-select" name="pollTrackId">  
+           {{#each options}}
+            <option value="{{_id}}">{{title}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <button class="mt-3">Submit</button>
+      </form>
+    </div>
+    <button class="button--close faux" onclick="closeModal(event, this)">
+        <i class="fa fa-remove"></i>
+    </button>
+  </div>
+</div>
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="bestof2018-results"
+        >
+<div class="bestof2018-results">
+  {{#data}}
+    <ul>
+    {{#each results}}
+      <li class="row flex content-row artist-row artist-row-results cl-white">
+        <div class="banner" style='background-image: url("{{winningChild.image}}")'></div>
+        <div class="flex" style="flex: 1 1 auto;">
+          <div class="m-auto-0 artist-ranking">
+            <h3>{{rank}}</h3> 
+          </div>
+          <div class="artist-circle m-auto-0 ml-3 mr-3">
+           <img src="{{artistImg}}">
+          </div>
+          <div class="m-auto-0">
+            <h3 class="artist-name"><span class="bestof2018-mobile">{{ranking}}.</span> {{artistName}}</h3>
+            <p class="song-title"><i class="fa fa-music mr-1"></i>{{songName}}</p>
+          </div>
+        </div>
+        <p class="artist-votes num-votes-{{votes}}">{{votes}} vote</p>
+      </li>
+    {{/each}}
+    </ul>
+  {{/data}}
+</div>
+</script>
+
+<script type="text/html"
+        data-route="^[Bb]est-[Oo]f-2018\/results$"
+        data-template="best-of-2018-results"
+        data-title="Best of 2018 Results"
+        data-process="processBestOf2018ResultsPage"
+        >
+{{#if loading}}
+  {{>loading-view}}
+{{else}}
+  <div class="bestof2018 bestof2018-page cl-white">
+    <div class="top-banner">
+      {{>bestof2018-banner-top}}
+      <div class="container flex">
+        <div class="bestof2018-header-results">
+          <h1 class="title uppercase bestof2018-logo text center m-auto">Best of <span>2018</span> <span class="title-results">Results</span></h1>
+          {{#data}}
+            {{#unless breakdown.status.hasVoted}}
+              <p class="mt-2">Here are the top 30 artist picks!</p>
+              <a href="/best-of-2018" class="button button-bestof2018 mt-4">Vote Now</a> 
+            {{else}}
+              <p class="mt-2">Thanks for submitting your Best of 2018 picks. <br>Here's the leaderboard for the top 30!</p>
+              <a href="{{tweetUrl}}" target="_blank" class="button button-bestof2018 mt-4"><i class="fa fa-twitter"></i> Tweet Your Picks</a>
+            {{/unless}}
+          {{/data}}
+        </div>
+      </div>
+    </div>
+    <div class="banner-bottom cl-white">
+      <div class="banner">
+        <div class="banner-shade"></div>
+        <div class="gradient gradient--inverted"></div>
+      </div>
+      <div class="container">
+        {{>bestof2018-results}}
+      </div>
+    </div>
+  </div>
+{{/if}}
+</script>

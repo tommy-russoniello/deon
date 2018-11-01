@@ -1,0 +1,607 @@
+
+.bestof2018-page {
+	color: #fff;
+}
+
+.bestof2018-page ::-webkit-scrollbar-thumb {
+  background-color: #fff;
+  border-radius: 50px;
+  height: 40px;
+  border: 1px solid #000;
+}
+
+.bestof2018-page ::-webkit-scrollbar {
+	background: transparent;
+  width: 8px;
+}
+
+.bestof2018-voting {
+  width: 100%;
+}
+
+h1.bestof2018-logo {
+	font-size: 6rem
+}
+
+h1.bestof2018-logo span {
+	display: block;
+	font-size: 11rem;
+	line-height: 0.75
+}
+
+.bestof2018-voting h2 {
+  margin-bottom: 0px;
+}
+
+.bestof2018-header,
+.bestof2018-voting,
+.bestof2018-results {
+	width: 100%;
+	padding: 0em 5em;
+}
+
+.bestof2018-header > * {
+	display: inline-block;
+	transition: all 0.5s ease;
+}
+
+.bestof2018-page .bestof2018-header p {
+  font-size: 18px;
+  padding-left: 0em;
+}
+
+.bestof2018-page .bestof2018-header p span {
+	color: #ccc;
+	font-size: 0.9em;
+	font-style: italic
+}
+
+.bestof2018-mobile {
+	display: none
+}
+
+.button-bestof2018 {
+	margin: 0em 1rem;
+	font-size: 1em;
+  letter-spacing: 5px;
+	background: transparent;
+	border: 4px solid #fff;
+	color: #fff;
+  transform: translateY(-4px);
+  box-shadow: -4px 4px 0px 0px #fff;
+}
+
+.button-bestof2018:hover {
+	background: #fff;
+	color: #000 !important;
+	transform: translateY(0px);
+	box-shadow: none
+}
+
+@media screen and (min-width: 1000px) {
+	.bestof2018-header p {
+	    max-width: calc(100% - 500px);
+	    padding-left: 1.5em !important
+	}
+}
+@media screen and (max-width: 999px) {
+	.bestof2018-header {
+		text-align: center;
+		display: block;
+		max-width: 550px;
+		margin: auto;
+	}
+
+	h1.bestof2018-logo {
+		font-size: 3.5rem
+	}
+
+	h1.bestof2018-logo span {
+		font-size: 6.5rem;
+	}
+
+	h1 span.title-results {
+		font-size: 3.4rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h1 span.title-album-art {
+    font-size: 2.5rem !important;
+    line-height: 1.3 !important;
+	}
+
+	.bestof2018-page .bestof2018-header p {
+		margin-top: 1.5em
+	}
+
+	.bestof2018-header,
+	.bestof2018-voting,
+	.bestof2018-results{
+		padding: 0em;
+	}
+}
+
+@media screen and (max-width: 630px) {
+	.bestof2018 .artist-circle {
+		width: 50px !important;
+		height: 50px !important
+	}
+
+	p.song-title a{
+		font-size: 14px !important;
+	}
+
+	h3.artist-name {
+		font-size: 1.5em !important
+	}
+	.bestof2018 .content-row {
+		padding: 1.25rem !important;
+	}
+
+	button.button-remove-artist{
+		opacity: 1 !important
+	}
+
+	.bestof2018-header p {
+		font-size: 15px !important;
+	}
+
+	.bestof2018-search-result {
+		font-size: 1.25rem !important;
+	}
+
+	.bestof2018-mobile {
+		display: inline;
+	}
+
+	.artist-circle, .artist-ranking {
+		display: none
+	}
+
+	p.song-title {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bestof2018-track-select{
+    font-size: 1em !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+	p.song-title {
+  max-width: 200px
+	}
+}
+
+.bestof2018-header-tweet,
+.bestof2018-header-results{
+	width: 100%;
+	display: block;
+	margin:auto;
+	text-align: center;
+}
+
+
+h1 span.title-results {
+	font-size: 5.9rem;
+	line-height: 1.2;
+}
+
+.bestof2018-header-tweet p {
+	margin: auto;
+	max-width: 600px;
+	padding-left: 0px !important
+}
+
+.bestof2018-search-result {
+	margin: 15px 0px;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.bestof2018-search-result button.add-artist-track {
+	padding-right: 0px;
+	float: right
+}
+
+.bestof2018 .select-row-results {
+/*	display: none*/
+padding-top: 1rem !important
+}
+
+
+.bestof2018 .select-row-results .faux {
+	color: #fff;
+}
+.bestof2018 .select-row-results.on {
+	display: block
+}
+
+.bestof2018-selection {
+	padding: 1rem;
+	border: 4px solid #fff;
+}
+
+.bestof2018-selection .fa {
+	padding: 10px;
+	font-size: 21px;
+}
+
+.bestof2018-selection input{
+	width: calc(100% - 50px);
+	background: transparent;
+	color: #fff;
+	font-size: 21px;
+	font-weight: 700;
+	border-bottom: 0px
+}
+
+.bestof2018-selection input::-moz-selection {
+	background: dodgerblue;
+}
+
+.bestof2018-selection input::selection {
+	background: dodgerblue;
+}
+
+.bestof2018-selection:focus-within,
+.bestof2018-selection.bestof2018-selection-modal:focus-within{
+	color: dodgerblue
+}
+
+.bestof2018-selection.bestof2018-selection-modal {
+  padding: 0.5rem;
+	border-color: #000;
+}
+
+.bestof2018-track-select {
+	width: 100%;
+	background: none;
+	font-weight: 600;
+	font-size: 1.5em;
+	box-shadow: none !important
+}
+
+.bestof2018-page .top-banner {
+  color: #fff;
+}
+
+.bestof2018-page .top-banner p.gray {
+  color: #aaa;
+}
+
+.bestof2018-voting .artist-row.no-artist .favorite-song-title {
+  opacity: 0.5;
+}
+
+.bestof2018-voting .artist-row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+
+.bestof2018-voting button.button-remove-artist {
+	border-radius: 50px;
+	border-color: #fff;
+	color: #fff;
+	padding: 5px 8px 5px 10px;
+	opacity: 0
+}
+
+/*.bestof2018 .content-row.artist-row-results {
+  margin: 0 0 1px 0;
+}*/
+
+.bestof2018-results ul li:last-child{
+	margin: 0px
+}
+
+.bestof2018-voting button.button-remove-artist:hover {
+	background: #fff;
+}
+
+.bestof2018-voting button.button-remove-artist:hover i.fa.fa-close {
+	color: #000
+}
+
+.content-row:hover button.button-remove-artist{
+	opacity: 1
+}
+
+p.song-title a {
+	color: #fff;
+	text-decoration: none
+}
+
+p.song-title a:hover {
+	text-decoration: underline;
+	color: #fff
+}
+
+.content-row .song-title-edit .fa {
+	width: 20px;
+	margin-right: 0.5rem;
+}
+
+.content-row .song-title-edit .fa-pencil {
+	display: none
+}
+
+.song-title-edit:hover .fa-pencil {
+	display: inline-block
+}
+
+.song-title-edit:hover .fa-heart {
+	display: none
+}
+
+.bestof2018 .content-row{
+  margin: 0 0 0.75rem 0;
+  padding: 1.25rem 3rem;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background-position: center;
+}
+
+.bestof2018 .content-row.example-row {
+  border: 4px dashed #fff
+}
+
+.bestof2018 .content-row.select-row {
+  border: 4px solid #fff;
+  border-top: 0;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.bestof2018 .content-row h3 {
+	color: #fff;
+	transition: all 0.5s ease 0.25s;
+	font-weight: bold;
+}
+
+h3.artist-name {
+	font-size: 2em
+}
+
+.bestof2018-voting select {
+  width: 100%;
+  opacity: 0.9;
+  height: 30px;
+}
+
+.bestof2018-voting select[disabled] {
+  opacity: 0.5;
+}
+
+.bestof2018 .artist-results {
+	border-bottom: 10px solid dodgerblue;
+}
+
+ul#bestof2018-picks li{
+	list-style: none
+}
+
+.bestof2018 .ranking-box {
+	width: 50px;
+	height: 50px;
+	background: dodgerblue;
+	color: #fff;
+	margin: auto;
+	text-align: center;
+	display: table
+}
+
+.bestof2018 .ranking-box h3 {
+	display: table-cell;
+  vertical-align: middle
+}
+
+.bestof2018 p.artist-votes {
+  margin: auto;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 700
+}
+
+.bestof2018 p.artist-votes:after {
+  content: "s";
+}
+
+.bestof2018 p.artist-votes.num-votes-1:after {
+  content: "";
+}
+
+.bestof2018 .artist-row .banner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: 102% auto;
+  background-repeat: no-repeat;
+  z-index: -1;
+  background-color: transparent;
+  left: 0px;
+  top: 0px;
+/*  opacity: 0;*/
+  transition: all 1s ease;
+}
+
+.bestof2018 .artist-row .banner:before {
+  content: "";
+  background: #000;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+	  opacity: 0.5;
+	}
+
+.bestof2018 .artist-row-picks:nth-child(2) .artist-ranking h3:before,
+.bestof2018 .artist-row-picks:nth-child(2) .bestof2018-mobile:before {
+  content: "1";
+}
+.bestof2018 .artist-row-picks:nth-child(3) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(3) .bestof2018-mobile:before {
+  content: "2";
+}
+.bestof2018 .artist-row-picks:nth-child(4) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(4) .bestof2018-mobile:before {
+  content: "3";
+}
+.bestof2018 .artist-row-picks:nth-child(5) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(5) .bestof2018-mobile:before {
+  content: "4";
+}
+.bestof2018 .artist-row-picks:nth-child(6) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(6) .bestof2018-mobile:before {
+  content: "5";
+}
+.bestof2018 .artist-row-picks:nth-child(7) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(7) .bestof2018-mobile:before {
+  content: "6";
+}
+.bestof2018 .artist-row-picks:nth-child(8) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(8) .bestof2018-mobile:before {
+  content: "7";
+}
+.bestof2018 .artist-row-picks:nth-child(9) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(9) .bestof2018-mobile:before {
+  content: "8";
+}
+.bestof2018 .artist-row-picks:nth-child(10) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(10) .bestof2018-mobile:before {
+  content: "9";
+}
+.bestof2018 .artist-row-picks:nth-child(11) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(11) .bestof2018-mobile:before {
+  content: "10";
+}
+
+.bestof2018 .artist-circle {
+	width: 75px;
+	height: 75px;
+}
+
+.bestof2018 .banner-bottom {
+	position: relative;
+	padding-bottom: 5em;
+}
+
+.submit-container {
+  text-align: center
+}
+
+.bestof2018-voting .submit-container .button--cta {
+	margin-bottom: 3rem;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+@media screen and (min-width: 776px) {
+  .voting-col-artists {
+    padding-right: 1rem;	
+    padding-bottom: 0px;
+  }
+}
+
+.bestof2018-centered > *{
+}
+.bestof2018-centered {
+	text-align: center;
+	margin: auto;
+	width: 100%;
+	display: block
+}
+
+.bestof2018-tweet-form {
+	max-width: 550px;
+	margin: auto;
+}
+
+.bestof2018-tweet-form .button {
+	width: 49.5%
+}
+
+@media screen and (max-width: 430px) {
+.bestof2018-tweet-form .button {
+	width: 100%
+	}
+}
+
+#tweet-vote {
+	text-align: center;	
+}
+
+#tweet-vote textarea {
+  width: 100%;
+  margin-bottom: 0.25rem;
+  font-size: 14px;
+  line-height: 1.4;
+  border: 1px solid #ccc;
+  background: #FFF;
+  color: #333;
+}
+
+.bestof2018-tweet-form .button--white-outline {
+	border-color: #fff;
+	color: #fff;
+}
+
+.bestof2018-tweet-form .button--white-outline:hover {
+	color: #000 !Important;
+	background: #fff;
+}
+
+#tweet-vote .button {
+  padding: 10px 12px 10px 15px;
+}
+
+.bestof2018-results #tweet-vote .view-results {
+  display: none;
+}
+
+h1 span.title-album-art {
+	font-size: 4.2rem;
+	line-height: 1.2;
+}
+
+.bestof2018-album-poll {
+	max-width: 1280px;
+	text-align: center;
+	margin: auto;
+}
+
+.bestof2018-album-poll label {
+	width: 45%;
+}
+
+
+@media screen and (max-width: 630px) {
+	.bestof2018-album-poll label {
+		width: 100%;
+	}
+}
+
+.bestof2018 .bestof2018-album-poll [type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.bestof2018 .bestof2018-album-poll [type=radio] + img {
+  cursor: pointer;
+  width: 100%;
+  padding: 1em;
+  border: 4px solid transparent;
+}
+
+.bestof2018 .bestof2018-album-poll [type=radio]:checked + img {
+  border-color: #fff
+}
