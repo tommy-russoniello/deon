@@ -5,6 +5,10 @@ const LICENSE_STATES = {
 }
 
 function processAccountLicensesPage (args) {
+  if (!checkStreamlabsComplete('/account/licenses')) {
+    return
+  }
+
   if (!isSignedIn()) {
     return go('/signin?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueTo=Licenses')
   }
@@ -281,8 +285,6 @@ function onClickDeleteWhitelist(e, el) {
     toasty("License successfully removed!")
 
     var tbody = findNode('tbody', table)
-
-    console.log('tbody', tbody.children.length)
 
     if (tbody.children.length == 1) {
       empty.classList.add("empty")

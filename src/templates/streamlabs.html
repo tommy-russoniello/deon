@@ -1,0 +1,26 @@
+<script type="text/template"
+        data-route="^streamlabs\/register"
+        data-title="Developer Bounty Hunter Program"
+        data-process="processStreamlabsRegisterPage"
+        data-template="streamlabs-register"
+>
+  <div class="container">
+    <div class="panel">
+      <h1>Finish Registering</h1>
+      <p>Complete the form and to finish your Monstercat.com account and get full access to <a href="/gold">Gold</a></p>
+
+      <p>You'll be redirected to continue {{>continueTo}}</p>
+      <form onsubmit="submitStreamlabsSignUp(event, this)">
+        <table class="form mobile">
+          {{>signup-fields}}
+        </table>
+        <div class="button-group">
+          <button class="button--full actionier">
+            <span class="actionier-off">Complete</span>
+            <span class="actionier-on">Submitting...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</script>

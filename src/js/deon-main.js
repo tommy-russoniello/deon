@@ -295,6 +295,22 @@ function isSignedIn () {
   return !!(session && session.user)
 }
 
+function isStreamlabsIncomplete () {
+  return session 
+    && session.user
+    && session.user.streamlabs
+    && session.user.streamlabs.uid
+    && !session.user.email
+}
+
+function checkStreamlabsComplete (continueTo) {
+  if (isStreamlabsIncomplete()) {
+    go('/streamlabs/register?continueTo=' + encodeURIComponent(continueTo))
+    return false
+  }
+  return true
+}
+
 function hasCompletedProfile () {
   if (!isSignedIn()) {
     return false

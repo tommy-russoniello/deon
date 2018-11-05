@@ -230,6 +230,10 @@ function disableTwoFactor (e, el) {
 ==================================*/
 
 function processAccountPage (args) {
+  if (!checkStreamlabsComplete('/account')) {
+    return
+  }
+
   if (!isSignedIn()) {
     go('/signin')
     return
@@ -312,6 +316,10 @@ function processSocialSettings (args) {
 }
 
 function processAccountGoldPage (args) {
+  if (!checkStreamlabsComplete('/account/gold')) {
+    return
+  }
+
   renderContent(args.template, {loading: true})
   var thankyous = [
     "Very cool!",
