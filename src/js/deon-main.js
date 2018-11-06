@@ -899,6 +899,8 @@ function mapTrack (track) {
   track.showDownloadLink = !track.inEarlyAccess && track.streamable //(track.downloadable && track.streamable) || track.freeDownloadForUsers
   track.time = formatDuration(track.duration)
   track.artistsList = mapTrackArtists(track)
+  track.nonFeaturedArtistsList = track.artistsList.filter(x => x.role != 'Featured')
+  track.featuredArtistsList = track.artistsList.filter(x => x.role == 'Featured')
   track.releaseDate = formatDateJSON(track.release.releaseDate)
   track.playUrl = getPlayUrl(track.albums, track.releaseId)
   track.downloadLink = getDownloadLink(track.release._id, track._id)

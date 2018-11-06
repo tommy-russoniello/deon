@@ -193,7 +193,7 @@
                                           </div>
                                           <div class="scroll-container col-xs-visible col-md-hidden"
                                                onmouseenter="scrollTrackTitle(this)" onmouseleave="removeScrollTrackTitle(this)">
-                                              {{>artists-csv-list}}
+                                              {{>nonfeatured-featured-artists}}
                                           </div>
                                           {{>unlicensable}}
                                         </td>
@@ -201,7 +201,7 @@
                                             <div class="scroll-container"
                                                onmouseenter="scrollTrackTitle(this)" onmouseleave="removeScrollTrackTitle(this)">
                                             <span class="scroll-title">
-                                              {{>artists-csv-list}}
+                                              {{>nonfeatured-featured-artists}}
                                             </span>
                                           </div>
                                         </td>
@@ -257,7 +257,7 @@
 {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="release-events"
         data-process="processReleaseEvents"
         >
@@ -275,7 +275,7 @@
 {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="release-merch"
         data-process="processReleaseMerch">
 {{#if products.length}}
@@ -301,7 +301,7 @@
 {{/if}}
 </script>
 
-<script type="text/template" data-partial data-template="gold-panel">
+<script type="text/html" data-partial data-template="gold-panel">
 <div class="banner" style="background-image:url(/img/banner.jpg)">
   <div class="banner-shade"></div>
   <div class="gradient gradient--inverted"></div>
@@ -332,7 +332,7 @@
 </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="related-releases"
         data-process="processRelatedReleases">
 {{#if results.length}}
@@ -366,7 +366,7 @@
 {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="release-tweet">
 <div class="release-twitter">
     <div class="official-tweet">
@@ -376,7 +376,7 @@
 </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="release-twitter-follow-buttons"
         >
 <h3>Follow On Twitter</h3>

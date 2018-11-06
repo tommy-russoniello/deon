@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^catalog"
         data-title="Catalog Music"
         data-process="processCatalogPage"
@@ -15,7 +15,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-process="processCatalogFilters"
         data-template="catalog-filters"
         >
@@ -57,7 +57,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="catalog-rows-group">
     <div
          data-process="processCatalogResults"
@@ -66,12 +66,12 @@
     </footer>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="catalog-sorting-header">
 <a href="#" class="{{#sorting}}sorting-active {{/sorting}}{{#desc}}sorting-desc {{/#desc}}{{#asc}}sorting-asc{{/asc}}">{{label}}</a>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="catalog-rows"
         data-process="processCatalogResults"
         >
@@ -129,7 +129,7 @@
             <div class="scroll-container"
                onmouseover="scrollTrackTitle(this)" onmouseleave="removeScrollTrackTitle(this)">
             <span class="scroll-title">
-              {{>artists-csv-list}}
+              {{>nonfeatured-featured-artists}}
             </span>
           </div>
         </td>

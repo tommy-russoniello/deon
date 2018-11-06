@@ -9,7 +9,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="music-releases"
         data-process="processMusicReleases">
     {{#data}}
@@ -52,12 +52,12 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="unlicensable">
 {{^licensable}}<div class="unlicensable">Not available for Content Creator licenses. <a href="/non-licensable-tracks">Read more</a></div>{{/licensable}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="early-access-msg">
 {{#inEarlyAccess}}
 <div class="in-early-access-msg">
@@ -71,7 +71,7 @@
 {{/inEarlyAccess}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="play-release">
 <button class="button--release-cta button--cta"
         onclick="playSongs(event, this)"
@@ -84,7 +84,7 @@
 </button>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="track-cells-one-line">
 <td class="longer-width">
   <div class="scroll-container"
@@ -101,7 +101,7 @@
 </td>
 {{/if}}
 <td class="longer-width">
-    {{>artists-csv-list}}
+    {{>nonfeatured-featured-artists}}
 </td>
 <td class="col-xs-hidden col-md-visible genre">{{#genre}}<span>{{.}}</span>{{/genre}}</td>
 <td class="col-xs-hidden col-md-visible">{{time}}</td>
@@ -109,32 +109,41 @@
 </script>
 
 
-<script type="text/template"
+<script type="text/html"
+        data-partial data-template="nonfeatured-featured-artists">
+{{>artists-csv-list artistsList=nonFeaturedArtistsList}}
+{{#if featuredArtistsList.length}}
+    feat.
+    {{>artists-csv-list artistsList=featuredArtistsList}}
+{{/if}}
+</script>
+
+<script type="text/html"
         data-partial data-template="artists-csv-list">
 {{#if artistsList.length}}
     <span class="artists comma-list{{#or}} or{{/or}}">
-    {{#artistsList}}<span class="artist">{{#public}}<a href="{{artistPageLink}}">{{name}}</a>{{/public}}{{^public}}{{name}}{{/public}}</span>{{/artistsList}}
+    {{#artistsList}}<span class="artist {{role}}">{{#public}}<a href="{{artistPageLink}}">{{name}}</a>{{/public}}{{^public}}{{name}}{{/public}}</span>{{/artistsList}}
     </span>
 {{else}}
     {{artistsTitle}}
 {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="track-cells">
 <td>{{title}}{{>early-access-msg}}{{>unlicensable}}</td>
 {{#playlistId}}
 <td><a href="/release/{{releaseId}}">{{releaseTitle}}</a></td>
 {{/playlistId}}
 <td>
-    {{>artists-csv-list}}
+    {{>nonfeatured-featured-artists}}
 </td>
 <td class="col-xs-hidden col-md-visible genre">{{#genre}}<span>{{.}}</span>{{/genre}}</td>
 <td class="col-xs-hidden col-md-visible">{{time}}</td>
 <td class="col-xs-hidden col-md-visible">{{bpm}}</td>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="play-song">
 {{#streamable}}
@@ -175,7 +184,7 @@
 {{/streamable}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="track-buttons">
 {{#if showDownloadLink}}
 <a class="silent button--mobile"
@@ -219,7 +228,7 @@
 {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^artist\/(.*)"
         data-title="Artist"
         data-process="processArtistPage"
@@ -275,7 +284,7 @@
 {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="album-release-dates">
     {{#unless inEarlyAccess}}
@@ -288,7 +297,7 @@
     {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
   data-template="user-releases"
   data-process="processUserReleases">
     {{#loading}}
@@ -330,7 +339,7 @@
     {{/unless}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="release-list-item"
         data-partial
         >
