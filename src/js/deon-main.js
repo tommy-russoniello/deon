@@ -716,9 +716,8 @@ function mapTrackArtists (track) {
       return !!obj
     })
     .map((details) => {
-      var relationship = findTrackRelationship(track, details.name) || {}
-      // Default is not set, if not default filter out
-      if (relationship.vendor || !details.public) {
+      var relationship = findTrackRelationship(track, details.name)
+      if (!relationship || !details.public) {
         return undefined
       }
       details.uri = details.vanityUri || details.websiteDetailsId || details._id
@@ -734,7 +733,7 @@ function mapTrackArtists (track) {
 
 function findTrackRelationship(track, name) {
   return (track.artistRelationships || []).find((rel) => {
-    return (rel||{}).name == name
+    return rel.name == name && !rel.vendor
   })
 }
 
