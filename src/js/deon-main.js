@@ -1128,10 +1128,10 @@ function processHomeMerch (opts) {
     })
   }
   else if (opts.state == 'finish') {
-    if (opts.err) {
+    if (opts.error) {
       betterRender('home-merch', opts.node, {
         loading: false,
-        err: opts.err
+        error: opts.error
       })
       return
     }
