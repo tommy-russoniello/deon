@@ -711,19 +711,25 @@ function getGetGoldLink () {
 }
 
 function mapTrackArtists (track) {
-  var artists = (track.artists || []).filter((obj) => {
-    return !!obj
-  }).map((details) => {
-    details.uri = details.vanityUri || details.websiteDetailsId || details._id
-    details.public = !!details.public
-    details.artistPageUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '') + '/artist/' + details.uri
-    details.artistPageLink = '/artist/' + details.uri
-    details.aboutMD = marked(details.about || "")
-    details.role = (findTrackRelationship(track, details.name)||{}).role
-    return details
-  })
-
-  return artists
+  return (track.artists || [])
+    .filter((obj) => {
+      return !!obj
+    })
+    .map((details) => {
+      var relationship = findTrackRelationship(track, details.name) || {}
+      // Default is not set, if not default filter out
+      if (relationship.vendor) {
+        return undefined
+      }
+      details.uri = details.vanityUri || details.websiteDetailsId || details._id
+      details.public = !!details.public
+      details.artistPageUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '') + '/artist/' + details.uri
+      details.artistPageLink = '/artist/' + details.uri
+      details.aboutMD = marked(details.about || "")
+      details.role = relationship.role
+      return details
+    })
+    .filter(x => !!x)
 }
 
 function findTrackRelationship(track, name) {
