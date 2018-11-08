@@ -718,7 +718,7 @@ function mapTrackArtists (track) {
     .map((details) => {
       var relationship = findTrackRelationship(track, details.name) || {}
       // Default is not set, if not default filter out
-      if (relationship.vendor) {
+      if (relationship.vendor || !details.public) {
         return undefined
       }
       details.uri = details.vanityUri || details.websiteDetailsId || details._id
