@@ -14,8 +14,7 @@ function processStreamlabsRegisterPage (args) {
   renderContent(args.template, scope)
   cache(PAGE_STREAMLABS_REGISTER, scope)
 
-
-  google.maps.event.addDomListener(window, 'load', initLocationAutoComplete)
+  initLocationAutoComplete()
 }
 
 function submitStreamlabsSignUp (e) {
@@ -28,11 +27,11 @@ function submitStreamlabsSignUp (e) {
 
       loadSession(() => {
         if (!isStreamlabsIncomplete()) {
-          toasty('You did it!')
+          toasty('Registration complete!')
           go(scope.redirectTo)
         }
         else {
-          toastr(Error('Profile incomplete in session. Contact support.'))
+          toastr(Error('Profile incomplete in session. Contact support@monstercat.com'))
         }
       })
     }
