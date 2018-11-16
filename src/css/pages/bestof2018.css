@@ -42,7 +42,6 @@ h1.bestof2018-logo span {
 
 .bestof2018-header > * {
 	display: inline-block;
-	transition: all 0.5s ease;
 }
 
 .bestof2018-page .bestof2018-header p {
@@ -360,8 +359,7 @@ p.song-title a:hover {
 
 .bestof2018 .content-row h3 {
 	color: #fff;
-	transition: all 0.5s ease 0.25s;
-	font-weight: bold;
+  font-weight: bold;
 }
 
 h3.artist-name {
@@ -426,8 +424,6 @@ ul#bestof2018-picks li{
   background-color: transparent;
   left: 0px;
   top: 0px;
-/*  opacity: 0;*/
-  transition: all 1s ease;
 }
 
 .bestof2018 .artist-row .banner:before {

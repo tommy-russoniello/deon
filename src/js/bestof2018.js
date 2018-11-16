@@ -1,5 +1,4 @@
-const BESTOF2018_POLLID = '5beb1ee1392fadc053274d59'
-const BESTOF2018_ART_POLLID = '581929beb18f478110e6fcb7'
+const BESTOF2018_POLLID = '5bedbcfaec51c7d730efe9de'
 
 const pollEndpoint = endpoint //'http://localhost:4002'
 
@@ -23,6 +22,12 @@ function processBestOf2018ResultsPage (args) {
       scope.error = err
     }
     else {
+      result.results = result.results || []
+      //Show maximum of 40
+      if (result.results.length > 40) {
+        result.results = result.results.splice(0, 40)
+      }
+
       scope.data = result
 
       if (result.breakdown.status.hasVoted) {
@@ -73,54 +78,6 @@ function getVotedForTweet (breakdown) {
   return tweet;
 }
 
-function processBestOf2018ArtPage () {
-  const scope = {
-    loading: true
-  }
-
-  renderContent('best-of-2018-art', scope)
-
-  request({
-    method: 'GET',
-    url: endpoint + '/poll/' + BESTOF2018_ART_POLLID + '/breakdown',
-    withCredentials: true
-  }, (err, result) => {
-    scope.loading = false
-    
-    /*
-    err = null
-    result = {
-      poll: {
-        choices: [
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-          "https://assets.monstercat.com/releases/covers/Aero Chord - Shadows (feat. Nevve) (Art).jpg",
-        ]
-      }
-    }
-    */
-
-    if (err) {
-      scope.error = err
-      scope.data = null
-    }
-    else {
-      scope.data = result
-      scope.data.choices = result.poll.choices.map((choice, index) => {
-        return {
-          albumArt: choice,
-          index: index
-        }
-      })
-    }
-
-    renderContent('best-of-2018-art', scope)
-  })
-}
-
 function processBestOf2018Page () {
   const scope = {
     loading: true,
@@ -130,13 +87,13 @@ function processBestOf2018Page () {
   renderContent('best-of-2018', scope)
 
   request({
-    url: endpoint + '/doublepoll/5beb1ee1392fadc053274d59',
+    url: endpoint + '/doublepoll/' + BESTOF2018_POLLID,
     withCredentials: true
   }, (err, result) => {
     scope.loading = false
 
     if (err) {
-      scope.error = err
+      scope.error = err.toString()
       scope.data = {}
     }
     else {
@@ -145,10 +102,13 @@ function processBestOf2018Page () {
         return option
       })
 
+      const end = new Date(result.poll.endTime)
       scope.data = result
       scope.data.isSignedIn = isSignedIn()
       scope.data.artistOptions = artistOptions
       scope.data.status.open = status.started && !status.ended
+      scope.data.votingCloseDate = end.toLocaleDateString('en-us', {month: 'short', year: 'numeric', day: 'numeric'})
+      scope.data.votingCloseTime = end.toLocaleTimeString('en-us', {timeZoneName: 'short', minute: 'numeric', hour: 'numeric'})
     }
 
     cache(PAGE_BESTOF2018, scope)
@@ -201,6 +161,7 @@ function openBestOfArtistModal (e, el, rank) {
   const bestof2018scope = cache(PAGE_BESTOF2018)
 
   const options = bestof2018scope.data.childOptions[key]
+  const artist = bestof2018scope.data.parentOptions.find(x => x._id == key)
 
   if (!options) {
     toasty(Error('An error occurred, there was an issue with the poll.'))
@@ -210,6 +171,7 @@ function openBestOfArtistModal (e, el, rank) {
     "options": options,
     "optionId": key,
     "position": rank,
+    artistName: artist.title
   })
 }
 
@@ -232,6 +194,7 @@ function openAddBestOfArtistModal (e, el, rank) {
 }
 
 function onSubmitArtistTrack(e, el) {
+  e.preventDefault()
   var fd = new FormData(el)
   const parentOptionId = fd.get('parentId')
   const childOptionId = fd.get('pollTrackId')
@@ -311,12 +274,19 @@ function submitBestOf2018 (e) {
     toasty(Error('No artists selected.'))
     return
   }
+
+  const votes = data.parentOptionIds.map((parentId, idx) => {
+    return {
+      parentOptionId: parentId,
+      childOptionId: data.childOptionIds[idx]
+    }
+  })
+
   request({
     method: 'POST',
     url:  endpoint + '/doublepoll/' + BESTOF2018_POLLID + '/vote',
     data: {
-      parentOptions: data.parentOptionIds,
-      childOptions: data.childOptionIds
+      votes: votes
     },
     withCredentials: true
   }, (err, result) => {
@@ -325,22 +295,6 @@ function submitBestOf2018 (e) {
       return
     }
     toasty('Successfully submitted your votes!')
-    go('/best-of-2018-art')
-  })
-}
-
-function submitBestOf2018AlbumArt (event) {
-  submitForm(event, {
-    method: 'POST',
-    url: endpoint + '/vote',
-    transformData: (data) => {
-      data.pollId = BESTOF2018_ART_POLLID
-      data.choices = [data.choice]
-      return data
-    },
-    success: () => {
-      toasty('Vote submitted')
-      go('/best-of-2018/results')
-    }
+    go('/bestof2018/results')
   })
 }
