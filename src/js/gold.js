@@ -329,11 +329,12 @@ function submitUnsubscribeFeedback (e) {
       return errs
     },
     action: function (args) {
-      request({
+      args.data.type = 'gold_unsub_feedback'
+
+      requestWithFormData({
         url: 'https://submit.monstercat.com',
         method: 'POST',
-        cors: true,
-        data: new FormData(args.data)
+        data: args.data
       }, (err, body, xhr) => {
         if (err) {
           err.push(err)
