@@ -1,11 +1,11 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^(\?.*)?$"
         data-process="processPage"
         data-template="home-page"
         >
     <div role="home-featured">
         <div
-            data-source="$endpoint/catalog/release?limit=15"
+            data-source="$endpoint/catalog/release?limit=15&filtersOr[]=type,Single&filtersOr[]=type,Album&filtersOr[]=type,EP"
             data-process="processHomeFeatured">
         </div>
     </div>
@@ -17,7 +17,7 @@
     {{>spotify-and-social}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="home-featured"
         data-partial>
     {{#error}}
@@ -116,7 +116,7 @@
     {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="home-page-tracks"
         data-process="processHomeTracks"
         >
@@ -127,7 +127,7 @@
 {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="home-play-button"
         data-partial
 >
@@ -190,7 +190,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="home-merch"
         data-process="processHomeMerch"
         data-partial
@@ -221,7 +221,7 @@
     {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="merch-list"
         data-partial
         >
@@ -238,7 +238,7 @@
 </ul>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="blog-stories"
         transform="transformBlog">
     {{#loading}}
@@ -269,7 +269,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="spotify-and-social"
         data-partial
         >
