@@ -271,3 +271,84 @@ function closeGoldShopDiscountNotice () {
   setCookie('last-gold-shop-code', goldShopCodeNotice.currentCode.code)
   setCookie(cookieName, goldShopNextCodeDate)
 }
+
+/*=========================================
+=            BLACK FRIDAY 2018            =
+=========================================*/
+const cm2018End = new Date("Nov 26 2018 21:00:00 GMT-0800 (Pacific Standard Time)")
+const bf2018End = new Date("Nov 25 2018 21:00:00 GMT-0800 (Pacific Standard Time)")
+const bf2018Start = new Date("Nov 22 2018 21:00:00 GMT-0800 (Pacific Standard Time)")
+const now2018 = new Date()
+
+function getBlackFridayTimePeriod () {
+
+  if (now2018 > cm2018End) {
+    return 'over'
+  }
+  else if (now2018 > bf2018End) {
+    return 'during-cyber-monday'
+  }
+  else if (now2018 > bf2018Start) {
+    return 'during-black-friday'
+  }
+
+  return 'before-black-friday'
+}
+
+siteNotices.bfcm = new SiteNotice({
+  hideForDays: 40,
+  name: 'bfcm-' + getBlackFridayTimePeriod(),
+  template: 'black-friday-countdown',
+  completed: () => {
+    startCountdownTicks()
+  },
+  shouldOpen: function () {
+    return new Date() < cm2018End
+  },
+  transform: function (done) {
+    const bfcm2018 = findNode("#bfcm-2018")
+    const period = getBlackFridayTimePeriod()
+
+    const scope = {
+    }
+
+    //Everything is over
+    if (period == 'over') {
+
+    }
+    else if (period == 'during-cyber-monday') {
+      scope.title = 'ends in'
+      scope.logo = '/img/cmlogo.svg'
+      scope.ctaUrl = 'https://shop.monstercat.com'
+      scope.ctaIcon = 'shopping-bag'
+      scope.ctaText = 'shop now'
+      scope.class = 'cm2018'
+      scope.to = cm2018End
+      //render cyber monday
+    }
+    else if (period == 'during-black-friday') {
+      scope.title = 'ends in'
+      scope.logo = '/img/bflogo.svg'
+      scope.ctaUrl = 'https://shop.monstercat.com'
+      scope.ctaIcon = 'shopping-bag'
+      scope.ctaText = 'shop now'
+      scope.class = 'bf2018'
+      scope.to = bf2018End
+    }
+    else {
+      scope.title = 'starts in'
+      scope.logo = '/img/bflogo.svg'
+      scope.ctaUrl = 'https://monster.cat/BlackFridayCalendar'
+      scope.ctaIcon = 'calendar'
+      scope.ctaText = 'add to calendar'
+      scope.class = 'bf2018'
+      scope.to = bf2018Start
+    }
+
+    done(null, scope)
+  }
+})
+
+function closeBlackFriday () {
+  siteNotices.bfcm.closeByUser()
+}

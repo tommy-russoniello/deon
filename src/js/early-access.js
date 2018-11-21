@@ -85,8 +85,12 @@ function dateToRemainingTime (date) {
   return diff
 }
 
+function getCountdownEls () {
+  return document.querySelectorAll('[role=countdown]')
+}
+
 function updateCountdownEls () {
-  var els = document.querySelectorAll('[role=countdown]')
+  var els = getCountdownEls()
   for(var i = 0; i < els.length; i++) {
     var el = els[i]
     var date = new Date(el.getAttribute('to'))

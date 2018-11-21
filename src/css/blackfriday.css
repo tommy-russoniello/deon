@@ -1,77 +1,152 @@
-#black-friday {
-  background: url(/img/blackfriday2017/bg.png) #171717;
+#bfcm-2018 {
+  background:  
+  linear-gradient(
+    rgba(128, 232, 233,0.5),
+    rgba(128, 232, 233,0.5)
+  ),
+  url(/img/blackfriday-pattern.jpg);
   color: #fff;
-  padding: 5px 0 0 0;
+  background-size: 55%;
+  margin-top: 5px;
+  padding: 10px 0px;
+  transition: all 1s;
 }
 
-#black-friday a.go {
+#bfcm-2018 .fa-calendar,
+#bfcm-2018 .fa-shopping-bag {
+  display: none
 }
 
-#black-friday .container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#black-friday .info {
-  display: block;
-  background: url(/img/blackfriday2017/title-desktop.png) center left no-repeat;
-  background-size: 100% auto;
-  height: 100px;
-  width: 70%;
-}
-
-#black-friday .actions {
+#bfcm-2018 .actions {
+  height: 75px;
   text-align: right;
   display: flex;
-  flex-direction: row-reverse;
   align-items: center;
 }
 
-#black-friday .actions a.button--cta {
-  border: 0px;
+#bfcm-2018 .actions img {
+  height: 100%
 }
 
-#black-friday .actions a.button--cta:hover {
+#bfcm-2018 .actions .button-container .button--cta {
+  border: 0px;
+  background: #ff4038;
+  box-shadow: -3px 2.5px 0px black;
+  text-align: center;
+}
+
+#bfcm-2018 .actions .button--cta:hover {
   color: #171717;
   background: #fff;
+  transform: translateY(3px);
+  box-shadow: none
 }
 
-#black-friday .button-container {
-  padding-left: 20px;
+#bfcm-2018 .cm2018 .actions .button-container .button--cta {
+  border: 0px;
+  background: #fff;
+  color: #000;
+  box-shadow: -3px 2.5px 0px black;
+  text-align: center;
 }
 
-#black-friday .countdown-container {
+#bfcm-2018 .cm2018 .actions .button-container .button--cta:hover {
+  color: #fff;
+  background: #171717;
+  transform: translateY(3px);
+  box-shadow: none
 }
 
-#black-friday .countdown-container .label {
-  font-size: 16px;
+#bfcm2018 .calendar {
+  line-height: 1.2;
 }
 
-#black-friday .countdown-container .countdown {
-  font-size: 22px;
+#bfcm-2018 .countdown-container {
+  margin: 0 0.5em;
+  color: #212020;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-style: italic;
+  text-shadow: -3px 2.5px 0px white;
+  text-align: left;
+  text-transform: uppercase;
+  text-align: center;
+  flex: 1;
 }
 
-#black-friday .countdown-container .countdown .unit {
+#bfcm-2018 .actions .countdown-container label h3 {
+  position: relative;
+  font-size: 36px;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+#bfcm-2018 .countdown-container .countdown {
+  letter-spacing: 3px;
+  font-size: 36px;
+}
+
+#bfcm-2018 .countdown-container .countdown:after {
+  content: ".";
+  opacity: 0;
+}
+
+#bfcm-2018 .countdown-container .countdown .unit {
   display: inline-block;
-  width: 1.7em;
+  margin-right: 0.1em;
 }
 
-#black-friday .countdown-container .countdown .unit.m {
-  width: 2em;
+#bfcm-2018 .countdown-container .countdown .unit.d {
+  margin-left: 0.3em;
+  width: 1.4em;
 }
 
-@media screen and (max-width: 990px) {
-  #black-friday .info {
-    width: 65%;
+#bfcm-2018 .countdown-container .countdown .unit.h {
+  width: 2.25em;
+}
+
+#bfcm-2018 .countdown-container .countdown .unit.m {
+  width: 2.25em;
+}
+
+#bfcm-2018 .countdown-container .countdown .unit.s {
+  width: 2.1em;
+}
+
+@media screen and (max-width: 680px) {
+  #bfcm-2018 .actions img {
+    height: 45px
+  }
+
+  #bfcm-2018 .countdown-container {
+    margin-left: 1em
+  }
+
+  #bfcm-2018 .calendar {
+    display: none
+  }
+
+  #bfcm-2018 .actions .countdown,
+  #bfcm-2018 .actions .countdown-container label h3 {
+    margin: 0px;
+    font-size: 16px !important;
+    letter-spacing: 2px;
+    text-shadow: -1px 1px 0px white;
+  }
+
+
+  #bfcm-2018 .fa-calendar,
+  #bfcm-2018 .fa-shopping-bag {
+    display: inline-block;
   }
 }
 
-@media screen and (max-width: 840px) {
-  #black-friday .info {
-    background: url(/img/blackfriday2017/title-mobile.png) center left no-repeat;
-    background-size: contain;
-    width: 40%;
+@media screen and (max-width: 980px) {
+  #bfcm-2018 .actions .countdown,
+  #bfcm-2018 .actions .countdown-container label h3 {
+    font-size: 20px;
+    letter-spacing: 2px;
   }
 }
+
+

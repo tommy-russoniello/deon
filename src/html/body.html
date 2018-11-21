@@ -22,7 +22,7 @@ window.fbAsyncInit = function() {
  }(document, 'script', 'facebook-jssdk'));
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="countdown-banner"
 >
 <div class="container">
@@ -40,8 +40,37 @@ window.fbAsyncInit = function() {
     </div>
     </div>
 </script>
-<div id="site-notices">
 
+<script type="text/html"
+        data-template="black-friday-countdown"
+        >
+<div id="bfcm-2018">
+    <div class="container {{class}}">  
+        <div class="actions">
+          <img class="logo-black" src="{{logo}}">
+          <div class="countdown-container">
+            <label><h3>{{title}}
+              <span class="countdown" show-days="1" role="countdown" to="{{to}}" completed="countdownBannerCompleted"></span></h3> 
+            </label>
+          </div>
+          <div class="button-container">
+                <button
+                    onclick="closeBlackFriday()"
+                    class="button button-sm button--cta button--close pull-right"
+                    style="margin-left: 6px;">
+                    <span class="fa fa-remove"></span>
+                </button>
+                <a class="button button--cta button-sm" href="{{ctaUrl}}">
+                  <span class="calendar">{{ctaText}}</span>
+                  <i class="fa fa-{{ctaIcon}}"></i>
+                </a>
+          </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<div id="site-notices">
 </div>
 <header>
     <div class="col-xs-hidden col-md-visible scrub-container">
@@ -368,7 +397,7 @@ window.fbAsyncInit = function() {
 <script type="text/template"
         data-route="^help\/?$"
         data-title="Help"
-        data-process="processPage"
+      data-process="processPage"
         data-template="help-page"
         >
   <div class="container">

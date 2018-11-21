@@ -148,6 +148,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
       }, 2000)
     }
   })
+  siteNotices.bfcm.start()
   document.querySelector('.credit [role=year]').innerText = new Date().getFullYear()
 
   window.addEventListener('routenotfound', (e) => {
@@ -177,7 +178,9 @@ document.addEventListener("DOMContentLoaded", (e) => {
       break
     }
     if (typeof (stopCountdownTicks) == 'function') {
-      stopCountdownTicks()
+      if (getCountdownEls().length == 0) {
+        stopCountdownTicks()
+      } 
     }
     if (window.location.pathname.indexOf("search") == -1) {
       const searchFields = findNodes('[name=term]')
