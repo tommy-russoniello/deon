@@ -1205,6 +1205,9 @@ function processRosterYear (obj) {
       var scope = args.result
 
       scope.results.forEach(function (doc) {
+        if (!doc.profileImageUrl) {
+          doc.profileImageUrl = 'https://assets.monstercat.com/artists-profile-images/promo-artist.jpg'
+        }
         if (doc.profileImageUrl)
         { doc.uri = doc.vanityUri || doc.websiteDetailsId || doc._id }
         doc.image = doc.profileImageUrl
@@ -1216,6 +1219,7 @@ function processRosterYear (obj) {
         if (a > b) { return 1 }
         return 0
       })
+
       betterRender(args.template, args.node, scope)
 
       const qo = searchStringToObject()
