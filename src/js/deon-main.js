@@ -964,6 +964,11 @@ function mapRelease (release) {
 }
 
 function transformWebsiteDetails (wd) {
+  if (!wd.profileImageUrl) {
+    wd.profileImageUrl = 'https://assets.monstercat.com/artists-profile-images/Promo_Generic%20Artist%20Graphic.jpg'
+    wd.imagePositionY = 50
+    wd.hideOnReleasePage = true
+  }
   if (wd.profileImageUrl) {
     wd.image = wd.profileImageUrl
     wd.imageSmall = wd.profileImageUrl + "?image_width=256"
