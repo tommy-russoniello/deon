@@ -340,13 +340,13 @@ window.fbAsyncInit = function() {
 </script>
 
 <script type="text/template" data-template="error" data-partial>
-    {{#error}}
+    {{#if error}}
     <div class="container">
         <div class="errors-container">
-            {{err.message}}
+            {{error}}
         </div>
     </div>
-    {{/error}}
+    {{/if}}
 </script>
 
 <script type="text/template" data-template="loading-view-black" data-partial>

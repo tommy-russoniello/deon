@@ -244,6 +244,9 @@ function processPlaylistsPage (args) {
 
 function processPlaylistPage (args) {
   processor(args, {
+    error: (args) => {
+      renderError(args.error)
+    },
     success: function (args) {
       const playlist = args.result
       const scope = {

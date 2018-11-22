@@ -600,7 +600,20 @@ function renderLoading () {
 }
 
 function renderError (err) {
-  renderContent('error', {err: err})
+  let msg
+  if (typeof err == 'string') {
+    msg = err
+  }
+  else if (typeof err == 'object') {
+    if (err.hasOwnProperty('message')) {
+      msg = err.message
+    }
+    else {
+      msg = err.toString()
+    }
+  }
+
+  renderContent('error', {error: msg})
 }
 
 function renderContent (template, scope) {
