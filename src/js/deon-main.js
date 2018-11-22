@@ -1059,7 +1059,7 @@ function processHomeFeatured (args) {
   templateProcessor('home-featured', args, {
     hasLoading: true,
     transform: function (args) {
-      var results = args.result.results.map(mapRelease)
+      var results = args.result.results.map(mapRelease).filter( x => x.type != 'Podcast')
       var featured = results.shift()
 
       scope = {
