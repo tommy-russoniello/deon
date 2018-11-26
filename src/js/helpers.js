@@ -632,3 +632,16 @@ function betterRender (template, node, scope) {
 function findParentOrSelf (node, matcher) {
   return findParentWith(node, matcher, true)
 }
+
+function keyDownSuperEnter (e) {
+  if ((e.keyCode == 13 || e.keyCode == 10) && e.metaKey) {
+    const form = findParentWith(e.target, 'form')
+
+    if (form) {
+      const btn = form.querySelector('button:not([type="button"]')
+      if (btn) {
+        btn.click()
+      }
+    }
+  }
+}
