@@ -54,6 +54,7 @@ function openModal (name, data) {
   renderModal(name, data)
   findNode('body').classList.add('showing-modal')
   modalsEl.classList.add('open')
+  return modalsEl
 }
 
 function closeModal () {
