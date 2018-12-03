@@ -82,18 +82,7 @@ function processGoldBuyPage (args) {
 
   renderContent('gold-buy-page', scope)
 
-  const redirectTo = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
-  const opts =  {}
-
-  if (redirectTo) {
-    opts.return_url = window.location.origin + redirectTo
-  }
-
-  const so = searchStringToObject()
-
-  if (so.promo) {
-    opts.code = so.promo
-  }
+  const opts = getXsollaTokenOpts()
 
   generateXsollaIframeSrc('gold', opts, (err, result) => {
     if (err) {
@@ -123,6 +112,23 @@ function processGoldBuyPage (args) {
       description: 'Buy Monstercat Gold subscription for downloads, early streaming, shop discounts, and more.'
     })
   })
+}
+
+function getXsollaTokenOpts () {
+  const opts =  {}
+  const redirectTo = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
+
+  if (redirectTo) {
+    opts.return_url = window.location.origin + redirectTo
+  }
+
+  const so = searchStringToObject()
+
+  if (so.promo) {
+    opts.code = so.promo
+  }
+
+  return opts
 }
 
 function getXsollaIframeSrc (token) {
@@ -157,7 +163,12 @@ function generateXsollaToken (type, opts, done) {
 
   data = Object.assign(data, opts)
 
-  request({
+  if (generateXsollaToken.cache) {
+    done(null, generateXsollaToken.cache)
+    return
+  }
+
+  requestCached({
     method: 'POST',
     withCredentials: true,
     data: data,
@@ -168,6 +179,7 @@ function generateXsollaToken (type, opts, done) {
       return
     }
 
+    generateXsollaToken.cache = result
     done(null, result)
   })
 }
@@ -268,6 +280,12 @@ function processGoldPage (args) {
         description: desc,
         title: 'Monstercat Gold - Downloads, streaming, licenses, discounts'
       })
+
+      //This preloads the token for the user so that if they click Buy the iframe
+      //will load more quickly
+      if (isSignedIn()) {
+        generateXsollaToken('gold', getXsollaTokenOpts(), () => {})
+      }
     }
   })
 }
