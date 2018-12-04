@@ -179,10 +179,11 @@ function openAddBestOfArtistModal (e, el, rank) {
   const picksEl = findNode('#bestof2018-picks')
   const key = el.dataset.optionId
 
-  if (picksEl.childElementCount > 10) {
+  /*if (picksEl.childElementCount > 10) {
     toasty(Error("You have already selected 10 artists."))
     return
-  }
+  }*/
+
   for (var i = 0; i < picksEl.childElementCount; i++) {
     if (picksEl.children[i].classList.contains(key)) {
       toasty(Error("You have already selected this artist."))
@@ -281,6 +282,18 @@ function submitBestOf2018 (e) {
       childOptionId: data.childOptionIds[idx]
     }
   })
+
+  const numVotes = votes.length
+  if (votes.length < 10) {
+    if (!confirm("Only submit " + numVotes + ' vote' + (numVotes == 1 ? '' : 's') + '? You can submit up to 10.')) {
+      return
+    }
+  }
+
+  if (numVotes > 10) {
+    toasty(new Error('Maximum 10 selections allowed. Try to narrow it down!'))
+    return
+  }
 
   request({
     method: 'POST',

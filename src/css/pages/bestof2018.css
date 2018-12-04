@@ -478,6 +478,11 @@ ul#bestof2018-picks li{
 .bestof2018 .artist-row-picks:nth-child(11) .bestof2018-mobile:before {
   content: "10";
 }
+.bestof2018 .artist-row-picks:nth-child(n+12) .artist-ranking h3:before, 
+.bestof2018 .artist-row-picks:nth-child(n+12) .bestof2018-mobile:before {
+  content: "X";
+}
+
 
 .bestof2018 .artist-circle {
 	width: 75px;

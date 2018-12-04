@@ -854,6 +854,14 @@ ul.errors li {
   height: 100px;
 }
 
+.artist-circle.artist-cicle-placeholder {
+  background: #fff;
+}
+
+.artist-circle.artist-cicle-placeholder img {
+  width: 50%;
+}
+
 .artist-circle img {
   position: absolute;
   height: 100%;
