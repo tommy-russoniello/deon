@@ -104,7 +104,7 @@ function processBestOf2018Page () {
 
       const end = new Date(result.poll.endTime)
 
-      if (end > new Date()) {
+      if (end < new Date()) {
         go('/bestof2018/results')
         return
       }
