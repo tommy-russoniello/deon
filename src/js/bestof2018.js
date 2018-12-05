@@ -171,7 +171,8 @@ function openBestOfArtistModal (e, el, rank) {
     "options": options,
     "optionId": key,
     "position": rank,
-    artistName: artist.title
+    artistName: artist.title,
+    buttonLabel: rank ? 'Update': 'Add'
   })
 }
 
@@ -196,9 +197,9 @@ function openAddBestOfArtistModal (e, el, rank) {
 
 function onSubmitArtistTrack(e, el) {
   e.preventDefault()
-  var fd = new FormData(el)
-  const parentOptionId = fd.get('parentId')
-  const childOptionId = fd.get('pollTrackId')
+  var fd = formToObject(e.target)
+  const parentOptionId = fd.parentId
+  const childOptionId = fd.pollTrackId
   const bestof2018scope = cache(PAGE_BESTOF2018)
   const bestof2018data = bestof2018scope.data
 
@@ -218,7 +219,7 @@ function onSubmitArtistTrack(e, el) {
   var picksEl = findNode('#bestof2018-picks')
   var example = findNode('.example-row')
   var input = findNode('[role="artist-filter"]')
-  var rank = parseInt(fd.get("position")) || picksEl.childElementCount
+  var rank = parseInt(fd.position) || picksEl.childElementCount
 
   var li = render('bestof2018-row', {
     artistName: artistOption.title,
@@ -231,7 +232,7 @@ function onSubmitArtistTrack(e, el) {
     childOptionId: trackOption._id
   })
 
-  if (fd.has("position")){
+  if (fd.hasOwnProperty("position")){
     // offset by one because of example li
     picksEl.children[rank].replaceWith(li.firstElementChild)
     toasty("Updated track.")
