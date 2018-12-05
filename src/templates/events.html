@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^event\/(.*)"
         data-title="Event"
         data-process="processEventPage"
@@ -73,7 +73,7 @@
 {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="event-sponsor">
   <div class="container text left cl-white">
     <div class="footer-cta footer-cta--sponsor">
@@ -87,7 +87,7 @@
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^events\/?(\?.+)?$"
         data-process="processEventsPage"
         data-template="page-events"
@@ -123,7 +123,7 @@
     <div role="event-google-tracking"></div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="events-header"
         data-process="processHeaderEvent">
   <div class="top-banner top-banner-events">
@@ -133,12 +133,12 @@
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="events-table-container">
   <div data-source="$endpoint/events/upcoming?{{upcomingQueryString}}" data-process="processUpcomingEvents"></div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="events-table"
         data-process="processUpcomingEvents"
         >
@@ -149,7 +149,7 @@
 </table>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="upcoming-event-tr">
 <tr {{#featured}}class="featured"{{/featured}} data-date="{{startDate}}" event-id="{{_id}}">
     <td class="date">
@@ -199,7 +199,7 @@
   </tr>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="events-past"
         data-process="processPastEvents">
   <div class="past-events">
@@ -236,7 +236,7 @@
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="event-header"
         >
@@ -285,7 +285,7 @@
 </script>
 
 
-<script type="text/template"
+<script type="text/html"
         data-template="email-optin-mailchimp-link"
         data-partial
         >
@@ -301,7 +301,7 @@
 </script>
 
 <!-- This is if you aren't logged in -->
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="events-email-optin-container">
 
@@ -326,7 +326,7 @@
 
 
 <!-- This is if you are logged in -->
-<script type="text/template"
+<script type="text/html"
         data-template="events-email-optin"
         data-process="processEve"
         >
