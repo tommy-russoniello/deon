@@ -103,6 +103,12 @@ function processBestOf2018Page () {
       })
 
       const end = new Date(result.poll.endTime)
+
+      if (end > new Date()) {
+        go('/bestof2018/results')
+        return
+      }
+
       scope.data = result
       scope.data.isSignedIn = isSignedIn()
       scope.data.artistOptions = artistOptions
