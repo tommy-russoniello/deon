@@ -1,3 +1,9 @@
+.top-banner-events > .flex.container.container--event-header {
+  padding: 5rem 0
+}
+.col--event-details {
+  background: #fff
+}
 .events-tables {
   position: relative;
 }
@@ -120,6 +126,7 @@ tr.featured a.external .fa-external-link{
   color: white;
 }
 .events-no-featured-message {
+  width: 100%;
   padding: 40px 20px;
   margin: auto;
   background: #fff;
@@ -127,7 +134,6 @@ tr.featured a.external .fa-external-link{
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  width: 90%;
   opacity: 1;
   transition: opacity 0.25s ease;
   animation: scalingCenteredModal .45s ease 1 forwards;
@@ -163,6 +169,11 @@ tr.featured a.external .fa-external-link{
   padding-bottom: 1%;
 }
 
+.events-wrapper{
+  position: relative;
+  background: #000;
+}
+
 .footer-cta{
   padding: 4rem 0;
   position: relative;
@@ -171,6 +182,12 @@ tr.featured a.external .fa-external-link{
 .footer-cta--sponsor {
   background: #222 url('/../img/sponsor.jpg');
   background-size: cover;
+  padding: 4rem 2rem;
+  margin-top: 2rem;
+}
+
+.footer-cta--subscribe {
+  background: #fff;
   padding: 4rem 2rem;
   margin-top: 2rem;
 }
@@ -436,3 +453,34 @@ ul.picture-gallery > li > div{
   margin-bottom: 0.25em;
 }
 
+h3.event-details {
+  font-size: 1rem;
+  margin-top: 0.2rem;
+  letter-spacing: 1.75px;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1.75
+}
+
+.tag.tag--details {
+  font-size: 0.9rem;
+}
+
+@media screen and (min-width: 992px) {
+.top-banner .featured-artwork.featured-artwork--event {
+    padding: 0;
+    padding-left: 3rem !important;
+}
+
+.event-artist .hover-wrapper {
+  padding: 0.5rem;
+  }
+}
+
+.top-banner .featured-artwork.featured-artwork--event {
+  padding: 0rem;
+}
+
+.event-page-header p.description {
+  font-size: 1.2em
+} 

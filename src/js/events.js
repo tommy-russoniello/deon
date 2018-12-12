@@ -230,6 +230,13 @@ function transformEvent (event) {
     'Fri': 'day'
   }
 
+  if (event.youTubeVideoUrl) {
+    const youtubeId = youTubeIdParser(event.youTubeVideoUrl)
+    if (youtubeId) {
+      event.youTubeEmbedUrl = 'https://www.youtube.com/embed/' + youtubeId
+    }
+  }
+
   event.localWeekdayLong = event.localWeekday + weekdays[event.localWeekday]
   return event
 }

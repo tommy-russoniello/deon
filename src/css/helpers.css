@@ -209,6 +209,12 @@
   height: 100%;
 }
 
+.col-youtube {
+  flex-basis: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 .flex {
   display: flex;
   flex-wrap: wrap;
@@ -550,7 +556,7 @@ a.cl-white {
   display: block;
 }
 .shadow{
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 35px rgba(0,0,0,0.1);
 }
 .responsive{
   width: 100%;

@@ -10,65 +10,90 @@
   <div class="event-page-header">
     {{#event}}
     <div class="top-banner top-banner-events">
-      {{>event-header}}
-      <div class="container cl-white">
-        {{#if artistDetails.length}}
-        <header class="flex top-cta ">
-            <div class="col-xs-12">
-                <h2 class="line-top">Artists</h2>
-            </div>
-        </header>
-        <ul class="art-list artist-list art-list--full-width">
-          {{#each artistDetails}}
-          <li>
-              <a class="silent" href="/artist/{{vanityUri}}" title="{{name}}">
+      {{>event-header-full}}
+      <div class="container pb-4">
+        <div class="flex mb-4">
+          <div class="col-xs-12 col-md-4 col-sm-last featured-artwork featured-artwork--event">
+            {{#if posterImageUri}}
+            <img class="shadow responsive" src="{{posterImageSmall}}"/>
+            {{/if}}
+          </div>
+          <div class="col-xs-12 col-md-8 col-sm-first col--event-details p-4">
+            <h3 class="event-details"><span class="tag tag--details">Location</span> {{location}}</h3>
+            <h3 class="event-details"><span class="tag tag--details">Venue</span> {{venue}}</h3>
+            <h3 class="event-details"><span class="tag tag--details">Date</span> {{dateString}}</h3>
+            <p class="description mt-3">{{ description }}</p>
+
+            {{#if artistDetails.length}}
+            <header class="flex top-cta mt-4 mb-3">
+                <div class="col-xs-12">
+                    <h2 class="line-top">Artists</h2>
+                </div>
+            </header>
+            <ul class="art-list artist-list art-list--full-width">
+              {{#each artistDetails}}
+              <li class="event-artist">
+                <a class="silent" href="/artist/{{vanityUri}}" title="{{name}}">
                   {{#if image}}
-                    <div class="image-wrapper">
-                        <img src="/img/artist.jpg" class="preload" />
-                        <img src="{{image}}"/>
-                    </div>
-                    {{else}}
-                    <div class="no-art">
-                        <label>No image.</label>
-                    </div>
+                  <div class="image-wrapper">
+                    <img src="/img/artist.jpg" class="preload" />
+                    <img src="{{image}}"/>
+                  </div>
+                  {{else}}
+                  <div class="no-art">
+                    <label>No image.</label>
+                  </div>
                   {{/if}}
                   <div class="hover-wrapper">
-                      <label class="title one-line-ellipsis">{{name}}</label>
+                    <label class="title one-line-ellipsis">{{name}}</label>
                   </div>
-              </a>
-          </li>
-          {{/each}}
-        </ul>
-        {{/if}}
-
-        <div class="back-to-events">
-          <a class="button button--white button--icon button--icon-left" href="/events" target="_BLANK">
-              <i class="fa fa-chevron-left"></i>
-              Back to Events
-          </a>
+                </a>
+              </li>
+              {{/each}}
+            </ul>
+            {{/if}}
+            {{#if youTubeEmbedUrl}}
+            <header class="flex top-cta mt-4 mb-3">
+              <div class="col-xs-12">
+                <h2 class="line-top">Event Video</h2>
+              </div>
+            </header>
+            <div class="aspect-container aspect-container-16x9 col-md-12">
+              <iframe id="ytplayer" type="text/html" width="100%" height="auto" src="{{youTubeEmbedUrl}}" frameborder="0"></iframe>
+            </div>
+            {{/if}}
+          </div>
         </div>
       </div>
     </div>
     {{/event}}
   </div>
-
-  {{>email-optin-mailchimp-link}}
-
-
   {{#event}}
     {{#if hasGallery}}
     <div class="container event-gallery">
       <ul class="art-list picture-gallery clearfix">
         {{#each gallery}}
-          <li>
-            <div style="background-image: url({{thumbSrc}});" onclick="openGalleryModal(event, this)" big-src="{{bigSrc}}"></div>
-          </li>
+        <li>
+          <div style="background-image: url({{thumbSrc}});" onclick="openGalleryModal(event, this)" big-src="{{bigSrc}}"></div>
+        </li>
         {{/each}}
       </ul>
     </div>
     {{/if}}
-
-    {{>event-sponsor}}
+      </div>
+    </div>
+    <div class="container mt-2">
+      <div class="flex">
+        <div class="col-xs-12 col-md-6 panel footer-cta footer-cta--subscribe">
+          <h2>Don't miss future Monstercat events!</h2>
+          <a class="button button-sm button--black button--icon" href="https://monstercat.us14.list-manage.com/subscribe?u=558f2b6bdecccf5cf42ccc7f7&id=1ef227c776&group[5449][2]=1&group[5449][1]=1&MERGE0={{userEmail}}" target="_blank">Subscribe to get notified <i class="fa fa-chevron-right"></i></a>
+        </div>
+        <div class="col-xs-12 col-md-6 panel footer-cta footer-cta--sponsor cl-white mt-2">
+          <h2>Sponsorship.</h2>
+          <p>Want to partner with one of our event properties? Contact <a href="mailto:ben@monstercat.com">ben@monstercat.com</a>.</p>
+        </div>
+      </div>
+    </div>  
   {{/event}}
 {{/data}}
 </script>
@@ -92,35 +117,35 @@
         data-process="processEventsPage"
         data-template="page-events"
         >
-    <div data-source="$endpoint/events/header?limit=1" data-process="processHeaderEvent"></div>
-    <section role="upcoming-events">
-      <div class="container latest">
-        <header class="flex top-cta">
-          <div class="col-xs-12 col-sm-6">
-              <h2 class="line-top">Upcoming Events</h2>
-          </div>
-          <div class="col-xs-12 col-sm-6 toggle-wrapper">
-              <span class="toggle-label">All Events</span>
-              <div class="toggle">
-                <input type="checkbox" role="upcoming-toggle" onclick="toggleUpcoming(event, this)" class="check">
-                <span class="switch"></span>
-                <span class="track"></span>
-              </div>
-              <span class="toggle-label">Monstercat</span>
-          </div>
-        </header>
-        <div role="events-tables" class="events-tables">
-          <div class="events-no-featured-message shadow hide">
-            <a href="https://www.monstercat.com/tickets" target="_BLANK" class="blue">Sign-up</a>
-            for information on upcoming Monstercat events.</div>
+  <div data-source="$endpoint/events/header?limit=1" data-process="processHeaderEvent"></div>
+  <section role="upcoming-events">
+    <div class="container latest">
+      <header class="flex top-cta">
+        <div class="col-xs-12 col-sm-6">
+            <h2 class="line-top">Upcoming Events</h2>
         </div>
-        <button onclick="clickLoadMoreUpcomingEvents(event, this)" role="load-more-upcoming-events" current-page="{{page}}" class="button button--load-events button--cta hide">Load More</button>
+        <div class="col-xs-12 col-sm-6 toggle-wrapper">
+            <span class="toggle-label">All Events</span>
+            <div class="toggle">
+              <input type="checkbox" role="upcoming-toggle" onclick="toggleUpcoming(event, this)" class="check">
+              <span class="switch"></span>
+              <span class="track"></span>
+            </div>
+            <span class="toggle-label">Monstercat</span>
+        </div>
+      </header>
+      <div role="events-tables" class="events-tables">
+        <div class="events-no-featured-message shadow hide">
+          <h3>No upcoming events currently scheduled. Stay tuned!</h3>
+        </div>
       </div>
-    </section>
-    {{>email-optin-mailchimp-link}}
-    <section data-source="$endpoint/events/past?featured=1&limit=100" data-process="processPastEvents" class="events-past"></section>
+      <button onclick="clickLoadMoreUpcomingEvents(event, this)" role="load-more-upcoming-events" current-page="{{page}}" class="button button--load-events button--cta hide">Load More</button>
+    </div>
+  </section>
+  {{>email-optin-mailchimp-link}}
+  <section data-source="$endpoint/events/past?featured=1&limit=100" data-process="processPastEvents" class="events-past"></section>
   {{>event-sponsor}}
-    <div role="event-google-tracking"></div>
+  <div role="event-google-tracking"></div>
 </script>
 
 <script type="text/html"
@@ -151,7 +176,7 @@
 
 <script type="text/html"
         data-partial data-template="upcoming-event-tr">
-<tr {{#featured}}class="featured"{{/featured}} data-date="{{startDate}}" event-id="{{_id}}">
+  <tr {{#featured}}class="featured"{{/featured}} data-date="{{startDate}}" event-id="{{_id}}">
     <td class="date">
       <div>
         <span class="month">{{localMonth}}</span>
@@ -238,13 +263,40 @@
 
 <script type="text/html"
         data-partial
-        data-template="event-header"
-        >
+        data-template="event-header-full">
   <div class="banner">
       <div class="banner" style="background-image:url({{coverImageLarge}})">
           <div class="banner-shade"></div>
           <div class="gradient"></div>
       </div>
+  </div>
+  <div class="container container--event-header flex">
+    <div class="col-xs-12 col-sm-12 cl-white text center">
+      <a class="silent no-hover" href="{{url}}">
+          <h1 class="title uppercase mb-1">{{name}}</h1>
+      </a>
+      {{#if upcoming}}
+        <span class="tag">Upcoming Event</span>
+      {{else}}
+        <span class="tag">Past Event - {{dateString}}</span>
+      {{/if}}
+      <a class="button button--cta" role="view-event" href="{{url}}">View</a>
+      {{#if showCtaButton}}
+        <a class="button button--cta button--icon" target="_blank" href="{{ctaUri}}">{{ctaLabel}} <i class="fa fa-external-link"></i></a>
+      {{/if}}
+    </div>
+  </div>
+</script>
+
+<script type="text/html"
+        data-partial
+        data-template="event-header"
+        >
+  <div class="banner">
+    <div class="banner" style="background-image:url({{coverImageLarge}})">
+      <div class="banner-shade"></div>
+      <div class="gradient"></div>
+    </div>
   </div>
   <div class="container flex">
     {{#if posterImageUri}}
@@ -262,12 +314,12 @@
     <div class="col-xs-12 col-sm-12 cl-white featured-details featured-details--event">
     {{/if}}
       {{#if upcoming}}
-        <span class="tag">Upcoming Event</span>
+      <span class="tag">Upcoming Event</span>
       {{else}}
-        <span class="tag">Past Event</span>
+      <span class="tag">Past Event</span>
       {{/if}}
       <a class="silent no-hover" href="{{url}}">
-          <h1 class="title uppercase">{{name}}</h1>
+        <h1 class="title uppercase">{{name}}</h1>
       </a>
       <h3>
         {{venue}} @ {{location}}.
@@ -278,7 +330,7 @@
       <p class="description">{{ description }}</p>
       <a class="button button--cta" role="view-event" href="{{url}}">View</a>
       {{#if showCtaButton}}
-        <a class="button button--cta button--icon" target="_blank" href="{{ctaUri}}">{{ctaLabel}} <i class="fa fa-external-link"></i></a>
+      <a class="button button--cta button--icon" target="_blank" href="{{ctaUri}}">{{ctaLabel}} <i class="fa fa-external-link"></i></a>
       {{/if}}
     </div>
   </div>
@@ -289,15 +341,12 @@
         data-template="email-optin-mailchimp-link"
         data-partial
         >
-
-  <div class="container panel events-email">
-      <div class="form form-inline mobile">
-        <label class="email-me mb-1">Get emailed about Monstercat events!</label>
-        <br />
-        <a href="https://monstercat.us14.list-manage.com/subscribe?u=558f2b6bdecccf5cf42ccc7f7&id=1ef227c776&group[5449][2]=1&group[5449][1]=1&MERGE0={{userEmail}}"
-           class="button button--cta">Subscribe</a>
-      </div>
-  </div>
+  <div class="container">
+    <div class="col-xs-12 panel footer-cta footer-cta--sponsor cl-white mt-1">
+      <h2>Don't miss future Monstercat events!</h2>
+      <a class="button button-sm button--white button--icon" href="https://monstercat.us14.list-manage.com/subscribe?u=558f2b6bdecccf5cf42ccc7f7&id=1ef227c776&group[5449][2]=1&group[5449][1]=1&MERGE0={{userEmail}}" target="_blank">Subscribe to get notified <i class="fa fa-chevron-right"></i></a>
+    </div>
+  </div>  
 </script>
 
 <!-- This is if you aren't logged in -->
@@ -305,10 +354,10 @@
         data-partial
         data-template="events-email-optin-container">
 
-<div role="events-email-optin">
-  {{#if isSignedIn}}
+  <div role="events-email-optin">
+    {{#if isSignedIn}}
     <div data-source="$endpoint/self" data-process="processEventsEmailOptin"></div>
-  {{else}}
+    {{else}}
     <div class="container panel events-email events-email-signin">
       <form onsubmit="signUpForEventEmail(event, this)">
         <div class="form form-inline mobile">
@@ -320,8 +369,8 @@
         </div>
       </form>
     </div>
-  {{/if}}
-</div>
+    {{/if}}
+  </div>
 </script>
 
 
@@ -330,27 +379,27 @@
         data-template="events-email-optin"
         data-process="processEve"
         >
-{{#loading}}
-{{/loading}}
-{{#error}}
-<div class="container panel">
-  <p>{{message}}</p>
-</div>
-{{/error}}
-{{#data}}
-  {{^fullyOptedIn}}
-  <div class="container panel events-email">
-    <form onsubmit="subscribeEventsOptIn(event, this)">
-      <div class="form form-inline mobile">
-        <label class="email-me">Email me about Monstercat events.</label>
-        <div class="form-block my-location">
-          <label>My location: </label>
-          {{>location-autocomplete}}
-        </div>
-        <button class="button--cta button--full subscribe">Subscribe</button>
-      </div>
-    </form>
+  {{#loading}}
+  {{/loading}}
+  {{#error}}
+  <div class="container panel">
+    <p>{{message}}</p>
   </div>
-  {{/fullyOptedIn}}
-{{/data}}
+  {{/error}}
+  {{#data}}
+    {{^fullyOptedIn}}
+    <div class="container panel events-email">
+      <form onsubmit="subscribeEventsOptIn(event, this)">
+        <div class="form form-inline mobile">
+          <label class="email-me">Email me about Monstercat events.</label>
+          <div class="form-block my-location">
+            <label>My location: </label>
+            {{>location-autocomplete}}
+          </div>
+          <button class="button--cta button--full subscribe">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    {{/fullyOptedIn}}
+  {{/data}}
 </script>
