@@ -1,0 +1,227 @@
+<script type="text/html" data-template="black-friday-countdown">
+<div id="bfcm-2018">
+    <div class="container {{class}}">  
+        <div class="actions">
+          <img class="logo-black" src="{{logo}}">
+          <div class="countdown-container">
+            <label><h3>{{title}}
+              <span class="countdown" show-days="1" role="countdown" to="{{to}}" completed="countdownBannerCompleted"></span></h3> 
+            </label>
+          </div>
+          <div class="button-container">
+                <button
+                    onclick="closeBlackFriday()"
+                    class="button button-sm button--cta button--close pull-right"
+                    style="margin-left: 6px;">
+                    <span class="fa fa-remove"></span>
+                </button>
+                <a class="button button--cta button-sm" href="{{ctaUrl}}">
+                  <span class="calendar">{{ctaText}}</span>
+                  <i class="fa fa-{{ctaIcon}}"></i>
+                </a>
+          </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" data-template="black-friday-countdown">
+<div id="bfcm-2018">
+    <div class="container {{class}}">  
+        <div class="actions">
+          <img class="logo-black" src="{{logo}}">
+          <div class="countdown-container">
+            <label><h3>{{title}}
+              <span class="countdown" show-days="1" role="countdown" to="{{to}}" completed="countdownBannerCompleted"></span></h3> 
+            </label>
+          </div>
+          <div class="button-container">
+                <button
+                    onclick="closeBlackFriday()"
+                    class="button button-sm button--cta button--close pull-right"
+                    style="margin-left: 6px;">
+                    <span class="fa fa-remove"></span>
+                </button>
+                <a class="button button--cta button-sm" href="{{ctaUrl}}">
+                  <span class="calendar">{{ctaText}}</span>
+                  <i class="fa fa-{{ctaIcon}}"></i>
+                </a>
+          </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script type="text/html" data-template="countdown-banner">
+<div class="container">
+    <a class="info" href="{{urlInfo}}">
+        {{{info}}}
+    </a>
+    <div class="actions">
+        <div class="button-container">
+            <a href="{{urlButton}}" class="button button--cta">{{buttonLabel}}</a>
+        </div>
+        <div class="countdown-container">
+            <div class="label">{{label}}</div>
+            <div class="countdown" show-days="1" role="countdown" to="{{to}}" completed="countdownBannerCompleted"></div>
+        </div>
+    </div>
+    </div>
+</script>
+
+
+<script type="text/html" data-template="front-form">
+<button class="button--close faux" onclick="closeFrontForm(event, this)">
+    <i class="fa fa-remove"></i>
+</button>
+<h3>Message Support</h3>
+<form
+  method="POST"
+  name="fa-form-1"
+  action="https://webhook.frontapp.com/forms/monstercat/e7bf54a291645762ba696daeba632a299169715243305549824d591af3ee6ea1"
+  enctype="multipart/form-data"
+  accept-charset="utf-8"
+  onsubmit="submitFrontForm(event)"
+  data-set="front-form">
+    {{#meta}}
+    <input type="hidden" name="{{name}}" value="{{value}}" />
+    {{/meta}}
+    <p class="mb-2">Have a suggestion? <a href="https://feedback.monstercat.com">Post it here</a>.</p>
+    {{>errors}}
+    <div class="form-group form-group-inline row">
+        <div class="col-sm-2">
+            <label for="email">Name</label>
+        </div>
+        <div class="col-sm-10">
+            <input type="text" name="name" value="{{name}}">
+        </div>
+    </div>
+
+    <div class="form-group form-group-inline row">
+        <div class="col-sm-2">
+            <label for="email">Email</label>
+        </div>
+        <div class="col-sm-10">
+            <input type="email" name="email" value="{{email}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Message</label>
+        <textarea name="body" onkeydown="keyDownSuperEnter(event)"></textarea>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn--cta" data-set-target="front-form" >Submit</button>
+    </div>
+    </form>
+</script>
+
+<script type="text/html" data-template="loading-view" data-partial>
+    <div class="loading">
+        <span class="loader"></span>
+    </div>
+</script>
+
+<script type="text/html" data-template="errors" data-partial>
+{{#errors.length}}
+    <ul class="errors">
+    {{#errors}}
+        <li>{{.}}</li>
+    {{/errors}}
+    </ul>
+{{/errors.length}}
+</script>
+
+<script type="text/html" data-template="error" data-partial>
+    {{#if error}}
+    <div class="container">
+        <div class="errors-container">
+            {{error}}
+        </div>
+    </div>
+    {{/if}}
+</script>
+
+<script type="text/html" data-template="loading-view-black" data-partial>
+    <div class="loading loading--black">
+        <span class="loader"></span>
+    </div>
+</script>
+
+<script type="text/html" data-template="loading-inner-view" data-partial>
+    <div class="loading loading-inner">
+        <span class="loader"></span>
+    </div>
+</script>
+
+<script type="text/html" data-template="loading-table-view" data-partial>
+<tr>
+    <td class="loading-table" colspan="10">
+        <span class="loader"></span>
+    </td>
+</tr>
+</script>
+
+<script type="text/html" data-template="navigation">
+{{#data}}
+{{#user}}
+<a class="silent nav-item" onclick="closeNav()" href="/playlists"><i class="fa fa-bars"></i>Playlists</a>
+<a class="silent nav-item" onclick="closeNav()" href="/account"><i class="fa fa-gear"></i>Account</a>
+<a class="silent nav-item" onclick="closeNav()" href="/account/gold"><i class="fa fa-paw"></i>Gold</a>
+<a class="silent nav-item" onclick="closeNav()" href="/account/licenses"><i class="fa fa-check-circle-o"></i>Licenses</a>
+{{/user}}
+{{^user}}
+<a class="silent nav-item" onclick="closeNav()" href="/signin?redirect={{currentUrl}}"><i class="fa fa-sign-in"></i>Sign In</a>
+{{/user}}
+{{/data}}
+</script>
+
+<script type="text/html"
+        data-template="404"
+        data-title="Page Not Found">
+    <div class="container">
+        <h1>Page Not Found</h1>
+        <div class="panel">
+            <p>The page you are looking for is not here.</p>
+        </div>
+    </div>
+</script>
+
+<script type="text/html"
+  data-route="^help\/?$"
+  data-title="Help"
+  data-process="processPage"
+  data-template="help-page">
+  <div class="container">
+    <h1>Help</h1>
+    <div class="panel md-container">
+      <h2>Notices & Important Information</h2>
+      <ul class="ml-3">
+        <li><a href="/faqs/migration-notice">Connect Migration Notice</a></li>
+        <li><a href="/twitch-policy">Twitch Policy</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/terms-of-service">Terms of Service</a></li>
+      </ul>
+      <h2>Frequently Asked Questions</h2>
+      <p>
+        Have any questions about this platform or the services provided? Please
+        check the links below that may point you in the right direction.
+      </p>
+      <h3>Topics</h3>
+      <ul class="ml-3">
+        <li><a href="/faqs/general">General Site</a></li>
+        <li><a href="/faqs/whitelisting">Content Creators &amp; Whitelisting</a></li>
+      </ul>
+      <p>
+        If you still have a question please contact us at <a
+          href="mailto:connect@monstercat.com">connect@monstercat.com</a>.
+      </p>      <h2>Other Links</h2>
+    </div>
+  </div>
+</script>
+
+<script type="text/html" data-template="toast">
+    <div class="toast{{#error}} error{{/error}}" >
+        <p>{{{message}}}</p>
+    </div>
+</script>

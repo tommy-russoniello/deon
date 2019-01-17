@@ -1,5 +1,3 @@
-var endpoint        = endhost + '/api'
-var newshost        = 'https://www.monstercat.com/news-api'
 var datapoint       = 'https://blobcache.monstercat.com'
 var session         = null
 var pageTitleSuffix = 'Monstercat'
