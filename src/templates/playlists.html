@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-template="add-to-playlist-modal"
         >
     <div class="modal">
@@ -64,7 +64,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-title="My Playlists"
         data-source="$endpoint/playlist?fields=name,public"
         data-process="processPlaylistsPage"
@@ -122,7 +122,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^playlist\/(.*)"
         data-source="$endpoint/playlist/$1?fields=name,public,userId"
         data-process="processPlaylistPage"
@@ -225,7 +225,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="playlist-tracks"
         data-process="processPlaylistTracks"
         completed="updateControls">

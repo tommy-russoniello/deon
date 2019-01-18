@@ -1,5 +1,5 @@
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="markdown-basic">
     <div class="container">
         {{#loading}}
@@ -16,7 +16,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^faqs(?:\/|\/general)?$"
         data-process="processMarkdownPage"
         data-no-cors
@@ -25,14 +25,14 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^faqs\/whitelisting\/?$">
     <div class="container">
         {{>licensingContentCreatorFAQs}}
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^faqs/migration-notice\/?$"
         source-type="markdown"
         data-process="processMarkdownPage"
@@ -42,7 +42,7 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^twitch-policy\/?$"
         data-process="processMarkdownPage"
         data-no-cors
@@ -51,7 +51,7 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^privacy-policy\/?$"
         data-process="processMarkdownPage"
         data-no-cors
@@ -60,7 +60,7 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^terms-of-service\/?$"
         data-process="processMarkdownPage"
         data-no-cors
@@ -69,7 +69,7 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^non-licensable-tracks\/?$"
         source-type="markdown"
         data-process="processMarkdownPage"
@@ -78,7 +78,7 @@
     {{>markdown-basic}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^halloween-stencils\/?$"
         data-process="processMarkdownPage"
         data-no-cors

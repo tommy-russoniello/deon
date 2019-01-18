@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^twitchpromo$"
         data-title="Free Trial of Twitch Music Licensing"
         data-process="processLicensingTwitchTrial"
@@ -124,14 +124,14 @@
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^license\/?$"
         redirect="/licensing">
 </script>
 
 <!-- POLICY PAGES -->
 
-<script type="text/template"
+<script type="text/html"
         data-route="^licensing\/twitch-policy\/?\??(.*)?$"
         data-title="Twitch License Policy"
         data-process="processMarkdownBarePage"
@@ -156,16 +156,16 @@
   </div>
 </script>
 
-<script type="text/template" data-template="markdown-simple" data-process="processMarkdownSimple">
+<script type="text/html" data-template="markdown-simple" data-process="processMarkdownSimple">
 {{>markdown-basic}}
 </script>
 
 
-<script type="text/template" data-template="markdown-bare" data-process="processMarkdownBare">
+<script type="text/html" data-template="markdown-bare" data-process="processMarkdownBare">
 {{{data}}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^licensing\/youtube-policy\/?\??(.*)?$"
         data-title="Monstercat YouTube Licensing Policy"
         data-template="youtube-policy-page"
@@ -193,7 +193,7 @@
   </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^licensing\/other-platforms\/?\??(.*)?$"
         data-process="processLicensingOtherPlatformsPage"
         data-template="licensing-other-platforms-page"
@@ -241,7 +241,7 @@
 
 <!-- MUSTACHES -->
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="licensing-content-creator-ctas">
 {{#if hasGoldAccess}}
   <a class="button button--full button-cta button--youtube button-cta--mobile" role="licensing-cta" href="/account/whitelists?vendor=youtube">
@@ -272,7 +272,7 @@
 {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="licensingOurContentCreators">
   <h2>Our Content Creators</h2>
   <p>Some of the great streamers and YouTubers using Monstercat music to make their content great.</p><!-- what year is it? -->
@@ -299,7 +299,7 @@
 </script>
 
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="licensingContentCreatorSellingPoints">
   <ul class="selling-points">
     <li>Available to all our <a href="/gold" class="cl-white">Monstercat Gold</a> subscribers</li>
@@ -309,7 +309,7 @@
   </ul>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="licensing-modal-main">
   <div class="section content-creators flex-buttons">
       <a class="button button-cta button-cta--mobile" href="/sync" onclick="closeModal(event)">
@@ -321,7 +321,7 @@
 
 <!-- MODALS -->
 
-<script type="text/template"
+<script type="text/html"
         data-template="track-licensing-modal"
         transform="loadReleaseAndTrack">
     <div class="modal modal--licensing-track modal--licensing">

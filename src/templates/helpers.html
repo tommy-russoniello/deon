@@ -1,21 +1,21 @@
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="location-autocomplete">
     <input class="location-auto-complete" type="text" placeholder="City, Country" autocomplete="on" value="{{placeNameFull}}">
     <input type="hidden" name="googleMapsPlaceId" value="{{googleMapsPlaceId}}" />
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial data-template="copy-clipboard-button"
 >
   <button type="button" class="button copy-clipboard-button" onclick="copyToClipboard(event)"><i class="fa fa-copy"></i></button>
 </script>
 
-<script type="text/template" data-partial data-template="submit-button">
+<script type="text/html" data-partial data-template="submit-button">
   <button class="{{#if class}}{{class}}{{else}}button--cta button--full{{/if}}">
       {{>submit-button-inner}}
   </button>
 </script>
-<script type="text/template"
+<script type="text/html"
         data-template="loading-placeholder"
         data-partial
         >
@@ -23,7 +23,7 @@
 {{/words}}
 </script>
 
-<script type="text/template" data-partial data-template="submit-button-inner">
+<script type="text/html" data-partial data-template="submit-button-inner">
   <span class="actionier-off">
       {{#if text}}
         {{text}}

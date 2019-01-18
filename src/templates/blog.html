@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^(?:news|blog)\/(article|[\d+\-]+|posts|preview)\/([^\/\?]*)\/?"
         data-title="Article"
         data-process="processBlogPostPage"
@@ -62,11 +62,11 @@
     {{/data}}
 </script>
 
-<script type="text/template" data-template="markdown-post" data-process="processMarkdownPost">
+<script type="text/html" data-template="markdown-post" data-process="processMarkdownPost">
     {{{data}}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="blog-featured">
 
@@ -98,7 +98,7 @@
 
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="blog-article">
         <article class="flex">
@@ -129,7 +129,7 @@
         </article>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^(?:news|blog)\/?(?:\?.*)?$"
         data-title="Blog"
         data-process="processBlogPagination"
@@ -146,7 +146,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^(?:news|blog)\/tags\/(.*)"
         data-title="Blog"
         data-process="processBlogPagination"
@@ -164,7 +164,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-process="processBlogPage"
         data-template="blog-page">
     {{#data}}
@@ -187,7 +187,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="blog-pagination">
     {{#if total}}

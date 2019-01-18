@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^browse"
         data-title="Browse Music"
         data-process="processBrowseMusicPage"
@@ -35,7 +35,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="browse-filters"
         data-process="processBrowseFilters"
         >
@@ -81,19 +81,19 @@
     {{/data}}
 </script>
 
-<script type="text/template" data-template="browse-filter-item">
+<script type="text/html" data-template="browse-filter-item">
     <li>
         <input type="hidden" name="{{type}}s[{{index}}]" value="{{value}}"/>
         <button type="button" onclick="removeBrowseFilter(event, this)">{{value}} <i class="fa fa-close"></i></button>
     </li>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="browse-page">
     <ul data-source="{{source}}" data-process="processMusicBrowseResults" class="music-browse"></ul>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="music-browse"
         data-process="processMusicBrowseResults"
         >

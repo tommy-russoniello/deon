@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-route="^search\/artists(\?.*)?"
         data-process="processSearchArtistsPage"
         data-template="search-artists-page"
@@ -15,7 +15,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-artists"
         data-process="processSearchArtistsResults"
         >
@@ -36,7 +36,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^search\/songs(\?.*)?"
         data-process="processSearchTracksPage"
         data-template="search-tracks-page"
@@ -51,7 +51,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-tracks"
         data-process="processSearchTrackResults"
         >
@@ -72,7 +72,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^search\/releases(\?.*)?"
         data-template="search-releases-page"
         data-process="processSearchReleasesPage"
@@ -87,7 +87,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-releases"
         data-process="processSearchReleaseResults"
         >
@@ -111,7 +111,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^search(\?.*)?"
         data-title="Search All"
         data-template="search-page"
@@ -152,7 +152,7 @@
     </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-snippet-releases"
         data-process="processSearchSnippetReleases">
     {{#data}}
@@ -166,7 +166,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-snippet-artists"
         data-process="processSearchSnippetArtists"
         >
@@ -185,7 +185,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template="search-snippet-tracks"
         data-process="processSearchSnippetTracks">
     {{#data}}
@@ -200,7 +200,7 @@
     {{/data}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="search-tracks-table">
     {{#if results.length}}
@@ -233,7 +233,7 @@
     {{/if}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="search-releases-list">
     <ul class="art-list art-list--full-width">
@@ -254,7 +254,7 @@
 </script>
 
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="search-artists-list"
         >
@@ -279,7 +279,7 @@
     </ul>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="search-pagination"
         >

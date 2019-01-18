@@ -1,4 +1,4 @@
-<script type="text/template"
+<script type="text/html"
         data-partial
         data-template="voted-for-tweet"
         >
@@ -13,7 +13,7 @@
 </form>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^[Bb]est[Oo]f2017\/results$"
         data-title="Best of 2017 Results"
         transform="transformBestOf2017Results"
@@ -54,7 +54,7 @@
 </div>
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-template=""
         data-partial data-template="bestof2017-results"
         >
@@ -68,7 +68,7 @@
       {{/results}}
 </script>
 
-<script type="text/template" data-partial data-template="bestof2017-topsong" data-template="bestof2017-topsong">
+<script type="text/html" data-partial data-template="bestof2017-topsong" data-template="bestof2017-topsong">
 {{#_id}}
   <div class="top-song">{{>play-song}} <span class="top-song-name">{{title}} by {{artistsTitle}}</span></div>
   <div class="download-area {{#hasGold}}has-gold{{/hasGold}}">
@@ -87,7 +87,7 @@
 {{/_id}}
 </script>
 
-<script type="text/template"
+<script type="text/html"
         data-route="^[Bb]est[Oo]f2017$"
         data-title="Best of 2017"
         transform="transformBestOf2017"
