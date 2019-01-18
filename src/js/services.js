@@ -24,7 +24,7 @@ function getUserServicesScope (done) {
   if (opts.isSignedIn && opts.gold.subscribed){
     requestJSON({
       method: 'GET',
-      url: endhost+ '/api/self/gold-subscription',
+      url: endpoint2 + '/self/gold-subscription',
       withCredentials: true
     }, function (err, json){
       var gold = transformGoldSubscription(json);

@@ -32,7 +32,7 @@ function processSubscriptionsPage (args) {
 
   request({
     method: 'POST',
-    url: endpoint + '/self/subscriptions',
+    url: endpoint2 + '/self/subscriptions',
     withCredentials: true,
     data: getXsollaTokenDefaults()
   }, (err, result) => {
@@ -172,7 +172,7 @@ function generateXsollaToken (type, opts, done) {
     method: 'POST',
     withCredentials: true,
     data: data,
-    url: endpoint + '/xsolla/token/' + type
+    url: endpoint2 + '/xsolla/token/' + type
   }, (err, result) => {
     if (err) {
       done(err)
@@ -309,7 +309,7 @@ function clickCancelLegacySubscription (e) {
   btn.classList.toggle('on')
 
   requestJSON({
-    url: endpoint + '/self/cancel-paypal/' + id,
+    url: endpoint2 + '/self/cancel-paypal/' + id,
     method: 'POST',
     withCredentials: true
   }, function (err, result) {

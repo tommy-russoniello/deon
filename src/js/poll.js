@@ -68,7 +68,7 @@ function createVote (e, el) {
     return toasty(Error('You need to select at least ' + minChoices + ' choices.'))
 
   requestJSON({
-    url: endpoint + '/vote',
+    url: endpoint2 + '/vote',
     method: 'POST',
     data: {
       pollId: data.pollId,
