@@ -1,7 +1,4 @@
 const BESTOF2018_POLLID = '5bedbcfaec51c7d730efe9de'
-
-const pollEndpoint = endpoint //'http://localhost:4002'
-
 const PAGE_BESTOF2018 = 'page-best-of-2018'
 
 function processBestOf2018ResultsPage (args) {
