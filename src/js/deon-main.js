@@ -870,7 +870,7 @@ function submitRemoveYouTubeClaim (e, el) {
 
       return errs
     },
-    url: endpoint + '/self/remove-claims',
+    url: `${endpoint2}/self/remove-claims`,
     method: 'POST',
     success: function () {
       toasty(strings.claimReleased)

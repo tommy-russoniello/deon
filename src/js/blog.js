@@ -83,7 +83,7 @@ function processBlogPostPage (args) {
     cors = true
     withCredentials = true
     preview = true
-    url = endpoint + '/blog/drafts/' + uri
+    url = `${endpoint2}/blog/drafts/${uri}`
   }
   else {
     preview = false
@@ -103,31 +103,25 @@ function processBlogPostPage (args) {
       })
       return
     }
-
     const post = transformPost(preview ? result.meta : result)
-
-
     if (args.matches[1] == 'preview') {
-      markdownUrl = endpoint + '/blog/drafts/' + args.matches[2]
+      markdownUrl = `${endpoint}/blog/drafts/${args.matches[2]}`
     }
     else {
       markdownUrl = newshost + '/' + result.path
     }
-
     renderContent(args.template, {
       data: post,
       preview: preview,
       markdownUrl: markdownUrl,
       markdownCors: cors
     })
-
     var meta = {
       'title': post.title + ' - Blog',
       'description': transformExcerptToText(post.excerpt),
       'og:type': 'article',
       'og:image': post.image
     }
-
     primePageIsReady(meta, 'markdown_post')
     scrollToHighlightHash()
   })

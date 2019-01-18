@@ -1,7 +1,7 @@
 function requestSelfShopCodes (done) {
   requestJSON({
     withCredentials: true,
-    url: endpoint + '/self/shop-codes'
+    url: endpoint2 + '/self/shop-codes'
   }, function (err, result) {
     if(err) {
       return done(err);
