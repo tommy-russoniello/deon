@@ -163,7 +163,7 @@ function confirmBlockNonLicensableTracks(){
 
 function submitAddLicense (e, el) {
   submitForm(e, {
-    url: `${endpoint}/self/whitelist`,
+    url: `${endpoint2}/self/whitelist`,
     method: 'POST',
     cors: true,
     transform: (data) => {

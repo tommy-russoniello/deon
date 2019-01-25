@@ -88,6 +88,8 @@ function toggleStreamerMode(e, el) {
   var form = findParentWith(e.target, "form")
   var hideTracks = findNode('[name="hideNonLicensableTracks"]', form)
   var blockTracks = findNode('[name="blockNonLicensableTracks"]', form)
+  var publicPlaylist = findNode('[name="playlistPublicByDefault"]', form)
+  var format = findNode('[name="preferredDownloadFormat"]', form)
 
   hideTracks.checked = el.checked
   blockTracks.checked = el.checked
@@ -95,8 +97,10 @@ function toggleStreamerMode(e, el) {
     url: `${endpoint2}/self`,
     method: 'PUT',
     data: {settings: {
+      playlistPublicByDefault: publicPlaylist.checked,
       hideNonLicensableTracks: hideTracks.checked,
       blockNonLicensableTracks: blockTracks.checked,
+      preferredDownloadFormat: format.value,
     }},
     cors: true,
   }, (err, body, xhr) => {

@@ -32,7 +32,7 @@ function processSubscriptionsPage (args) {
 
   request({
     method: 'POST',
-    url: endpoint2 + '/self/subscriptions',
+    url: `${endpoint2}/xsolla/token/gold`,
     withCredentials: true,
     data: getXsollaTokenDefaults()
   }, (err, result) => {
