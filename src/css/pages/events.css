@@ -484,3 +484,19 @@ h3.event-details {
 .event-page-header p.description {
   font-size: 1.2em
 } 
+
+
+.events-video-icon{
+  position: absolute;
+  z-index: 2;
+  font-size: 1.2em;
+  background: #fff;
+  color: #000;
+  padding: 0.4em;
+  width: 45px;
+  text-align: center;
+}
+
+.col-video-text p {
+  line-height: 3
+}
