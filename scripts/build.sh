@@ -8,7 +8,7 @@ RESET="\033[0m"
 
 BIN=$PWD/bin
 SRC=$PWD/src
-ENV=${1:-environment.html}
+ENV=${1:-environment}
 TEMPLATES=$(find "$SRC/templates" -iname '*.html')
 
 echo
@@ -41,7 +41,7 @@ echo -e "${YELLOW}HTML${RESET}"
 echo -e "Combining all HTML and Templates..."
 
 gawk -v root=src -f $PWD/scripts/stamp-qs.awk < $SRC/index.html > tmp.html
-cat $SRC/env-$ENV.html $TEMPLATES >> tmp.html
+cat $SRC/$ENV.html $TEMPLATES >> tmp.html
 mv tmp.html $BIN/index.html
 
 echo
