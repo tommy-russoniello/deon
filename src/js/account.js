@@ -186,9 +186,6 @@ function enableTwoFactor (e, el) {
       }
       return errs
     },
-    error: (err) => {
-      alert(err.message)
-    },
     success: function () {
       window.location.hash = '#two-factor'
       reloadPage()
@@ -245,17 +242,17 @@ function processAccountPage (args) {
       const account = result
 
       scope.countries = getAccountCountries(account.location)
-      if (!account.twoFactorId && !account.pendingTwoFactorId) {
+      if (account.twoFactorState == 'disabled') {
         scope.enableTwoFactor = {
           countries: CountryCallingCodes
         }
         scope.twoFactor = false
       }
-      else if (account.pendingTwoFactorId) {
+      else if (account.twoFactorState == 'pending') {
         scope.confirmingTwoFactor = true
-        scope.twoFacotr = false
+        scope.twoFactor = false
       }
-      else if (account.twoFactorId) {
+      else if (account.twoFactorState == 'enabled') {
         scope.twoFactor = true
       }
       if (account.birthday) {
