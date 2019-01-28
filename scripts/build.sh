@@ -8,7 +8,7 @@ RESET="\033[0m"
 
 BIN=$PWD/bin
 SRC=$PWD/src
-ENV=${1:-dev}
+ENV=${1:-environment.html}
 TEMPLATES=$(find "$SRC/templates" -iname '*.html')
 
 echo
