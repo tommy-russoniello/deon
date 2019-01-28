@@ -64,11 +64,13 @@ function request (opts, done) {
     var responseContentType = xhr.getResponseHeader("Content-Type")
 
     if (responseContentType && responseContentType.indexOf('application/json') >= 0) {
-      try {
-        obj = JSON.parse(xhr.responseText)
-      } catch (e) {
-        console.warn(e)
-        err = e
+      if (xhr.status != 204) {
+        try {
+          obj = JSON.parse(xhr.responseText)
+        } catch (e) {
+          console.warn(e)
+          err = e
+        }
       }
     } else {
       obj = xhr.responseText
