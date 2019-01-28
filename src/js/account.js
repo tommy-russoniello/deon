@@ -202,9 +202,6 @@ function confirmTwoFactor (e, el) {
     transformData: transformTwoFactorFormData,
     url: endpoint2 + '/self/two-factor/confirm',
     method: 'POST',
-    error: (err) => {
-      alert(err.message)
-    },
     success: function () {
       reloadPage()
       window.location.hash = '#two-factor'

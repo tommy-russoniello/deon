@@ -32,7 +32,7 @@ function processSubscriptionsPage (args) {
 
   request({
     method: 'POST',
-    url: `${endpoint2}/xsolla/token/gold`,
+    url: `${endpoint2}/self/manage-subscriptions`,
     withCredentials: true,
     data: getXsollaTokenDefaults()
   }, (err, result) => {
@@ -44,18 +44,15 @@ function processSubscriptionsPage (args) {
     renderContent('subscriptions-page', scope)
 
     scope.loading = false
-    if (!result.legacySubs.length) {
+    scope.legacy = !!result.legacy
+    if (result.legacy) {
+      scope.subscriptions = result.subscriptions
+    }
+    else {
       scope.xsollaIframeSrc = getXsollaIframeSrc(result.xsollaToken)
       scope.hasSubscriptions = result.hasActiveSubs
     }
-    else if (result.legacySubs.length) {
-      scope.legacy = true
-      scope.subscriptions = result.legacySubs
-    }
-    else {
-      renderError(new Error('An unknown token error occured'))
-      return
-    }
+
     renderContent('subscriptions-page', scope)
     setXsollaIframesLoading()
     pageIsReady({

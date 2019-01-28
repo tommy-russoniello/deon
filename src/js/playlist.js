@@ -88,7 +88,7 @@ function clickRemoveFromPlaylist (e, el) {
     return
   }
   const url = `${endpoint2}/playlist/${id}`
-  requestCachedURL(url, (err, obj) => {
+  requestJSON(url, (err, obj) => {
     if (terror(err)) {
       return
     }
@@ -114,14 +114,12 @@ function openAddToPlaylist (e, el) {
     loading: true
   })
 
-  requestCachedURL(`${endpoint2}/self/playlist?sort=name`, (err, playlists) => {
+  requestCachedURL(`${endpoint2}/self/playlist`, (err, playlists) => {
     if (err) {
       renderModal(template, {
         error: err,
         loading: false
       })
-      done(err)
-
       return
     }
     renderModal(template, {
@@ -260,7 +258,7 @@ function processPlaylistPage (args) {
         }
 
         if (playlist.tracks.length < PLAYLIST_DOWNLOAD_LIMIT) {
-          scope.downloadUrl = endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+          scope.downloadUrl = endpoint2 + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
         }
         else {
           scope.downloadLinks = []
@@ -274,13 +272,14 @@ function processPlaylistPage (args) {
             scope.downloadLinks.push({
               label: ((page == 1) ? 'Download ' : '') + 'Part ' + page,
               hover: 'Tracks ' + frm + ' to ' + to,
-              url: endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+              url: endpoint2 + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
             })
           }
         }
       }
 
       var numLoadingPages = Math.ceil(playlist.tracks.length / PLAYLIST_PAGE_LIMIT)
+      numLoadingPages = Math.max(numLoadingPages, 1)
 
       scope.pagePlaceholders = []
       const stages = []
@@ -377,9 +376,11 @@ function loadPlaylistTracksPage (playlistId, page, done) {
 
     betterRender('playlist-tracks', tbody, {results: tracks})
 
-    tracksTable.insertBefore(table, placeHolderTBody)
-    tracksTable.removeChild(placeHolderTBody)
-    const firstPlaceHolder = placeHolderTBody.querySelector('tr[data-placeholder-page="' + page + '"]')
+    if (placeHolderTBody) {
+      tracksTable.insertBefore(table, placeHolderTBody)
+      tracksTable.removeChild(placeHolderTBody)
+      const firstPlaceHolder = placeHolderTBody.querySelector('tr[data-placeholder-page="' + page + '"]')
+    }
 
     if (done) {
       done(null, tracks)
