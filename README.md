@@ -15,12 +15,6 @@ Praise the sun.
 
 Open the directory in your browser or use a simple web server to host.
 
-## Building for Production
-
-Add `pro` to the build command arguments, like this `./build pro` to build the
-production version of the project. This swaps out the `env-dev.html` for the
-`env-pro.html` for setting up variables.
-
 ## Contributing
 
  * Contributions will be subject to code review before being considered.
