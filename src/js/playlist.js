@@ -53,7 +53,7 @@ function createAndAddToPlaylist (e, el) {
 
 function updatePlaylist(id, data, done) {
   requestJSON({
-    url: endpoint2 + '/playlist/' + el.dataset.playlistId,
+    url: endpoint2 + '/playlist/' + id,
     method: "PATCH",
     data: data,
     withCredentials: true
@@ -551,7 +551,6 @@ function savePlaylistOrder() {
     if (terror(err)) {
       return
     }
-    cache(url, obj)
     toasty(strings.reorderedPlaylist)
   })
 }
