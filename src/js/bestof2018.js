@@ -6,11 +6,9 @@ function processBestOf2018ResultsPage (args) {
     loading: true,
     error: null
   }
-
   renderContent('best-of-2018-results', scope)
-
   request({
-    url: endpoint + '/doublepoll/' + BESTOF2018_POLLID + '/results',
+    url: `${endpoint2}/doublepoll/${BESTOF2018_POLLID}/results`,
     withCredentials: true
   }, (err, result) => {
     scope.loading = false
@@ -24,15 +22,12 @@ function processBestOf2018ResultsPage (args) {
       if (result.results.length > 40) {
         result.results = result.results.splice(0, 40)
       }
-
       scope.data = result
-
       if (result.breakdown.status.hasVoted) {
         const tweet = getVotedForTweet(result.breakdown)
         scope.data.tweetUrl = getVotedForTweetIntentUrl(tweet)
       }
     }
-
     renderContent('best-of-2018-results', scope)
   })
 }
@@ -80,15 +75,12 @@ function processBestOf2018Page () {
     loading: true,
     error: null,
   }
-
   renderContent('best-of-2018', scope)
-
   request({
-    url: endpoint + '/doublepoll/' + BESTOF2018_POLLID,
+    url: `${endpoint2}/doublepoll/${BESTOF2018_POLLID}`,
     withCredentials: true
   }, (err, result) => {
     scope.loading = false
-
     if (err) {
       scope.error = err.toString()
       scope.data = {}
@@ -98,14 +90,11 @@ function processBestOf2018Page () {
       const artistOptions = result.parentOptions.map((option) => {
         return option
       })
-
       const end = new Date(result.poll.endTime)
-
       if (end > new Date()) {
         go('/bestof2018/results')
         return
       }
-
       scope.data = result
       scope.data.isSignedIn = isSignedIn()
       scope.data.artistOptions = artistOptions
@@ -113,7 +102,6 @@ function processBestOf2018Page () {
       scope.data.votingCloseDate = end.toLocaleDateString('en-us', {month: 'short', year: 'numeric', day: 'numeric'})
       scope.data.votingCloseTime = end.toLocaleTimeString('en-us', {timeZoneName: 'short', minute: 'numeric', hour: 'numeric'})
     }
-
     cache(PAGE_BESTOF2018, scope)
     renderContent('best-of-2018', scope)
   })
@@ -301,7 +289,7 @@ function submitBestOf2018 (e) {
 
   request({
     method: 'POST',
-    url:  endpoint + '/doublepoll/' + BESTOF2018_POLLID + '/vote',
+    url: `${endpoint2}/doublepoll/${BESTOF2018_POLLID}/vote`,
     data: {
       votes: votes
     },

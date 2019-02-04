@@ -340,7 +340,7 @@
 <script type="text/html"
         data-template="account-email-page"
         data-process="processAccountEmailPage"
-        data-source="$endpoint/self"
+        data-source="$endpoint2/self"
         data-title="My Email Settings"
         data-route="^account\/email"
         >
@@ -474,7 +474,7 @@
                         <p>Your Gold subscription lets you add licenses to use our music for your YouTube, Twitch, and Mixer channels.</p>
                         <h3 class="mt-2 mb-2">Your Licenses</h3>
 
-                        <table data-source="$endpoint/self/whitelist" data-process="processLicensesTable" id="licenses-preview" class="mb-4">
+                        <table data-source="$endpoint2/self/whitelists" data-process="processLicensesTable" id="licenses-preview" class="mb-4">
                         </table>
                         {{#if hasGoldAccess}}
                         <a href="/account/licenses" class="button button--cta">Manage Licenses</a> <a href="/licensing/content-creators" class="button button--black">Learn More</a>
@@ -528,7 +528,7 @@
 
 <script type="text/html"
         data-route="^(account\/?$|account\/?\?(.*)$)"
-        data-source="$endpoint/self"
+        data-source="$endpoint2/self"
         data-title="My Account"
         data-process="processAccountPage"
         data-template="account-page"
@@ -630,7 +630,7 @@
             <div class="col-xs-12 col-md-6 panel">
                 <div id="settings">
                     <h2>Settings</h2>
-                    <div data-source="$endpoint/self/settings"
+                    <div data-source="$endpoint2/self"
                          data-process="processAccountSettings">
                     </div>
                 </div>
@@ -666,7 +666,7 @@
                             </tbody>
                         </table>
                         <div class="button-group">
-                            <button class="button--full" type="button">Enable</button>
+                            <button class="button--full">Enable</button>
                         </div>
                     </form>
                     {{/enableTwoFactor}}

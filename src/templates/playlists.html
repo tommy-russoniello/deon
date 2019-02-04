@@ -66,7 +66,7 @@
 
 <script type="text/html"
         data-title="My Playlists"
-        data-source="$endpoint/playlist?fields=name,public"
+        data-source="$endpoint2/self/playlists"
         data-process="processPlaylistsPage"
         data-route="^playlists"
         data-template="playlists-page"
@@ -124,7 +124,7 @@
 
 <script type="text/html"
         data-route="^playlist\/(.*)"
-        data-source="$endpoint/playlist/$1?fields=name,public,userId"
+        data-source="$endpoint2/playlist/$1?fields=name,public,userId"
         data-process="processPlaylistPage"
         data-template="playlist-page"
         >
@@ -179,7 +179,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                {{#pagePlaceholders}}
+                {{#each pagePlaceholders}}
                 <tbody data-placeholder-page="{{page}}">
                     {{#tracks}}
                     <tr data-placeholder-index="{{index}}" data-placeholder-page="{{page}}">
@@ -219,7 +219,7 @@
                     </tr>
                     {{/tracks}}
                 </tbody>
-                {{/pagePlaceholders}}
+                {{/each}}
             </table>
         </div>
     </div>
@@ -275,7 +275,7 @@
         {{/each}}
         {{#unless results.length}}
             <tr>
-                <td colspan="10">No Results.</td>
+                <td colspan="10">No songs.</td>
             </tr>
         {{/unless}}
 </script>

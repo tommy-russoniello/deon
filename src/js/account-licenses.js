@@ -82,7 +82,7 @@ function transformLicense (license) {
   }
 
   license.clickDateRanges = true
-  license.viewLicenseUrl = endpoint + '/self/whitelist-license/' + license.identity
+  license.viewLicenseUrl = `${endpoint2}/user/${license.userId}/whitelist-license/${license.identity}`
 
   let prev
   let cutoff = 12 * 60 * 60 * 1000 //12 hours
@@ -133,11 +133,13 @@ function confirmBlockNonLicensableTracks(){
   const confirmMsg = "Would you like to skip non-licenseable tracks? \nYou can also change the settings yourself in Account Settings."
   if (confirm(confirmMsg)){
     request({
-      url: endpoint + '/self/settings',
+      url: `${endpoint2}/self`,
       method: 'PATCH',
       data: {
-        hideNonLicensableTracks: true,
-        blockNonLicensableTracks: true
+        settings: {
+          hideNonLicensableTracks: true,
+          blockNonLicensableTracks: true,
+        },
       },
       withCredentials: true
     }, (err) => {
@@ -145,7 +147,6 @@ function confirmBlockNonLicensableTracks(){
         toasty(err)
         return
       }
-
       loadSession((err) => {
         if (err) {
           toasty(err)
@@ -162,7 +163,7 @@ function confirmBlockNonLicensableTracks(){
 
 function submitAddLicense (e, el) {
   submitForm(e, {
-    url: endpoint + '/self/whitelist',
+    url: `${endpoint2}/self/whitelist`,
     method: 'POST',
     cors: true,
     transform: (data) => {
@@ -236,7 +237,7 @@ function clickShowLicenseDateRanges (e, el) {
   const tbody = findParentWith(tr,'tbody')
 
   request({
-    url: endpoint + '/self/whitelist/' + tr.dataset.id,
+    url: `${endpoint2}/self/whitelist/${tr.dataset.id}`,
     withCredentials: true
   }, (err, result) => {
     if (err) {
@@ -265,7 +266,7 @@ function onClickDeleteWhitelist(e, el) {
   btn.classList.add("on")
   btn.disabled = true
   request({
-    url: endpoint + '/self/whitelist/' + btn.dataset.id,
+    url: `${endpoint}/self/whitelist/${btn.dataset.id}`,
     method: 'DELETE',
     withCredentials: true
   }, (err, result) => {

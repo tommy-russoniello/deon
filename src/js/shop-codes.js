@@ -1,22 +1,19 @@
 function requestSelfShopCodes (done) {
   requestJSON({
     withCredentials: true,
-    url: endpoint + '/self/shop-codes'
-  }, function (err, result) {
-    if(err) {
-      return done(err);
+    url: endpoint2 + '/self/benefits-info'
+  }, function (err, body) {
+    if (err) {
+      return done(err)
     }
-    else {
-      result = transformShopCodes(result);
-      var obj = {};
-      obj.codes = result.results;
-      obj.lastCreated = result.lastCreated;
-      obj.nextCodeDate = new Date(new Date(obj.lastCreated).getTime() + 1000 * 60 * 60 * 24 * 30);
-      obj.currentCode = obj.codes[0];
-      obj.gold = result.gold;
-    }
-    done(null, obj);
-  });
+    var obj = Object.assign({}, body, {
+      gold: body.goldTime,
+    })
+    obj.lastCreated = obj.shopCode.created
+    obj.nextCodeDate = new Date(new Date(obj.shopCode.created).getTime() + 1000 * 60 * 60 * 24 * 30)
+    obj.currentCode = transformShopCode(obj.shopCode)
+    done(null, obj)
+  })
 }
 
 function transformShopCode (code) {
@@ -34,11 +31,6 @@ function transformShopCode (code) {
     code.rewardForText = '2+ years of Gold'
   }
   return code
-}
-
-function transformShopCodes (result) {
-  result.results = result.results.map(transformShopCode);
-  return result;
 }
 
 function transformShopCodesPage (obj, done) {

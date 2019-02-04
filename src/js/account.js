@@ -53,8 +53,8 @@ function submitSaveAccount (e, el) {
   const wasLegacy = isLegacyLocation()
 
   submitForm(e, {
-    url: endpoint + '/self',
-    method: 'PATCH',
+    url: endpoint2 + '/self',
+    method: 'PUT',
     transformData: transformSubmittedAccountData,
     validate: validateAccountData,
     success: function (result, data) {
@@ -72,11 +72,14 @@ function submitSaveAccount (e, el) {
 
 function submitSaveAccountSettings (e, el) {
   submitForm(e, {
-    url: endpoint + '/self/settings',
-    method: 'PATCH',
+    url: endpoint2 + '/self',
+    method: 'PUT',
+    transformData: (data) => {
+      return {settings: data}
+    },
     success: function (result, data) {
       toasty(strings.settingsUpdated)
-      session.settings = data
+      session.settings = data.settings
     }
   })
 }
@@ -85,27 +88,30 @@ function toggleStreamerMode(e, el) {
   var form = findParentWith(e.target, "form")
   var hideTracks = findNode('[name="hideNonLicensableTracks"]', form)
   var blockTracks = findNode('[name="blockNonLicensableTracks"]', form)
+  var publicPlaylist = findNode('[name="playlistPublicByDefault"]', form)
+  var format = findNode('[name="preferredDownloadFormat"]', form)
 
   hideTracks.checked = el.checked
   blockTracks.checked = el.checked
   request({
-    url: `${endpoint}/self/settings`,
-    data: {
+    url: `${endpoint2}/self`,
+    method: 'PUT',
+    data: {settings: {
+      playlistPublicByDefault: publicPlaylist.checked,
       hideNonLicensableTracks: hideTracks.checked,
       blockNonLicensableTracks: blockTracks.checked,
-    },
+      preferredDownloadFormat: format.value,
+    }},
     cors: true,
-    method: 'PATCH',
   }, (err, body, xhr) => {
     if (err) {
       toasty(err)
       return
     }
-    session.settings = body
-    if (el.checked){
+    session.settings = body.settings
+    if (el.checked) {
       toasty("Streamer mode activated. Happy content creating!")
-    }
-    else {
+    } else {
       toasty(Error("Streamer mode deactivated. Non-licensable tracks used will receive claims."))
     }
   })
@@ -117,8 +123,11 @@ function submitSaveRedditUsername (e, el) {
 
   submitForm(e, {
     method: 'PUT',
-    url: endpoint + '/self/update-reddit',
-    success: function (args) {
+    url: endpoint2 + '/self/update-reddit',
+    error: (err) => {
+      alert(err.message)
+    },
+    success: (args) => {
       if (unsetUsername) {
         toasty('Flair cleared')
       }
@@ -131,10 +140,9 @@ function submitSaveRedditUsername (e, el) {
 
 function submitJoinDiscord (e, el) {
   const responseEl = findNode('[role=join-discord] [role=response]')
-
   submitForm(e, {
     method: "POST",
-    url: endpoint + "/self/discord/join",
+    url: endpoint2 + "/self/discord/join",
     started: function () {
       betterRender('discord-response', responseEl, {loading: true})
     },
@@ -142,7 +150,6 @@ function submitJoinDiscord (e, el) {
       if (!data.discordId) {
         errs.push('Please provide a Discord User ID')
       }
-
       return errs
     },
     successMsg: 'Gold channel joined!'
@@ -160,16 +167,6 @@ function submitVerifyInvite (e, el) {
   })
 }
 
-function saveShopEmail (e, el) {
-  var data = getTargetDataSet(el, true, true)
-  if (!data) return
-  update('self', null, data, function (err, obj) {
-    if (err) return window.alert(err.message)
-    toasty(strings.shopEmailUpdated)
-    session.user.shopEmail = data.shopEmail
-  })
-}
-
 function transformTwoFactorFormData (data) {
   data.number = String(data.number)
   return data
@@ -177,8 +174,8 @@ function transformTwoFactorFormData (data) {
 
 function enableTwoFactor (e, el) {
   submitForm(e, {
-    method: 'PUT',
-    url: endpoint + '/self/two-factor',
+    method: 'POST',
+    url: endpoint2 + '/self/two-factor',
     transformData: transformTwoFactorFormData,
     validate: function (data, errs) {
       if (!data.countryCode) {
@@ -187,7 +184,6 @@ function enableTwoFactor (e, el) {
       if (!data.number) {
         errs.push('Number is required')
       }
-
       return errs
     },
     success: function () {
@@ -201,8 +197,8 @@ function enableTwoFactor (e, el) {
 function confirmTwoFactor (e, el) {
   submitForm(e, {
     transformData: transformTwoFactorFormData,
-    url: endpoint + '/self/two-factor/confirm',
-    method: 'PUT',
+    url: endpoint2 + '/self/two-factor/confirm',
+    method: 'POST',
     success: function () {
       reloadPage()
       window.location.hash = '#two-factor'
@@ -213,8 +209,8 @@ function confirmTwoFactor (e, el) {
 
 function disableTwoFactor (e, el) {
   requestJSON({
-    url: endpoint + '/self/two-factor/disable',
-    method: 'PUT',
+    url: endpoint2 + '/self/two-factor/disable',
+    method: 'POST',
     withCredentials: true
   }, (err, obj, xhr) => {
     if (terror(err)) {
@@ -246,17 +242,17 @@ function processAccountPage (args) {
       const account = result
 
       scope.countries = getAccountCountries(account.location)
-      if (!account.twoFactorId && !account.pendingTwoFactorId) {
+      if (account.twoFactorState == 'disabled') {
         scope.enableTwoFactor = {
           countries: CountryCallingCodes
         }
         scope.twoFactor = false
       }
-      else if (account.pendingTwoFactorId) {
+      else if (account.twoFactorState == 'pending') {
         scope.confirmingTwoFactor = true
-        scope.twoFacotr = false
+        scope.twoFactor = false
       }
-      else if (account.twoFactorId) {
+      else if (account.twoFactorState == 'enabled') {
         scope.twoFactor = true
       }
       if (account.birthday) {
@@ -348,7 +344,7 @@ function processAccountGoldPage (args) {
     return
   }
   requestJSON({
-    url: endpoint + '/self',
+    url: endpoint2 + '/self',
     withCredentials: true
   }, (err, selfResult) => {
     if (err) {
@@ -440,7 +436,7 @@ function processAccountSettings (args) {
         return opt
       })
 
-      scope.settings = result
+      scope.settings = result.settings
       const { settings } = scope
 
       scope.isStreamerMode = settings.blockNonLicensableTracks &&

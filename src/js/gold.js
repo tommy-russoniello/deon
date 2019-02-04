@@ -32,7 +32,7 @@ function processSubscriptionsPage (args) {
 
   request({
     method: 'POST',
-    url: endpoint + '/self/subscriptions',
+    url: `${endpoint2}/self/manage-subscriptions`,
     withCredentials: true,
     data: getXsollaTokenDefaults()
   }, (err, result) => {
@@ -44,18 +44,15 @@ function processSubscriptionsPage (args) {
     renderContent('subscriptions-page', scope)
 
     scope.loading = false
-    if (!result.legacySubs.length) {
+    scope.legacy = !!result.legacy
+    if (result.legacy) {
+      scope.subscriptions = result.subscriptions
+    }
+    else {
       scope.xsollaIframeSrc = getXsollaIframeSrc(result.xsollaToken)
       scope.hasSubscriptions = result.hasActiveSubs
     }
-    else if (result.legacySubs.length) {
-      scope.legacy = true
-      scope.subscriptions = result.legacySubs
-    }
-    else {
-      renderError(new Error('An unknown token error occured'))
-      return
-    }
+
     renderContent('subscriptions-page', scope)
     setXsollaIframesLoading()
     pageIsReady({
@@ -172,7 +169,7 @@ function generateXsollaToken (type, opts, done) {
     method: 'POST',
     withCredentials: true,
     data: data,
-    url: endpoint + '/xsolla/token/' + type
+    url: endpoint2 + '/xsolla/token/' + type
   }, (err, result) => {
     if (err) {
       done(err)
@@ -309,7 +306,7 @@ function clickCancelLegacySubscription (e) {
   btn.classList.toggle('on')
 
   requestJSON({
-    url: endpoint + '/self/cancel-paypal/' + id,
+    url: endpoint2 + '/self/cancel-paypal/' + id,
     method: 'POST',
     withCredentials: true
   }, function (err, result) {

@@ -513,17 +513,15 @@ function closeFrontForm (e) {
 
 function submitFrontForm (e) {
   submitForm(e, {
-    url: endpoint + '/support/send',
+    url: `${endpoint2}/support/send`,
     method: 'POST',
     validate: function (data, errors) {
       if (!data.email) {
         errors.push('Email is required')
       }
-
       if (!data.body) {
         errors.push('Message is required')
       }
-
       return errors
     },
     success: function () {
@@ -531,7 +529,6 @@ function submitFrontForm (e) {
       closeFrontForm()
     }
   })
-
   return
 }
 
@@ -870,7 +867,7 @@ function submitRemoveYouTubeClaim (e, el) {
 
       return errs
     },
-    url: endpoint + '/self/remove-claims',
+    url: `${endpoint2}/self/remove-claims`,
     method: 'POST',
     success: function () {
       toasty(strings.claimReleased)
