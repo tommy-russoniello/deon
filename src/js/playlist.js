@@ -258,7 +258,7 @@ function processPlaylistPage (args) {
         }
 
         if (playlist.tracks.length < PLAYLIST_DOWNLOAD_LIMIT) {
-          scope.downloadUrl = endpoint2 + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+          scope.downloadUrl = endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
         }
         else {
           scope.downloadLinks = []
