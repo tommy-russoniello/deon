@@ -25,7 +25,7 @@ function clickCreatePlaylist (e, el) {
 
 function createAndAddToPlaylist (e, el) {
   submitForm(e, {
-    url: `${endpoint}/self/playlist`,
+    url: `${endpoint2}/self/playlist`,
     validate: (data, errs) => {
       if (!data.name) {
         errs.push('Name is required')
@@ -114,7 +114,7 @@ function openAddToPlaylist (e, el) {
     loading: true
   })
 
-  requestCachedURL(`${endpoint2}/self/playlist`, (err, playlists) => {
+  requestCachedURL(`${endpoint2}/self/playlists`, (err, playlists) => {
     if (err) {
       renderModal(template, {
         error: err,

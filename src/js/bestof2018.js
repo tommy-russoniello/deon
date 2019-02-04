@@ -289,7 +289,7 @@ function submitBestOf2018 (e) {
 
   request({
     method: 'POST',
-    url: `${endpoint}/doublepoll/${BESTOF2018_POLLID}/vote`,
+    url: `${endpoint2}/doublepoll/${BESTOF2018_POLLID}/vote`,
     data: {
       votes: votes
     },
