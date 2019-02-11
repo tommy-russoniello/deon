@@ -272,7 +272,7 @@ function processPlaylistPage (args) {
             scope.downloadLinks.push({
               label: ((page == 1) ? 'Download ' : '') + 'Part ' + page,
               hover: 'Tracks ' + frm + ' to ' + to,
-              url: endpoint2 + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
+              url: endpoint + '/playlist/' + playlist._id + '/download?' + objectToQueryString(opts)
             })
           }
         }
