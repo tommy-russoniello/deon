@@ -20,7 +20,7 @@ function processStreamlabsRegisterPage (args) {
 function submitStreamlabsSignUp (e) {
   submitForm(e, {
     method: 'POST',
-    url: endpoint2 + '/streamlabs/complete-signup',
+    url: endpoint + '/streamlabs/complete-signup',
     transformData: transformSubmittedAccountData,
     success: () => {
       const scope = cache(PAGE_STREAMLABS_REGISTER)
