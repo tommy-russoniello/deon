@@ -49,7 +49,7 @@ function processSubscriptionsPage (args) {
       scope.subscriptions = result.subscriptions
     }
     else {
-      scope.xsollaIframeSrc = getXsollaIframeSrc(result.xsollaToken)
+      scope.xsollaIframeSrc = getXsollaIframeSrc(result.token)
       scope.hasSubscriptions = result.hasActiveSubs
     }
 
