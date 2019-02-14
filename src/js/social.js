@@ -17,7 +17,7 @@ function sendAccessToken(where, done) {
       token: res.authResponse.accessToken
     }
     requestJSON({
-      url: endpoint + where,
+      url: endpoint2 + where,
       method: 'POST',
       data: data,
       withCredentials: true
@@ -39,7 +39,7 @@ function sendIdToken(token, where, done) {
     token: token
   }
   requestJSON({
-    url: endpoint + where,
+    url: endpoint2 + where,
     method: 'POST',
     data: data,
     withCredentials: true
@@ -128,7 +128,7 @@ function signUpGoogle (opts, found) {
     .signIn()
     .then(function (user) {
       sendIdToken(user.getAuthResponse().id_token, '/google/signin', (err, status) => {
-        if(status == 200) {
+        if(status == 204) {
           if(typeof(found) == 'function') {
             return found(null, user);
           }
@@ -172,7 +172,7 @@ function signUpFacebook (opts, found) {
 
     FB.api('/me?fields=name,email', function (ares) {
       signInFacebook(function (err, status) {
-        if(status == 200) {
+        if(status == 204) {
           if(typeof(found) == 'function') {
             return found(null, ares);
           }
@@ -209,7 +209,7 @@ function unlinkGoogle (e, el) {
 
 function unlinkAccount (which) {
   requestJSON({
-    url: endpoint + '/self/' + which + '/unlink',
+    url: endpoint2 + '/self/' + which + '/unlink',
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
