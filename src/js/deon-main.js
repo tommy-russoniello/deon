@@ -1912,7 +1912,7 @@ getStats.translate = function (value) {
   if (isNaN(value)) { return value }
   if (value >= 1000000) {
     return (value / 1000000).toFixed(1) + 'm'
-  } else if (value >= 100000) {
+  } else if (value >= 10000) {
     return (value / 1000).toFixed(0) + 'k'
   }
   return value

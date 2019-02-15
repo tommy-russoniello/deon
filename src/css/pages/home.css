@@ -195,6 +195,11 @@ ul.social-grid {
 .social-grid .icon > i {
   font-size: 2rem;
 }
+.social-grid .icon span {
+  font-size: 2.25rem;
+  font-weight: bold;
+}
+
 .social-grid .stats{
   height: 100%;
 }
@@ -281,6 +286,10 @@ ul.social-grid {
 .social-grid .social-grid-wrapper.soundcloud:hover{
   border-color: #ff8800;
 }
+.social-grid .social-grid-wrapper.vk:focus,
+.social-grid .social-grid-wrapper.vk:hover{
+  border-color: #4680C2;
+}
 .social-grid .social-grid-wrapper.apple:focus,
 .social-grid .social-grid-wrapper.apple:hover{
   border-color: #0F79CE;
@@ -308,6 +317,9 @@ ul.social-grid {
 }
 .social-grid .social-grid-wrapper.apple:before{
   background: #0F79CE;
+}
+.social-grid .social-grid-wrapper.vk:before{
+  background: #4680C2;
 }
 
 @media screen and (min-width:768px){
