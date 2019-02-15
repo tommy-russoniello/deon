@@ -56,7 +56,10 @@ function enableGoogleSignin (e, el) {
     .signIn()
     .then(function (user) {
       sendIdToken(user.getAuthResponse().id_token, '/self/google/enable', function (err) {
-        if (err) return window.alert(err.message)
+        if (err) {
+          toasty(Error(err.message))
+          return
+        }
         window.location.reload()
       })
     })
@@ -94,7 +97,8 @@ function onSocialSignIn (err, status) {
     return window.confirm(strings.noAccount) ? go('/sign-up') : ''
   }
   if (err) {
-    return toasty.error(err)
+    toasty(Error(err))
+    return 
   }
 
   onSignIn()
@@ -102,7 +106,10 @@ function onSocialSignIn (err, status) {
 
 function enableFacebookSignin (e, el) {
   sendAccessToken('/self/facebook/enable', function (err) {
-    if (err) return window.alert(err.message)
+    if (err) {
+      toasty(err)
+      return
+    }
     if (status === 303) return go('/sign-up')
     window.location.reload()
   })
@@ -213,7 +220,10 @@ function unlinkAccount (which) {
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
-    if (err) return window.alert(err.message)
+    if (err) {
+      toasty(Error(err.message))
+      return
+    }
     window.location.reload()
   })
 }
