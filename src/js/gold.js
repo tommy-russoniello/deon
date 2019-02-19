@@ -217,7 +217,7 @@ function processGoldPage (args) {
       }, {
         id: 'early-streaming',
         title: 'Early Streaming Access',
-        description: 'Listen to releases on Monstercat.com 20 hours before they are released to everyone else.',
+        description: 'Listen to releases on Monstercat.com 21 hours before they are released to everyone else.',
         cta: 'Listen Early',
         image: '/img/gold-landing/2-StreamingAccess.jpg',
       }, {
