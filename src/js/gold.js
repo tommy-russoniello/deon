@@ -80,6 +80,18 @@ function processGoldBuyPage (args) {
   renderContent('gold-buy-page', scope)
 
   const opts = getXsollaTokenOpts()
+  let pageTitle, pageDesc
+
+  if (args.matches[1] == "redeem") {
+    opts.redeem_code = true
+    scope.redeemCode = true
+    pageTitle = "Redeem Coupon Code for Gold"
+    pageDesc = 'Redeem  Monstercat Gold subscription coupon code for downloads, early streaming, shop discounts, and more.'
+  }
+  else {
+    pageTitle = "Buy Gold"
+    pageDesc = 'Buy Monstercat Gold subscription for downloads, early streaming, shop discounts, and more.'
+  }
 
   generateXsollaIframeSrc('gold', opts, (err, result) => {
     if (err) {
@@ -105,8 +117,8 @@ function processGoldBuyPage (args) {
     renderContent('gold-buy-page', scope)
     setXsollaIframesLoading()
     pageIsReady({
-      title: 'Buy Gold',
-      description: 'Buy Monstercat Gold subscription for downloads, early streaming, shop discounts, and more.'
+      title: pageTitle,
+      description: pageDesc 
     })
   })
 }
