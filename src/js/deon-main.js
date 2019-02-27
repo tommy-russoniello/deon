@@ -1271,9 +1271,9 @@ function transformReleases (obj) {
 }
 
 function isVariousArtistsRelease(obj) {
-  var artists = obj.artists || ""
+  var artists = (obj.artists || "").toLowerCase()
 
-  return artists.toLowerCase().indexOf("various artists") > -1
+  return artists.indexOf("various artists") > -1 || artists == "monstercat"
 }
 
 function processUserReleases (args) {
