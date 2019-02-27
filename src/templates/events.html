@@ -176,7 +176,7 @@
 
 <script type="text/html"
         data-partial data-template="upcoming-event-tr">
-  <tr {{#featured}}class="featured"{{/featured}} data-date="{{startDate}}" event-id="{{_id}}">
+  <tr {{#if featured}}class="featured" data-featured="1"{{else}}data-featured="0"{{/if}} data-date="{{startDate}}" data-event-id="{{_id}}">
     <td class="date">
       <div>
         <span class="month">{{localMonth}}</span>
