@@ -432,7 +432,7 @@ function processAccountSettings (args) {
 
       scope.downloadOptions = downloadFormatOptions.map((opt) => {
         opt = Object.assign({}, opt)
-        opt.selected = opt.value == result.preferredDownloadFormat
+        opt.selected = opt.value == result.settings.preferredDownloadFormat
         return opt
       })
 
