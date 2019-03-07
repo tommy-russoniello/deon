@@ -13,3 +13,4 @@ cache/*
 *.swp
 *.swo
 src/local.html
+src/env-local.html
