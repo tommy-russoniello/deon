@@ -143,3 +143,13 @@ section.gold-feature-section#reddit {
   z-index: 0;
   padding-bottom: 1.5rem;
 }
+
+a.button--licenses img{
+  height: 20px;
+  margin: 15px 10px 0px;
+  vertical-align: middle;
+  filter: brightness(100);
+}
+a.button--licenses:hover img{
+  filter: brightness(1);
+}

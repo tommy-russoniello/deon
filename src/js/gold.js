@@ -361,3 +361,19 @@ function submitUnsubscribeFeedback (e) {
     }
   })
 }
+
+function processGoldSuccess (args) {
+  let continueTo = getContinueTo()
+  let continueToLabel = getContinueToLabel()
+  continueTo.msg = continueToLabel.msg
+
+  if (!continueTo.url) {
+    continueTo.url = '/',
+    continueTo.msg = 'Home'
+  }
+  const scope = {
+    continueTo: continueTo,
+  }
+  console.log('scope', scope)
+  renderContent(args.template, scope)
+}

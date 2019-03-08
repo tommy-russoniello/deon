@@ -13,6 +13,9 @@ function processSignInPage (args) {
   scope.redirectTo = encodeURIComponent(url)
   scope.continueTo = getSignInContinueTo()
   scope.signOnQueryString = getSignOnQueryString()
+
+  console.log('', )
+  
   renderContent(args.template, scope)
   pageIsReady({
     title: 'Sign In',
@@ -282,6 +285,35 @@ function getSignInContinueTo () {
   return continueTo
 }
 
+function getContinueTo() {
+  var continueTo = () => {
+    return so.redirect || so.redirectTo
+  }
+  var so = searchStringToObject()
+
+  if (so.continueTo) {
+    continueTo = {
+      url: '/' + so.continueTo,
+    }
+    return continueTo
+  }
+  return continueTo
+}
+
+function getContinueToLabel() {
+  var redirectTo = getRedirectTo()
+  var continueToLabel = false
+  var so = searchStringToObject()
+
+  if (so.continueToLabel) {
+    continueToLabel = {
+      msg: 'to ' + capitalizeFirstLetter(so.continueToLabel),
+    }
+    return continueToLabel
+  }
+  return continueToLabel
+}
+
 function processSignUpPage (args) {
   const redirectTo = getRedirectTo()
   const continueTo = getSignInContinueTo()
@@ -296,7 +328,6 @@ function processSignUpPage (args) {
     continueTo: continueTo,
     redirectTo: encodeURIComponent(redirectTo)
   }
-
   var qo = searchStringToObject()
 
   if (qo.email) {
@@ -314,7 +345,7 @@ function processSignUpPage (args) {
   }
 
   scope.signOnQueryString = getSignOnQueryString()
-
+  
   renderContent(args.template, scope)
 
   google.maps.event.addDomListener(window, 'load', initLocationAutoComplete)
