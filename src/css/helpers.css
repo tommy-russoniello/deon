@@ -906,7 +906,7 @@ button:disabled{
   cursor:not-allowed;
 }
 
-h1.mcatgold, h2.mcatgold{
+h1.mcatgold, h2.mcatgold{a
   color: #f1d383;
 }
 
