@@ -109,6 +109,9 @@ function hoverLetter(e, number) {
         e.target.classList.remove('lightup')
       }, 500)
       if (hoveredLetters.length == correctLetters.length) {
+        recordEvent('Easter Egg Mar 2019 Complete', {
+          category: 'Engagement'
+        })
         setTimeout(function() {
           findNode('.easter-piano').classList.add('easter-piano--correct')
           setTimeout(function() {
