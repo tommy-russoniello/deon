@@ -373,22 +373,43 @@ function loadAndAppendFeaturedEvents () {
     })
 
     trsToAdd.forEach((newTr) => {
-      var allTrs = document.querySelectorAll('tr[event-id]')
+      var allTrs = document.querySelectorAll('tr[data-event-id]')
       var newDate = new Date(newTr.getAttribute('data-date'))
       var checkDate
-      var trAfterThis
+      var trBefore, trAfter, dateAfter, dateBefore
+
+      trBefore = allTrs[0]
+      dateBefore = new Date(trBefore.dataset.date)
+
+      if (!trBefore || dateBefore > newDate) {
+        trBefore.parentNode.prepend(newTr)
+        return
+      }
 
       i = 0
+      var inserted = false
       do {
-        trAfterThis = allTrs[i]
-        if (trAfterThis) {
-          checkDate = new Date(trAfterThis.getAttribute('data-date'))
-        }
-        i++
-      } while (checkDate < newDate && i < allTrs.length)
+        trBefore = allTrs[i]
+        trAfter = allTrs[i+1]
 
-      if (trAfterThis) {
-        trAfterThis.parentNode.insertBefore(newTr, trAfterThis.nextSibling)
+        dateBefore = new Date(trBefore.dataset.date)
+
+        if (trAfter) {
+          dateAfter = new Date(trAfter.dataset.date)
+        } else {
+          dateAfter = new Date("3000-01-01")
+        }
+
+        if (dateBefore <= newDate && dateAfter >= newDate) {
+          trBefore.parentNode.insertBefore(newTr, trBefore.nextSibling)
+          inserted = true
+        }
+
+        i++
+      } while (!inserted && i < allTrs.length)
+
+      if (!inserted) {
+        trBefore.parentNode.prepend(newTr)
       }
     })
 
