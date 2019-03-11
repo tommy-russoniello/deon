@@ -8,13 +8,10 @@ function processSignInPage (args) {
     return
   }
   const scope = {}
-  const url = getRedirectTo()
 
-  scope.redirectTo = encodeURIComponent(url)
   scope.continueTo = getSignInContinueTo()
   scope.signOnQueryString = getSignOnQueryString()
 
-  console.log('', )
   
   renderContent(args.template, scope)
   pageIsReady({
@@ -103,7 +100,7 @@ function resendTwoFactorToken (e, el) {
 function onSignIn(done) {
   if (!done) {
     done = function () {
-      goRedirectTo()
+      goContinueTo()
     }
   }
   getSession(function (err, sess) {
@@ -203,7 +200,7 @@ function signUpAt (data, where) {
     if (terror(err)) {
       return
     }
-    goRedirectTo()
+    goContinueTo()
   })
 }
 
@@ -223,17 +220,15 @@ function validateSignUp (data, errors) {
 }
 
 function getSignOnQueryString () {
-  //?redirect={{redirectTo}}&continueTo={{continueTo}}
   const str = []
-  const redirectTo = getRedirectTo()
+  const continueTo = getContinueTo()
 
-  if (redirectTo) {
-    str.push('redirectTo=' + encodeURIComponent(redirectTo))
+  if (continueTo.url) {
+    str.push('continueUrl=' + encodeURIComponent(continueTo.url))
   }
 
-  var so = searchStringToObject()
-  if (so.continueTo) {
-    str.push('continueTo=' + so.continueTo)
+  if (continueTo.label) {
+    str.push('continueLabel=' + encodeURIComponent(continueTo.label))
   }
 
   if (str.length) {
@@ -243,79 +238,55 @@ function getSignOnQueryString () {
   return false
 }
 
-function getRedirectTo () {
-  var so = searchStringToObject()
-  return so.redirect || so.redirectTo || "/"
-}
-
-function goRedirectTo () {
-  const to = getRedirectTo()
-  if (to.indexOf('http') == 0) {
-    window.location = to
+function goContinueTo () {
+  const to = getContinueTo()
+  if (to.url && to.url.indexOf('http') == 0) {
+    window.location = to.url
   }
   else {
-    go(to)
+    go(to.url)
   }
 }
 
 function getSignInContinueTo () {
-  var redirectTo = getRedirectTo()
-  var continueTo = false
-  var so = searchStringToObject()
-
-  if (so.continueTo) {
-    continueTo = {
-      msg: 'to ' + so.continueTo
-    }
-    return continueTo
+  const continueTo = getContinueTo()
+  if (continueTo.url.indexOf('bestof2017') >= 0) {
+    continueTo.label = 'voting on <a href="/bestof2017">Best of 2017</a>'
   }
 
-  if (redirectTo.indexOf('bestof2017') >= 0) {
-    continueTo = {
-      msg: 'voting on <a href="/bestof2017">Best of 2017</a>'
-    }
-  }
-
-  if (redirectTo.indexOf('api/shopify') >= 0) {
-    continueTo = {
-      msg: 'to the Monstercat Shop'
-    }
+  if (continueTo.url.indexOf('api/shopify') >= 0) {
+    continueTo.label = 'to the Monstercat Shop'
   }
 
   return continueTo
 }
 
-function getContinueTo() {
-  var continueTo = () => {
-    return so.redirect || so.redirectTo
+function getContinueTo () {
+  const continueTo = {
+    url: "",
+    label: ""
   }
-  var so = searchStringToObject()
 
-  if (so.continueTo) {
-    continueTo = {
-      url: '/' + so.continueTo,
-    }
-    return continueTo
+  const so = searchStringToObject()
+
+  if (so.continueUrl) {
+    continueTo.url = so.continueUrl
   }
+
+  if (so.continueLabel) {
+    continueTo.label = so.continueLabel
+  }
+
   return continueTo
 }
 
-function getContinueToLabel() {
-  var redirectTo = getRedirectTo()
-  var continueToLabel = false
-  var so = searchStringToObject()
+function getContinueToUrl() {
+  const cont = getContinueTo()
 
-  if (so.continueToLabel) {
-    continueToLabel = {
-      msg: 'to ' + capitalizeFirstLetter(so.continueToLabel),
-    }
-    return continueToLabel
-  }
-  return continueToLabel
+  return cont.url
 }
 
 function processSignUpPage (args) {
-  const redirectTo = getRedirectTo()
   const continueTo = getSignInContinueTo()
 
   if (isSignedIn()) {
@@ -325,8 +296,7 @@ function processSignUpPage (args) {
 
   const scope = {
     countries: getAccountCountries(),
-    continueTo: continueTo,
-    redirectTo: encodeURIComponent(redirectTo)
+    continueTo: continueTo
   }
   var qo = searchStringToObject()
 

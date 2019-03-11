@@ -154,13 +154,13 @@ function signUpGoogle (opts, found) {
 
 function clickSignUpFacebook (e, el) {
   signUpFacebook({
-    redirect: getRedirectTo()
+    redirect: getContinueToUrl()
   });
 }
 
 function clickSignUpGoogle (e, el){
   signUpGoogle({
-    redirect: getRedirectTo()
+    redirect: getContinueToUrl()
   });
 }
 

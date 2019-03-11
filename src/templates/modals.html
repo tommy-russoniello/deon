@@ -38,11 +38,11 @@
             </div>
             {{^hasGold}}
                 {{#signedIn}}
-                    <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" onclick="closeModal(event)">Get your Gold membership!</a>
+                    <a class="button button--mcatgold" href="/gold/buy" data-continue-url="auto" onclick="closeModal(event)">Get your Gold membership!</a>
                 {{/signedIn}}
             {{/hasGold}}
             {{^signedIn}}
-                <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" onclick="closeModal(event)">Sign up for Gold account!</a>
+                <a class="button button--mcatgold" href="/gold/buy" data-continue-url="auto" onclick="closeModal(event)">Sign up for Gold account!</a>
             {{/signedIn}}
             <button class="button--close faux" onclick="closeModal(event)">
               <i class="fa fa-remove"></i>

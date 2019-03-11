@@ -57,7 +57,7 @@
         {{else}}
             <div class="panel">
                 <h1>Sign In to Continue</h1>
-                <p>Sign in or create an account to continue {{>continueTo}}.</p>
+                <p>Sign in or create an account to continue to {{>continueTo}}.</p>
             </div>
         {{/unless}}
         <div class="flex sign-split">
@@ -310,7 +310,7 @@
         {{else}}
             <div class="panel">
                 <h1>Sign Up to Continue</h1>
-                <p>Create an account or sign in to continue {{>continueTo}}.</p>
+                <p>Create an account or sign in to continue to {{>continueTo}}.</p>
             </div>
         {{/unless}}
         <div class="flex sign-split">
@@ -404,7 +404,7 @@
                                         {{/if}}
                                     {{/if}}</p>
                             {{else}}
-                                <p>Hey {{displayName}}, to use these features you'll need to <a href="/gold/buy" data-redirect-url="auto">get Gold</a>.</p>
+                                <p>Hey {{displayName}}, to use these features you'll need to <a href="/gold/buy" data-continue-url="auto">get Gold</a>.</p>
                             {{/if}}
                         {{else}}
                             <h1>Gold Features</h1>
@@ -413,7 +413,7 @@
                         {{/if}}
 
                         {{^hasGoldAccess}}
-                            <br /><a href="/gold/buy" data-redirect-url="auto" class="button button--mcatgold button--icon">Get Gold  <i class="fa fa-chevron-right"></i></a>
+                            <br /><a href="/gold/buy" data-continue-url="auto" class="button button--mcatgold button--icon">Get Gold  <i class="fa fa-chevron-right"></i></a>
                             {{^isSignedIn}}
                                 <span class="or">or</span>
                                 <a href="/sign-in?redirect=%2Faccount%2Fgold" class="button button--cta-outline">Sign In</a>
@@ -541,7 +541,7 @@
                     <i class="fa fa-chevron-right"></i>
                 </a>
             {{else}}
-                <a href="/gold/buy" data-redirect-url="auto" class="button button--mcatgold-dark pull-right">Upgrade to Gold</a>
+                <a href="/gold/buy" data-continue-url="auto" class="button button--mcatgold-dark pull-right">Upgrade to Gold</a>
             {{/if}}
         {{/data}}
         <h1>My Account</h1>
@@ -785,7 +785,7 @@
         data-partial
         data-template="get-gold-cta"
 >
-<a href="/gold/buy" data-redirect-url="auto" class="button button--cta button--mcatgold-dark">Get Gold</a>
+<a href="/gold/buy" data-continue-url="auto" class="button button--cta button--mcatgold-dark">Get Gold</a>
 </script>
 
 <script type="text/html"
@@ -969,5 +969,4 @@ Success please join the following channels with the links below:<br/><br/>
         data-partial data-template="required"><span class="required">*</span></script>
 
 <script type="text/html"
-        data-partial data-template="continueTo">{{#continueTo}}{{#buying}}{{#vendor}}
-            a <strong>{{vendor}}</strong> license for <strong>{{identity}}</strong>{{/vendor}}{{#gold}}a <strong><a href="/gold">Gold subscription</a></strong>{{/gold}}{{/buying}}{{#if msg}}{{{msg}}}{{/if}}{{/continueTo}}</script>
+        data-partial data-template="continueTo">{{#continueTo}}<a href="{{url}}">{{label}}</a>{{/continueTo}}</script>

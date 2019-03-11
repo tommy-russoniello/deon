@@ -67,7 +67,7 @@ function processGoldBuyPage (args) {
   }
 
   if (!isSignedIn()) {
-    go('/sign-up?redirectTo=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueTo=Buy%20Gold')
+    go('/sign-up?continueUrl=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueLabel=Buy%20Gold')
     return
   }
 
@@ -76,10 +76,13 @@ function processGoldBuyPage (args) {
   scope.hasGold = hasGoldAccess()
   scope.email = session.user ? session.user.email : ''
   scope.emoji = emotes[randomChooser(emotes.length)-1]
+  scope.continueLabel = getCookie(COOKIES.GOLD_BUY_REDIRECT_LABEL)
+  scope.continueUrl = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
 
   renderContent('gold-buy-page', scope)
 
   const opts = getXsollaTokenOpts()
+  console.log('opts', opts);
 
   generateXsollaIframeSrc('gold', opts, (err, result) => {
     if (err) {
@@ -116,7 +119,13 @@ function getXsollaTokenOpts () {
   const redirectTo = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
 
   if (redirectTo) {
-    opts.return_url = window.location.origin + redirectTo
+    opts.return_url = window.location.origin + '/gold/buy/success?continueUrl=' + encodeURIComponent(redirectTo)
+
+    const label = getCookie(COOKIES.GOLD_BUY_REDIRECT_LABEL)
+
+    if (label && label.length) {
+      opts.return_url += '&continueLabel=' + encodeURIComponent(label)
+    }
   }
 
   const so = searchStringToObject()
@@ -159,11 +168,13 @@ function generateXsollaToken (type, opts, done) {
   let data = getXsollaTokenDefaults()
 
   data = Object.assign(data, opts)
-
+  /*
+  //I have disabled this cache since it didn't take into account
+  //the new return_url parameters that are much more dynamic
   if (generateXsollaToken.cache) {
     done(null, generateXsollaToken.cache)
     return
-  }
+  }*/
 
   requestCached({
     method: 'POST',
@@ -364,12 +375,10 @@ function submitUnsubscribeFeedback (e) {
 
 function processGoldSuccess (args) {
   let continueTo = getContinueTo()
-  let continueToLabel = getContinueToLabel()
-  continueTo.msg = continueToLabel.msg
 
   if (!continueTo.url) {
     continueTo.url = '/',
-    continueTo.msg = 'Home'
+    continueTo.label = 'Home'
   }
   const scope = {
     continueTo: continueTo,

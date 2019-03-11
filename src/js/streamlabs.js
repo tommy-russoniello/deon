@@ -1,14 +1,11 @@
 const PAGE_STREAMLABS_REGISTER = 'PAGE_STREAMLABS_REGISTER'
 
 function processStreamlabsRegisterPage (args) {
-  const redirectTo = getRedirectTo()
   const continueTo = getSignInContinueTo()
 
   const qo = searchStringToObject()
   const scope = {
     loading: false,
-    continueTo: qo.continueTo,
-    redirectTo: redirectTo,
     continueTo: continueTo
   }
   renderContent(args.template, scope)
@@ -28,7 +25,7 @@ function submitStreamlabsSignUp (e) {
       loadSession(() => {
         if (!isStreamlabsIncomplete()) {
           toasty('Registration complete!')
-          go(scope.redirectTo)
+          go(scope.continueTo.url)
         }
         else {
           toastr(Error('Profile incomplete in session. Contact support@monstercat.com'))
