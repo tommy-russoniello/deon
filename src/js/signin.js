@@ -66,7 +66,7 @@ function submitSignUp (e, el) {
 function signIn (data, done) {
   data.password = data.password.toString()
   requestJSON({
-    url: endhost + '/signin',
+    url: endpoint2 + '/signin',
     method: 'POST',
     withCredentials: true,
     data: data
@@ -76,7 +76,7 @@ function signIn (data, done) {
 function authenticateTwoFactorToken (e, el) {
   e.preventDefault()
   requestJSON({
-    url: endhost + '/signin/token',
+    url: endpoint2 + '/signin/token',
     method: 'POST',
     data: getDataSet(el),
     withCredentials: true
@@ -88,7 +88,7 @@ function authenticateTwoFactorToken (e, el) {
 
 function resendTwoFactorToken (e, el) {
   requestJSON({
-    url: endhost + '/signin/token/resend',
+    url: endpoint2 + '/signin/token/resend',
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
@@ -117,7 +117,7 @@ function onSignIn(done) {
 
 function signOut (e, el) {
   requestJSON({
-    url: endhost + '/signout',
+    url: endpoint2 + '/signout',
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
@@ -138,7 +138,7 @@ function recoverPassword (e, el) {
       return data
     },
     successMsg: strings.passwordResetEmail,
-    url: endhost + '/password/send-verification',
+    url: endpoint2 + '/password/send-verification',
     method: 'POST'
   })
 }
@@ -164,7 +164,7 @@ function processPasswordResetPage (args) {
 function updatePassword (e, el) {
   submitForm(e, {
     method: 'POST',
-    url: endhost + '/password/reset',
+    url: endpoint2 + '/password/reset',
     validate: function (data, errs) {
       if (!data.password) {
         errs.push(strings.passwordMissing)
@@ -183,7 +183,7 @@ function signUp (data, where, done) {
   data.password = data.password.toString()
   data.email = data.email.trim()
   requestJSON({
-    url: endpoint + where,
+    url: endpoint2 + where,
     method: 'POST',
     withCredentials: true,
     data: data

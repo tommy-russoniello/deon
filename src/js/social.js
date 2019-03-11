@@ -17,7 +17,7 @@ function sendAccessToken(where, done) {
       token: res.authResponse.accessToken
     }
     requestJSON({
-      url: endpoint + where,
+      url: endpoint2 + where,
       method: 'POST',
       data: data,
       withCredentials: true
@@ -39,7 +39,7 @@ function sendIdToken(token, where, done) {
     token: token
   }
   requestJSON({
-    url: endpoint + where,
+    url: endpoint2 + where,
     method: 'POST',
     data: data,
     withCredentials: true
@@ -56,7 +56,10 @@ function enableGoogleSignin (e, el) {
     .signIn()
     .then(function (user) {
       sendIdToken(user.getAuthResponse().id_token, '/self/google/enable', function (err) {
-        if (err) return window.alert(err.message)
+        if (err) {
+          toasty(Error(err.message))
+          return
+        }
         window.location.reload()
       })
     })
@@ -94,7 +97,8 @@ function onSocialSignIn (err, status) {
     return window.confirm(strings.noAccount) ? go('/sign-up') : ''
   }
   if (err) {
-    return toasty.error(err)
+    toasty(Error(err))
+    return 
   }
 
   onSignIn()
@@ -102,7 +106,10 @@ function onSocialSignIn (err, status) {
 
 function enableFacebookSignin (e, el) {
   sendAccessToken('/self/facebook/enable', function (err) {
-    if (err) return window.alert(err.message)
+    if (err) {
+      toasty(err)
+      return
+    }
     if (status === 303) return go('/sign-up')
     window.location.reload()
   })
@@ -128,7 +135,7 @@ function signUpGoogle (opts, found) {
     .signIn()
     .then(function (user) {
       sendIdToken(user.getAuthResponse().id_token, '/google/signin', (err, status) => {
-        if(status == 200) {
+        if(status == 204) {
           if(typeof(found) == 'function') {
             return found(null, user);
           }
@@ -172,7 +179,7 @@ function signUpFacebook (opts, found) {
 
     FB.api('/me?fields=name,email', function (ares) {
       signInFacebook(function (err, status) {
-        if(status == 200) {
+        if(status == 204) {
           if(typeof(found) == 'function') {
             return found(null, ares);
           }
@@ -209,11 +216,14 @@ function unlinkGoogle (e, el) {
 
 function unlinkAccount (which) {
   requestJSON({
-    url: endpoint + '/self/' + which + '/unlink',
+    url: endpoint2 + '/self/' + which + '/unlink',
     method: 'POST',
     withCredentials: true
   }, function (err, obj, xhr) {
-    if (err) return window.alert(err.message)
+    if (err) {
+      toasty(Error(err.message))
+      return
+    }
     window.location.reload()
   })
 }
