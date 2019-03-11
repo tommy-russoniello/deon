@@ -909,3 +909,80 @@ button:disabled{
 h1.mcatgold, h2.mcatgold{
   color: #f1d383;
 }
+
+.easter-piano g[class^="easter_"] > rect {
+  fill: transparent;
+}
+
+.easter-piano g[class^="easter_"] > path {
+  pointer-events: none;
+}
+
+.easter-piano g[class^="easter_"] > rect:hover ~ path {
+  transform: translate(0px, 22px) scale(1, 0.85);
+  transition-timing-function: ease-in;
+  transition-duration: 0.05s;
+}
+
+.lightup ~ path{
+  fill: dodgerblue;
+}
+
+.easter_audio audio {
+  position: absolute;
+  z-index: -9999;
+  visibility: hidden
+}
+
+.easter-piano--correct g path[class^="e_"] {
+  animation-duration: 0.9s;
+  animation-name: wave;
+  animation-iteration-count: 15;
+  animation-timing-function: cubic-bezier(0, 0, 0.64, 1.01);
+}
+
+.easter-piano--correct g path.e_o {
+  animation-delay: -0.1s;
+}
+
+.easter-piano--correct g path.e_n {
+  animation-delay: -0.2s;
+}
+
+.easter-piano--correct g path.e_s {
+  animation-delay: -0.3s;
+}
+
+.easter-piano--correct g path.e_t {
+  animation-delay: -0.4s;
+}
+
+.easter-piano--correct g path.e_e {
+  animation-delay: -0.5s;
+}
+
+.easter-piano--correct g path.e_r {
+  animation-delay: -0.6s;
+}
+
+.easter-piano--correct g path.e_c {
+  animation-delay: -0.7s;
+}
+
+.easter-piano--correct g path.e_a {
+  animation-delay: -0.8s;
+}
+
+.easter-piano--correct g path.e_t2 {
+  animation-delay: -0.9s;
+}
+
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25px);
+  }
+}

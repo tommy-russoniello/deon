@@ -33,6 +33,91 @@ var SOCIAL_LINKS_MAP = {
   }
 }
 
+function hash (key, seed=32532) {
+  var remainder, bytes, h1, h1b, c1, c1b, c2, c2b, k1, i;
+  
+  remainder = key.length & 3; // key.length % 4
+  bytes = key.length - remainder;
+  h1 = seed;
+  c1 = 0xcc9e2d51;
+  c2 = 0x1b873593;
+  i = 0;
+  
+  while (i < bytes) {
+      k1 = 
+        ((key.charCodeAt(i) & 0xff)) |
+        ((key.charCodeAt(++i) & 0xff) << 8) |
+        ((key.charCodeAt(++i) & 0xff) << 16) |
+        ((key.charCodeAt(++i) & 0xff) << 24);
+    ++i;
+    
+    k1 = ((((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16))) & 0xffffffff;
+    k1 = (k1 << 15) | (k1 >>> 17);
+    k1 = ((((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16))) & 0xffffffff;
+
+    h1 ^= k1;
+        h1 = (h1 << 13) | (h1 >>> 19);
+    h1b = ((((h1 & 0xffff) * 5) + ((((h1 >>> 16) * 5) & 0xffff) << 16))) & 0xffffffff;
+    h1 = (((h1b & 0xffff) + 0x6b64) + ((((h1b >>> 16) + 0xe654) & 0xffff) << 16));
+  }
+  
+  k1 = 0;
+  
+  switch (remainder) {
+    case 3: k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
+    case 2: k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
+    case 1: k1 ^= (key.charCodeAt(i) & 0xff);
+    
+    k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
+    k1 = (k1 << 15) | (k1 >>> 17);
+    k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
+    h1 ^= k1;
+  }
+  
+  h1 ^= key.length;
+
+  h1 ^= h1 >>> 16;
+  h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16)) & 0xffffffff;
+  h1 ^= h1 >>> 13;
+  h1 = ((((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16))) & 0xffffffff;
+  h1 ^= h1 >>> 16;
+
+  return h1 >>> 0;
+}
+let hoveredLetters = []
+
+let pianoEnabled = true
+const correctLetters = [2734231768, 801996900, 2591818128, 1859219075, 88345284, 1410161457, 2101993162, 2237613401, 1608845104, 1828313878, 2695523618, 272972224, 1673366705, 3909747113]
+
+function hoverLetter(e, number) {
+  if(pianoEnabled) {
+    hoveredLetters.push(number)
+    const currentLetters = hoveredLetters.join('')
+    const currentHash = hash(currentLetters)
+    const correctHash = correctLetters[hoveredLetters.length-1]
+
+    if (currentHash == correctHash) {
+      e.target.classList.add('lightup')
+      setTimeout(function() {
+        e.target.classList.remove('lightup')
+      }, 500)
+      if (hoveredLetters.length == correctLetters.length) {
+        setTimeout(function() {
+          findNode('.easter-piano').classList.add('easter-piano--correct')
+          setTimeout(function() {
+            var _0x1f68=['cGxheQ','bG9hZA','YWRkRXZlbnRMaXN0ZW5lcg'];(function(_0x352197,_0x318e53){var _0x191703=function(_0x151dfb){while(--_0x151dfb){_0x352197['push'](_0x352197['shift']());}};_0x191703(++_0x318e53);}(_0x1f68,0x95));var _0x27b7=function(_0x497407,_0x4a4041){_0x497407=_0x497407-0x0;var _0x1c95cf=_0x1f68[_0x497407];return _0x1c95cf;};let a2390jigs9=new Audio(atob('aHR0cHM6Ly9hc3NldHMubW9uc3RlcmNhdC5jb20vc3VwZXJzZWNyZXQvV1lHLndhdg=='));a2390jigs9[atob(_0x27b7('0x0'))](atob('Y2FucGxheXRocm91Z2g='),()=>a2390jigs9[atob(_0x27b7('0x1'))]());a2390jigs9[atob(_0x27b7('0x2'))]();
+          }, 1000);
+          pianoEnabled = false
+          findNode('.mcat-logo').classList.remove('easter-piano')
+        }, 750)
+      }
+    } else {
+      hoveredLetters = []
+    }
+    document.getElementById('easter-audio-' + number).play()
+  }
+}
+
 Object.keys(SOCIAL_LINKS_MAP).forEach((key) => {
   SOCIAL_LINKS_MAP[key].platform = key
 })
