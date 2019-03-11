@@ -12,4 +12,5 @@ cache/*
 # Vim swap files (http://stackoverflow.com/a/4824199)
 *.swp
 *.swo
-src/local.html
+src/env-*.html
+src/staging.html
