@@ -85,9 +85,16 @@ function hash (key, seed=32532) {
   return h1 >>> 0;
 }
 let hoveredLetters = []
-
 let pianoEnabled = true
 const correctLetters = [2734231768, 801996900, 2591818128, 1859219075, 88345284, 1410161457, 2101993162, 2237613401, 1608845104, 1828313878, 2695523618, 272972224, 1673366705, 3909747113]
+
+function addHoverLetter() {
+  [0,1,2,3,4].forEach((number) => {
+    document.querySelector("#_00"+number).addEventListener("mouseover", (event) => {
+      hoverLetter(event, number)
+    })
+  })
+}
 
 function hoverLetter(e, number) {
   if(pianoEnabled) {
@@ -114,7 +121,7 @@ function hoverLetter(e, number) {
     } else {
       hoveredLetters = []
     }
-    document.getElementById('easter-audio-' + number).play()
+    document.getElementById('easter-audio-00' + number).play()
   }
 }
 
@@ -127,6 +134,9 @@ preLoadImage('/img/artwork-merch.jpg')
 preLoadImage('/img/artist.jpg')
 
 document.addEventListener("DOMContentLoaded", (e) => {
+
+  addHoverLetter()
+
   const routeNodes = findNodes('[data-route]')
 
   for (var i = 0; i < routeNodes.length; i++) {
