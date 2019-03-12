@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 
       link.type = "application/rss+xml"
       link.rel = "alternate"
-      link.title = "Call of the Wild Radio Show"
+      link.title = "Monstercat: Call of the Wild"
       link.href = "https://www.monstercat.com/podcast/feed.xml"
       link.id = "podcast-rss"
       document.head.appendChild(link)
