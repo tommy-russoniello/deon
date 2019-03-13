@@ -381,15 +381,22 @@ function submitUnsubscribeFeedback (e) {
 }
 
 function processGoldSuccess (args) {
-  let continueTo = getContinueTo()
+  loadSession(() => {
+    /*if (!hasGoldAccess()) {
+      renderError("You don't have gold")
+      return
+    }*/
 
-  if (!continueTo.url) {
-    continueTo.url = '/',
-    continueTo.label = 'Home'
-  }
-  const scope = {
-    continueTo: continueTo,
-  }
-  console.log('scope', scope)
-  renderContent(args.template, scope)
+    let continueTo = getContinueTo()
+
+    if (!continueTo.url) {
+      continueTo.url = '/',
+      continueTo.label = 'Home'
+    }
+    const scope = {
+      continueTo: continueTo,
+      hasGoldAccess: hasGoldAccess()
+    }
+    renderContent(args.template, scope)
+  })
 }
