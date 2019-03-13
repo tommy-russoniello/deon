@@ -241,19 +241,12 @@ function getSignOnQueryString () {
   const str = []
   const continueTo = getContinueTo()
 
-  if (continueTo.url) {
-    str.push('continueUrl=' + encodeURIComponent(continueTo.url))
-  }
+  let url = appendUrl('', {
+    continueLabel: continueTo.label,
+    continueUrl: continueTo.url
+  })
 
-  if (continueTo.label) {
-    str.push('continueLabel=' + encodeURIComponent(continueTo.label))
-  }
-
-  if (str.length) {
-    return '?' + str.join('&')
-  }
-
-  return false
+  return url
 }
 
 function goContinueTo () {
