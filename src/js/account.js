@@ -230,8 +230,7 @@ function processAccountPage (args) {
     return
   }
 
-  if (!isSignedIn()) {
-    go('/signin')
+  if (!checkSignedIn('Your Account')) {
     return
   }
 
@@ -277,6 +276,9 @@ function processAccountPage (args) {
 }
 
 function processAccountEmailPage (args) {
+  if (!checkSignedIn('Your Email Settings')) {
+    return
+  }
   templatePageProcessor('account-email-page', args, {
     hasLoading: true,
     transform: function (args) {

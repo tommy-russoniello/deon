@@ -52,12 +52,12 @@
         data-template="sign-in-page"
         >
     <div class="container">
-        {{#unless continueTo}}
+        {{#unless continueTo.label}}
             <h1>Sign In</h1>
         {{else}}
             <div class="panel">
                 <h1>Sign In to Continue</h1>
-                <p>Sign in or create an account to continue to {{>continueTo}}.</p>
+                <p>Sign in or create an account to continue{{>continueTo}}.</p>
             </div>
         {{/unless}}
         <div class="flex sign-split">
@@ -163,8 +163,10 @@
 
 <script type="text/html"
         data-route="authenticate-token"
+        data-process="processAuthenticateToken"
         data-title="Sign In 2 Factor">
     <div class="container">
+        {{#data}}
         <h1>Authenticate Token</h1>
         <div class="panel">
             <form onsubmit="authenticateTwoFactorToken(event, this)">
@@ -182,6 +184,7 @@
                 </div>
             </form>
         </div>
+        {{/data}}
     </div>
 </script>
 
@@ -305,12 +308,12 @@
         data-template="sign-up-page"
         >
     <div class="container">
-        {{#unless continueTo}}
+        {{#unless continueTo.label}}
             <h1>Sign Up</h1>
         {{else}}
             <div class="panel">
                 <h1>Sign Up to Continue</h1>
-                <p>Create an account or sign in to continue to {{>continueTo}}.</p>
+                <p>Create an account or sign in to continue{{>continueTo}}.</p>
             </div>
         {{/unless}}
         <div class="flex sign-split">
@@ -969,4 +972,4 @@ Success please join the following channels with the links below:<br/><br/>
         data-partial data-template="required"><span class="required">*</span></script>
 
 <script type="text/html"
-        data-partial data-template="continueTo">{{#continueTo}}<a href="{{url}}">{{label}}</a>{{/continueTo}}</script>
+        data-partial data-template="continueTo">{{#continueTo}}{{#if label}} to <a href="{{url}}">{{label}}</a>{{/if}}{{/continueTo}}</script>

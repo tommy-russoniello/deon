@@ -165,7 +165,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
     document.addEventListener("click", (e) => {
       const t = e.target
       const goldLink = findParentOrSelf(t, 'a[href^="/gold"]')
-      console.log('goldLink', goldLink);
       if (goldLink && goldLink.dataset.continueUrl) {
         const expiresDays = (60*10)/86400 //10 minutes
         let label
@@ -180,11 +179,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
           url = goldLink.dataset.continueUrl
         }
 
-        console.log('label', label)
-        console.log('url', url)
-
         if (url.substr(0, '/gold'.length) != '/gold') {
-          console.log(`set it`)
           setCookie(COOKIES.GOLD_BUY_REDIRECT_LABEL, label, expiresDays)
           setCookie(COOKIES.GOLD_BUY_REDIRECT_URL, url , expiresDays)
         }
@@ -397,6 +392,29 @@ function pageIsReady (meta) {
 
 function isSignedIn () {
   return !!(session && session.user)
+}
+
+function checkSignedIn (continueLabel, continueUrl) {
+  continueUrl = continueUrl || (window.location.pathname + window.location.search)
+
+  const so = searchStringToObject()
+
+  //This prevents double redirects
+  if (so.continueUrl || so.continueLabel) {
+    return
+  }
+
+  if (!isSignedIn()) {
+    const url = appendUrl('/signin', {
+      continueLabel: continueLabel,
+      continueUrl: continueUrl
+    })
+
+    go(url)
+    return false
+  }
+
+  return true
 }
 
 function isStreamlabsIncomplete () {
@@ -1111,6 +1129,11 @@ function processArtistPage (args) {
 }
 
 function processPage (opts) {
+  if (opts.node.dataset.requireSignin) {
+    checkSignedIn(opts.node.dataset.title)
+    return
+  }
+
   renderContent(opts.node.dataset.template, {})
   pageIsReady({
     title: opts.node.dataset.title,
