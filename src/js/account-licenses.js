@@ -10,7 +10,7 @@ function processAccountLicensesPage (args) {
   }
 
   if (!isSignedIn()) {
-    return go('/signin?redirect=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueTo=Licenses')
+    return go('/signin?continueUrl=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueLabel=Licenses')
   }
 
   pageProcessor(args, {

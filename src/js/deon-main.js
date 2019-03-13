@@ -165,21 +165,26 @@ document.addEventListener("DOMContentLoaded", (e) => {
     document.addEventListener("click", (e) => {
       const t = e.target
       const goldLink = findParentOrSelf(t, 'a[href^="/gold"]')
-      if (goldLink && goldLink.dataset.redirectUrl) {
+      console.log('goldLink', goldLink);
+      if (goldLink && goldLink.dataset.continueUrl) {
         const expiresDays = (60*10)/86400 //10 minutes
         let label
         let url
 
-        if (goldLink.dataset.redirectUrl == 'auto') {
+        if (goldLink.dataset.continueUrl == 'auto') {
           url = window.location.pathname + window.location.search
           label = document.title.replace(' - Monstercat', '')
         }
         else {
-          label = goldLink.dataset.redirectLabel
-          url = goldLink.dataset.redirectUrl
+          label = goldLink.dataset.continueLabel
+          url = goldLink.dataset.continueUrl
         }
 
+        console.log('label', label)
+        console.log('url', url)
+
         if (url.substr(0, '/gold'.length) != '/gold') {
+          console.log(`set it`)
           setCookie(COOKIES.GOLD_BUY_REDIRECT_LABEL, label, expiresDays)
           setCookie(COOKIES.GOLD_BUY_REDIRECT_URL, url , expiresDays)
         }

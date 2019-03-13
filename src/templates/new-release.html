@@ -126,7 +126,7 @@
                                 {{#unless ../hasGoldAccess}}
                                 <li class="mb-1">
                                     <a href="/gold/buy"
-                                    data-redirect-url="auto" 
+                                    data-continue-url="auto" 
                                     class="button button--icon button--icon-rg button--mcatgold mb-0"
                                     click-action="Click Get Gold"
                                     click-category="Release Links"
@@ -325,11 +325,11 @@
     </div>
     {{^hasGold}}
         {{#signedIn}}
-            <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Get your Gold membership!</a>
+            <a class="button button--mcatgold" href="/gold/buy" data-continue-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Get your Gold membership!</a>
         {{/signedIn}}
     {{/hasGold}}
     {{^signedIn}}
-        <a class="button button--mcatgold" href="/gold/buy" data-redirect-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Sign up for Gold account!</a>
+        <a class="button button--mcatgold" href="/gold/buy" data-continue-url="auto" ab-test="{{activeTest}}" kpi="gold-buy">Sign up for Gold account!</a>
     {{/signedIn}}
     <span class="or">or</span>
     <a href="/gold" ab-test="{{activeTest}}" kpi="gold-learn">learn more</a>

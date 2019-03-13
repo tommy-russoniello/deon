@@ -157,6 +157,10 @@ th.license-x, td.license-x{
     text-align: center;
 }
 
+.container--gold .cl-white .button--mcatgold:hover {
+  color: #000;
+}
+
 .pricing.pricing--gold {
     color: #f1d383;
 }
