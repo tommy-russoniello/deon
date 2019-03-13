@@ -86,7 +86,7 @@ function hash (key, seed=32532) {
 }
 let hoveredLetters = []
 let pianoEnabled = true
-const correctLetters = [2734231768, 801996900, 2591818128, 1859219075, 88345284, 1410161457, 2101993162, 2237613401, 1608845104, 1828313878, 2695523618, 272972224, 1673366705, 3909747113]
+const correctLetters = [2734231768, 801996900, 2591818128, 1859219075, 88345284, 1410161457, 2101993162, 2237613401, 1608845104, 1828313878, 2695523618, 272972224, 1673366705, 3909747113, 3041847320, 2257382503, 923918589, 2132505665]
 
 function addHoverLetter() {
   [0,1,2,3,4].forEach((number) => {
@@ -115,8 +115,9 @@ function hoverLetter(e, number) {
         setTimeout(function() {
           findNode('.easter-piano').classList.add('easter-piano--correct')
           setTimeout(function() {
-            var _0x1f68=['cGxheQ','bG9hZA','YWRkRXZlbnRMaXN0ZW5lcg'];(function(_0x352197,_0x318e53){var _0x191703=function(_0x151dfb){while(--_0x151dfb){_0x352197['push'](_0x352197['shift']());}};_0x191703(++_0x318e53);}(_0x1f68,0x95));var _0x27b7=function(_0x497407,_0x4a4041){_0x497407=_0x497407-0x0;var _0x1c95cf=_0x1f68[_0x497407];return _0x1c95cf;};let a2390jigs9=new Audio(atob('aHR0cHM6Ly9hc3NldHMubW9uc3RlcmNhdC5jb20vc3VwZXJzZWNyZXQvV1lHLndhdg=='));a2390jigs9[atob(_0x27b7('0x0'))](atob('Y2FucGxheXRocm91Z2g='),()=>a2390jigs9[atob(_0x27b7('0x1'))]());a2390jigs9[atob(_0x27b7('0x2'))]();
-          }, 1000);
+           //not adventures btw ( ͡° ͜ʖ ͡°)
+            var _0x1f68=['cGxheQ','bG9hZA','YWRkRXZlbnRMaXN0ZW5lcg'];(function(_0x352197,_0x318e53){var _0x191703=function(_0x151dfb){while(--_0x151dfb){_0x352197['push'](_0x352197['shift']());}};_0x191703(++_0x318e53);}(_0x1f68,0x95));var _0x27b7=function(_0x497407,_0x4a4041){_0x497407=_0x497407-0x0;var _0x1c95cf=_0x1f68[_0x497407];return _0x1c95cf;};let a2390jigs9=new Audio(atob('aHR0cHM6Ly9hc3NldHMubW9uc3RlcmNhdC5jb20vc3VwZXJzZWNyZXQvd2hlcmV2ZXJ5b3Vnby5tcDM'));a2390jigs9[atob(_0x27b7('0x0'))](atob('Y2FucGxheXRocm91Z2g='),()=>a2390jigs9[atob(_0x27b7('0x1'))]());a2390jigs9[atob(_0x27b7('0x2'))]();
+          }, 500);
           pianoEnabled = false
           findNode('.mcat-logo').classList.remove('easter-piano')
         }, 750)
@@ -124,6 +125,7 @@ function hoverLetter(e, number) {
     } else {
       hoveredLetters = []
     }
+    document.getElementById('easter-audio-00' + number).currentTime = 0;
     document.getElementById('easter-audio-00' + number).play()
   }
 }
