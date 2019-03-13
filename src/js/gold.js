@@ -82,7 +82,6 @@ function processGoldBuyPage (args) {
   renderContent('gold-buy-page', scope)
 
   const opts = getXsollaTokenOpts()
-  console.log('opts', opts);
 
   generateXsollaIframeSrc('gold', opts, (err, result) => {
     if (err) {
@@ -114,8 +113,13 @@ function processGoldBuyPage (args) {
   })
 }
 
+function clearGoldCookies () {
+  setCookie(COOKIES.GOLD_BUY_REDIRECT_URL, '')
+  setCookie(COOKIES.GOLD_BUY_REDIRECT_LABEL, '')
+}
+
 function getXsollaTokenOpts () {
-  const opts =  {}
+  const opts =  getXsollaTokenDefaults()
   const redirectTo = getCookie(COOKIES.GOLD_BUY_REDIRECT_URL)
 
   if (redirectTo) {
@@ -127,6 +131,7 @@ function getXsollaTokenOpts () {
       opts.return_url += '&continueLabel=' + encodeURIComponent(label)
     }
   }
+
 
   const so = searchStringToObject()
 
@@ -193,8 +198,10 @@ function generateXsollaToken (type, opts, done) {
 }
 
 function getXsollaTokenDefaults () {
+  let url = window.location.protocol + '//' + window.location.host + '/gold/buy/success'
+
   return {
-    return_url: window.location.protocol + '//' + window.location.host + '/account/gold',
+    return_url: url,
     device: isXsollaMobileBrowser() ? 'mobile' : 'desktop'
   }
 }

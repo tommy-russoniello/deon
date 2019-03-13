@@ -338,6 +338,7 @@ function processAccountGoldPage (args) {
   }
 
   if (!scope.hasGoldAccess){
+    clearGoldCookies()
     return go('/gold/buy')
   }
 
