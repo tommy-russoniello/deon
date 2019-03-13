@@ -47,7 +47,14 @@ function submitSignIn (e, el) {
           onSignIn()
           return
         }
-        go('/authenticate-token')
+        const so = searchStringToObject()
+
+        url = appendUrl('/authenticate-token', {
+          continueUrl: so.continueUrl,
+          continueLabel: so.continueLabel
+        })
+
+        go(url)
       })
     }
   })
@@ -71,6 +78,17 @@ function signIn (data, done) {
     withCredentials: true,
     data: data
   }, done)
+}
+
+function processAuthenticateToken (args) {
+  pageProcessor(args, {
+    transform: () => {
+      const ct = getContinueTo()
+      return {
+        continueTo: ct
+      }
+    }
+  })
 }
 
 function authenticateTwoFactorToken (e, el) {
@@ -243,8 +261,10 @@ function goContinueTo () {
   if (to.url && to.url.indexOf('http') == 0) {
     window.location = to.url
   }
-  else {
+  else if (to.url) {
     go(to.url)
+  } else {
+    go('/')
   }
 }
 
@@ -264,19 +284,23 @@ function getSignInContinueTo () {
 function getContinueTo () {
   const continueTo = {
     url: "",
-    label: ""
+    label: "",
+    active: false
   }
 
   const so = searchStringToObject()
 
   if (so.continueUrl) {
     continueTo.url = so.continueUrl
+    continueTo.active = true
   } else if (so.redirect) {
     continueTo.url = so.redirect //Legacy parameter
+    continueTo.active = true
   }
 
   if (so.continueLabel) {
     continueTo.label = so.continueLabel
+    continueTo.active = true
   }
 
   return continueTo
@@ -286,6 +310,26 @@ function getContinueToUrl() {
   const cont = getContinueTo()
 
   return cont.url
+}
+
+function appendUrl (base, opts) {
+  let url = base
+
+  const parts = Object.keys(opts).reduce((list, key) => {
+    const val = opts[key]
+
+    if (val) {
+      list.push(encodeURIComponent(key) + '=' + encodeURIComponent(val))
+    }
+
+    return list
+  }, [])
+
+  if (parts.length > 0) {
+    url += '?' + parts.join('&')
+  }
+
+  return url
 }
 
 function processSignUpPage (args) {

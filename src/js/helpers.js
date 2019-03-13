@@ -587,6 +587,10 @@ var EPPZScrollTo =
 function renderHeader () {
   var data = transformCurrentUrl()
 
+  if (data.currentUrl == encodeURIComponent("/")) {
+    data.currentUrl = ""
+  }
+
   if (session) {
     data.user = session ? session.user : null
   }

@@ -9,8 +9,8 @@ function processAccountLicensesPage (args) {
     return
   }
 
-  if (!isSignedIn()) {
-    return go('/signin?continueUrl=' + encodeURIComponent(window.location.pathname + window.location.search) + '&continueLabel=Licenses')
+  if (!checkSignedIn('Your Licenses')) {
+    return
   }
 
   pageProcessor(args, {
