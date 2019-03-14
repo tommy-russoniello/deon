@@ -1132,8 +1132,9 @@ function processArtistPage (args) {
 
 function processPage (opts) {
   if (opts.node.dataset.requireSignin) {
-    checkSignedIn(opts.node.dataset.title)
-    return
+    if (!checkSignedIn(opts.node.dataset.title)) {
+      return
+    }
   }
 
   renderContent(opts.node.dataset.template, {})
